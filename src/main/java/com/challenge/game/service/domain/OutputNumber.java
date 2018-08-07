@@ -1,31 +1,18 @@
-package com.challenge.game.domain;
-
+package com.challenge.game.service.domain;
 
 import java.util.Objects;
 
-public class InputNumber {
-
-    private static final int LOW_BOUNDARY = 2;
+public class OutputNumber {
 
     private final int value;
 
     /**
-     * Initialise a value object for game round input.
+     * Initialise a value object for game round output.
      *
-     * @param value the value on the input number.
+     * @param value the value of the output number.
      */
-    public InputNumber(final int value) {
+    public OutputNumber(final int value) {
         this.value = value;
-    }
-
-
-    /**
-     * Validates value is within expected boundaries.
-     *
-     * @return [boolean] if valid value.
-     */
-    public boolean isValid() {
-        return value >= LOW_BOUNDARY;
     }
 
     public int getValue() {
@@ -36,7 +23,7 @@ public class InputNumber {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        InputNumber that = (InputNumber) o;
+        OutputNumber that = (OutputNumber) o;
         return value == that.value;
     }
 
@@ -47,7 +34,7 @@ public class InputNumber {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("InputNumber{");
+        final StringBuffer sb = new StringBuffer("OutputNumber{");
         sb.append("value=").append(value);
         sb.append('}');
         return sb.toString();

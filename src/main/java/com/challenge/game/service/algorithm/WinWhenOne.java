@@ -1,6 +1,6 @@
-package com.challenge.game.algorithm;
+package com.challenge.game.service.algorithm;
 
-import com.challenge.game.domain.OutputNumber;
+import com.challenge.game.service.domain.OutputNumber;
 
 public class WinWhenOne implements WinLogic {
 

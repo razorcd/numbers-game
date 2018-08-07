@@ -1,6 +1,6 @@
-package com.challenge.game.algorithm;
+package com.challenge.game.service.algorithm;
 
-import com.challenge.game.domain.OutputNumber;
+import com.challenge.game.service.domain.OutputNumber;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,6 +22,6 @@ public class WinWhenOneTest {
 
     @Test
     public void whenNotOneItShouldReturnFalse() {
-        assertTrue("Should be falsy when value is NOT 1.", winWhenOne.apply(new OutputNumber(5)));
+        assertFalse("Should be falsy when value is NOT 1.", winWhenOne.apply(new OutputNumber(5)));
     }
 }
