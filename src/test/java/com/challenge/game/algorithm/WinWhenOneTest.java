@@ -1,0 +1,27 @@
+package com.challenge.game.algorithm;
+
+import com.challenge.game.domain.OutputNumber;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class WinWhenOneTest {
+
+    private WinLogic winWhenOne;
+
+    @Before
+    public void setUp() throws Exception {
+        winWhenOne = new WinWhenOne();
+    }
+
+    @Test
+    public void whenOneItShouldReturnTrue() {
+        assertTrue("Should be truthy when value is 1.", winWhenOne.apply(new OutputNumber(1)));
+    }
+
+    @Test
+    public void whenNotOneItShouldReturnFalse() {
+        assertTrue("Should be falsy when value is NOT 1.", winWhenOne.apply(new OutputNumber(5)));
+    }
+}
