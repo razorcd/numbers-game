@@ -5,12 +5,13 @@ import com.challenge.game.domain.InputNumber;
 import com.challenge.game.domain.OutputNumber;
 
 import java.util.InputMismatchException;
+import java.util.Optional;
 
 public class GameRound {
 
     private static final OutputNumber WINNING_OUTPUT = new OutputNumber(1);
 
-    private final InputNumber inputNumber;  //TODO: remove?
+    private final InputNumber inputNumber;
     private final OutputNumber outputNumber;
     private final DivideByThree algorithm;
 
@@ -19,8 +20,9 @@ public class GameRound {
      * @param inputNumber the input number value object.
      */
     public GameRound(final InputNumber inputNumber, final DivideByThree algorithm) {
-        if (!inputNumber.isValid()) throw new InputMismatchException("Input is invalid.");
-        this.inputNumber = inputNumber;
+        this.inputNumber = Optional.of(inputNumber)
+                .filter(InputNumber::isValid)
+                .orElseThrow(InputMismatchException::new);
         this.algorithm = algorithm;
         this.outputNumber = algorithm.calculateOutputNumber(inputNumber);
     }
