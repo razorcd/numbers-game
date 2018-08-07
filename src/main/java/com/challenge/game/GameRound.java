@@ -12,7 +12,6 @@ public class GameRound {
     private static final OutputNumber WINNING_OUTPUT = new OutputNumber(1);
 
     private final InputNumber inputNumber;
-    private final OutputNumber outputNumber;
     private final DivideByThree algorithm;
 
     /**
@@ -24,15 +23,6 @@ public class GameRound {
                 .filter(InputNumber::isValid)
                 .orElseThrow(InputMismatchException::new);
         this.algorithm = algorithm;
-        this.outputNumber = algorithm.calculateOutputNumber(inputNumber);
-    }
-
-    /**
-     * Get input of this game round.
-     * @return [InputNumber] the input number of game.
-     */
-    public InputNumber getInputNumber() {
-        return inputNumber;
     }
 
     /**
@@ -40,7 +30,8 @@ public class GameRound {
      * @return [OutputNumber] the output number of game.
      */
     public OutputNumber getOutput() {
-        return outputNumber;
+        //TODO: memoize outputNumber?
+        return algorithm.calculateOutputNumber(inputNumber);
     }
 
     /**
@@ -48,6 +39,6 @@ public class GameRound {
      * @return [boolean] if is a winning round.
      */
     public boolean isWinner() {
-        return outputNumber.equals(WINNING_OUTPUT);
+        return algorithm.calculateOutputNumber(inputNumber).equals(WINNING_OUTPUT);  //TODO: move to OutputNumber
     }
 }
