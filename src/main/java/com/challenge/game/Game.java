@@ -6,6 +6,7 @@ public class Game {
 
     private static final int[] ADDITION_VALUES = {0, -1, 1};
     private static final int DIVIDER = 3;
+    private static final int WINNING_VALUE = 1;
 
     private final InputNumber inputNumber;
 
@@ -14,7 +15,7 @@ public class Game {
      * @param inputNumber the input number value object.
      */
     public Game(final InputNumber inputNumber) {
-        if (!inputNumber.isValid()) throw new InputMismatchException("input is invalid");
+        if (!inputNumber.isValid()) throw new InputMismatchException("Input is invalid.");
         this.inputNumber = inputNumber;
     }
 
@@ -23,7 +24,15 @@ public class Game {
      * @return [int] the output value
      */
     public int getOutput() {
-        return getClosestDivisibleValue(inputNumber)/3;
+        return getClosestDivisibleValue(inputNumber) / DIVIDER;
+    }
+
+    /**
+     * Check if input value generates a winning output value.
+     * @return [boolean] if output is a winning value
+     */
+    public boolean isWinner() {
+        return getClosestDivisibleValue(inputNumber) / DIVIDER == WINNING_VALUE;
     }
 
     private int getClosestDivisibleValue(final InputNumber inputNumber) {
