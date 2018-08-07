@@ -4,13 +4,16 @@ import java.util.InputMismatchException;
 
 public class Game {
 
-    private InputNumber inputNumber;
+    private static final int[] ADDITION_VALUES = {0, -1, 1};
+    private static final int DIVIDER = 3;
+
+    private final InputNumber inputNumber;
 
     /**
      * Initialise game with input.
      * @param inputNumber the input number value object.
      */
-    public Game(InputNumber inputNumber) {
+    public Game(final InputNumber inputNumber) {
         if (!inputNumber.isValid()) throw new InputMismatchException("input is invalid");
         this.inputNumber = inputNumber;
     }
@@ -20,9 +23,11 @@ public class Game {
      * @return [int] the output value
      */
     public int getOutput() {
-        int modulo = inputNumber.getValue()%3;
-        int[] additions = {0, -1, 1};
+        return getClosestDivisibleValue(inputNumber)/3;
+    }
 
-        return (inputNumber.getValue()+additions[modulo])/3;
+    private int getClosestDivisibleValue(final InputNumber inputNumber) {
+        int modulo = inputNumber.getValue() % DIVIDER;
+        return inputNumber.getValue() + ADDITION_VALUES[modulo];
     }
 }
