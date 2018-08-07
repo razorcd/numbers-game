@@ -29,7 +29,7 @@ public class Game {
      *
      * @return [GameRoundResult] the result of the played round.
      */
-    public GameRoundResult play(InputNumber inputNumber) {
+    public GameRoundResult play(final InputNumber inputNumber) {
         OutputNumber outputNumber = Stream.of(inputNumber)
                 .filter(InputNumber::isValid)
                 .map(gameAlgorithm)

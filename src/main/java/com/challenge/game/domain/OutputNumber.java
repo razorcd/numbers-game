@@ -11,7 +11,7 @@ public class OutputNumber {
      *
      * @param value the value of the output number.
      */
-    public OutputNumber(int value) {
+    public OutputNumber(final int value) {
         this.value = value;
     }
 

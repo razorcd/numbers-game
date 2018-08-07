@@ -12,7 +12,7 @@ public class WinWhenOne implements WinLogic {
      * @param outputNumber output number of game
      * @return [boolean] if output is a winning value.
      */
-    public Boolean apply(OutputNumber outputNumber) {
+    public Boolean apply(final OutputNumber outputNumber) {
         return outputNumber.equals(WINNING_VALUE);
     }
 }

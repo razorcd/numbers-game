@@ -14,7 +14,7 @@ public class InputNumber {
      *
      * @param value the value on the input number.
      */
-    public InputNumber(int value) {
+    public InputNumber(final int value) {
         this.value = value;
     }
 

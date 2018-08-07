@@ -13,7 +13,7 @@ public class GameRoundResult {
      * @param outputNumber the resulted output number of the played game.
      * @param winner if current result is a winning one.
      */
-    public GameRoundResult(OutputNumber outputNumber, boolean winner) {
+    public GameRoundResult(final OutputNumber outputNumber, final boolean winner) {
         this.outputNumber = outputNumber;
         this.winner = winner;
     }
