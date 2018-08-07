@@ -7,10 +7,11 @@ public class InputNumber {
 
     private static final int LOW_BOUNDARY = 2;
 
-    private int value;
+    private final int value;
 
     /**
-     * Initialise a value object for input number.
+     * Initialise a value object for game round input.
+     *
      * @param value the value on the input number.
      */
     public InputNumber(int value) {
@@ -20,6 +21,7 @@ public class InputNumber {
 
     /**
      * Validates value is within expected boundaries.
+     *
      * @return [boolean] if valid value.
      */
     public boolean isValid() {

@@ -4,10 +4,11 @@ import java.util.Objects;
 
 public class OutputNumber {
 
-    private int value;
+    private final int value;
 
     /**
-     * Initialise a value object for output number.
+     * Initialise a value object for game round output.
+     *
      * @param value the value of the output number.
      */
     public OutputNumber(int value) {

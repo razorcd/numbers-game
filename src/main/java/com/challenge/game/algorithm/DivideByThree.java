@@ -4,8 +4,9 @@ import com.challenge.game.domain.InputNumber;
 import com.challenge.game.domain.OutputNumber;
 
 public class DivideByThree {
-    private static final int[] ADDITION_VALUES = {0, -1, 1};
+
     private static final int DIVIDER = 3;
+    private static final int[] ADDITION_VALUES = {0, -1, 1};
 
     public OutputNumber calculateOutputNumber(InputNumber inputNumber) {
         return new OutputNumber(getClosestDivisibleValue(inputNumber) / DIVIDER);
