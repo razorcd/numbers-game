@@ -1,5 +1,7 @@
 package com.challenge.game.service.gamestate;
 
-public abstract class GameState {
-
+public enum GameState {
+    IDLE,
+    PLAYING,
+    FINISHED,
 }

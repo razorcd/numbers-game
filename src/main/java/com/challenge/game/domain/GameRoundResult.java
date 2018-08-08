@@ -1,8 +1,10 @@
-package com.challenge.game.service.domain;
+package com.challenge.game.domain;
 
 import java.util.Objects;
 
 public class GameRoundResult {
+
+    public final static GameRoundResult NULL = new GameRoundResult(null, false);
 
     private final OutputNumber outputNumber;
     private final boolean winner;
@@ -24,6 +26,15 @@ public class GameRoundResult {
 
     public boolean isWinner() {
         return winner;
+    }
+
+    /**
+     * Check if can play another round after current one.
+     *
+      * @return [boolean] if can play next round.
+     */
+    public boolean canPlayNext() {
+        return !isWinner();
     }
 
     @Override

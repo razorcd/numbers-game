@@ -1,4 +1,4 @@
-package com.challenge.game.service.domain;
+package com.challenge.game.model;
 
 import java.util.Objects;
 

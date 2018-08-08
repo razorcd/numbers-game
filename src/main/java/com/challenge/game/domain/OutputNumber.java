@@ -1,4 +1,4 @@
-package com.challenge.game.service.domain;
+package com.challenge.game.domain;
 
 import java.util.Objects;
 
@@ -17,6 +17,10 @@ public class OutputNumber {
 
     public int getValue() {
         return value;
+    }
+
+    public InputNumber toInputNumber() {
+        return new InputNumber(value);
     }
 
     @Override

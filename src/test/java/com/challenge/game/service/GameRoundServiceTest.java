@@ -2,9 +2,9 @@ package com.challenge.game.service;
 
 import com.challenge.game.service.algorithm.DivideByThree;
 import com.challenge.game.service.algorithm.WinWhenOne;
-import com.challenge.game.service.domain.GameRoundResult;
-import com.challenge.game.service.domain.InputNumber;
-import com.challenge.game.service.domain.OutputNumber;
+import com.challenge.game.domain.GameRoundResult;
+import com.challenge.game.domain.InputNumber;
+import com.challenge.game.domain.OutputNumber;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,7 +1,8 @@
-package com.challenge.game.service.domain;
+package com.challenge.game.domain;
 
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class InputNumber {
 
@@ -26,6 +27,19 @@ public class InputNumber {
      */
     public boolean isValid() {
         return value >= LOW_BOUNDARY;
+    }
+
+    /**
+     * Validate current input number is playable after specified game round result.
+     *
+     * @param gameRoundResult the previous game round result.
+     * @return [boolean] if can play current input after specified game round result.
+     */
+    public boolean canPlayNumberAfter(GameRoundResult gameRoundResult) {
+        return Stream.of(gameRoundResult)
+                .allMatch(roundResult ->
+                        Objects.isNull(roundResult.getOutputNumber()) ||
+                        hasSameValue(roundResult.getOutputNumber()));
     }
 
     public int getValue() {

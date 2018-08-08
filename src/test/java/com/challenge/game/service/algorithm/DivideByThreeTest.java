@@ -1,7 +1,7 @@
 package com.challenge.game.service.algorithm;
 
-import com.challenge.game.service.domain.InputNumber;
-import com.challenge.game.service.domain.OutputNumber;
+import com.challenge.game.domain.InputNumber;
+import com.challenge.game.domain.OutputNumber;
 import org.junit.Before;
 import org.junit.Test;
 
