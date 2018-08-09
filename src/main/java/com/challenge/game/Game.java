@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class Game {
 
-    public static Game NULL = new Game(null, PlayerAggregate.NULL, GameRoundResult.NULL);
+    public static final Game NULL = new Game(null, PlayerAggregate.NULL, GameRoundResult.NULL);
     private final GameRoundService gameRoundService;
     private final PlayerAggregate players;
     private final GameRoundResult gameRoundResult;

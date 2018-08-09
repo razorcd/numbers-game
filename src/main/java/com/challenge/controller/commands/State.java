@@ -1,6 +1,6 @@
 package com.challenge.controller.commands;
 
-import com.challenge.ServerAppState;
+import com.challenge.GameContext;
 import com.challenge.game.Game;
 import com.challenge.game.domain.GameRoundResult;
 import com.challenge.game.domain.PlayerAggregate;
@@ -8,17 +8,17 @@ import com.challenge.server.Messenger;
 
 public class State implements Command<String> {
 
-    private ServerAppState serverAppState;
-    private Messenger<String, String> messenger;
+    private GameContext gameContext;
+    private Messenger messenger;
 
     /**
      * State command.
      *
-     * @param serverAppState holds the state of the application.
+     * @param gameContext holds the state of the application.
      * @param messenger socket adapter.
      */
-    public State(ServerAppState serverAppState, Messenger<String, String> messenger) {
-        this.serverAppState = serverAppState;
+    public State(GameContext gameContext, Messenger messenger) {
+        this.gameContext = gameContext;
         this.messenger = messenger;
     }
 
@@ -29,7 +29,7 @@ public class State implements Command<String> {
      */
     @Override
     public void execute(String data) {
-        Game currentGame = serverAppState.getGame();
+        Game currentGame = gameContext.getGame();
 
         PlayerAggregate players = currentGame.getPlayers();
         GameRoundResult currentRoundResult = currentGame.getGameRoundResult();

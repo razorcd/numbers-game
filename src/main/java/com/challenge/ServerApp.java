@@ -13,29 +13,37 @@ public class ServerApp {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerApp.class);
 
-    //TODO: add global exception handling
-    //TODO: add global application state configuration singleton.
-
     public static void main(String[] args) {
-        PropertyConfigurator.configure(PropertyConfigurator.class.getClassLoader().getResourceAsStream("log4j.properties"));
-        PropertiesConfigLoader.initialize("application.properties");
-
         LOGGER.info("Starting application.");
-        ServerAppState serverAppState = new ServerAppState();
 
+        initializeGlobalConfiguration();
+
+        //setup server
+        String port = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.port", "9999");
         Server server = new Server();
-        Messenger<String, String> messenger = server.start(9999);
+        Messenger messenger = server.start(Integer.parseInt(port));
 
-        CommandController commandController = new CommandController(serverAppState, messenger, new UserInputDeserializer());
+        //setup application
+        GameContext gameContext = new GameContext();
+        CommandController commandController = new CommandController(gameContext, messenger, new UserInputDeserializer());
 
-        messenger.userInputSubscribe(commandController);
-
+        //listen on input stream
         messenger.send("connected");
-        messenger.startListening(); //blocks current thread
+        messenger.getInputStream()
+                .peek(commandController)
+                .filter(msg -> msg.equals("EXIT"))
+                .findAny();
 
         server.stop();
-
         LOGGER.info("Application closed.");
+    }
+
+    /**
+     * Initialize global configurations.
+     */
+    private static void initializeGlobalConfiguration() {
+        PropertyConfigurator.configure(PropertyConfigurator.class.getClassLoader().getResourceAsStream("log4j.properties"));
+        PropertiesConfigLoader.initialize("application.properties");
     }
 }
 

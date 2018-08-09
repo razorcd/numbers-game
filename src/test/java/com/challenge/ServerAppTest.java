@@ -2,6 +2,7 @@ package com.challenge;
 
 import com.challenge.server.Client;
 import com.challenge.server.Messenger;
+import com.challenge.utils.PropertiesConfigLoader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -17,10 +18,13 @@ import static org.junit.Assert.*;
 @FixMethodOrder(MethodSorters.JVM)
 public class ServerAppTest {
 
+    private static final String IP = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.ip", "127.0.0.1");
+    private static final String PORT = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.port", "9999");
+
     private ExecutorService executorService;
 
     private Client client;
-    private Messenger<String, String> messenger;
+    private Messenger messenger;
 
     @Before
     public void startServer() throws Exception {
@@ -31,7 +35,7 @@ public class ServerAppTest {
         Thread.sleep(400L); //for server under test to start
 
         client = new Client();
-        messenger = client.start("127.0.0.1", 9999);
+        messenger = client.start(IP, Integer.parseInt(PORT));
     }
 
     @After
@@ -66,12 +70,12 @@ public class ServerAppTest {
         messenger.readNextLineSync();
 
         //when
-        messenger.send("ADD_NEW_PLAYER:player1");
+        messenger.send("ADD_PLAYER:player1");
         //then
         assertEquals("Client should receive added player1.", "Added player player1 to game.", messenger.readNextLineSync());
 
         //and when
-        messenger.send("ADD_NEW_PLAYER:player2");
+        messenger.send("ADD_PLAYER:player2");
         //then
         assertEquals("Client should receive added player2.", "Added player player2 to game.", messenger.readNextLineSync());
     }
@@ -80,9 +84,9 @@ public class ServerAppTest {
     public void shouldStartAndPlayGame() {
         //given
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player1");
+        messenger.send("ADD_PLAYER:player1");
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player2");
+        messenger.send("ADD_PLAYER:player2");
         messenger.readNextLineSync();
 
         //when
@@ -98,7 +102,7 @@ public class ServerAppTest {
     public void shouldNotBeAbleToStartGameWithInvalidPlayers() {
         //given
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player1");
+        messenger.send("ADD_PLAYER:player1");
         messenger.readNextLineSync();
 
         //when
@@ -127,9 +131,9 @@ public class ServerAppTest {
     public void shouldBeAbleToRsStartAnAlreadyInitializedGame(){
         //given
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player1");
+        messenger.send("ADD_PLAYER:player1");
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player2");
+        messenger.send("ADD_PLAYER:player2");
         messenger.readNextLineSync();
         messenger.send("START");
         messenger.readNextLineSync();
@@ -149,9 +153,9 @@ public class ServerAppTest {
     public void shouldPlayGoodNumber(){
         //given
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player1");
+        messenger.send("ADD_PLAYER:player1");
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player2");
+        messenger.send("ADD_PLAYER:player2");
         messenger.readNextLineSync();
         messenger.send("START");
         messenger.readNextLineSync();
@@ -169,9 +173,9 @@ public class ServerAppTest {
     public void shouldNotPlayBadNumber(){
         //given
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player1");
+        messenger.send("ADD_PLAYER:player1");
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player2");
+        messenger.send("ADD_PLAYER:player2");
         messenger.readNextLineSync();
         messenger.send("START");
         messenger.readNextLineSync();
@@ -189,9 +193,9 @@ public class ServerAppTest {
     public void shouldNotPlayBadInputType(){
         //given
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player1");
+        messenger.send("ADD_PLAYER:player1");
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player2");
+        messenger.send("ADD_PLAYER:player2");
         messenger.readNextLineSync();
         messenger.send("START");
         messenger.readNextLineSync();
@@ -223,9 +227,9 @@ public class ServerAppTest {
     public void shouldBeAbleToGetCurrentStateOfStartedGame(){
         //given
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player1");
+        messenger.send("ADD_PLAYER:player1");
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player2");
+        messenger.send("ADD_PLAYER:player2");
         messenger.readNextLineSync();
         messenger.send("START");
         messenger.readNextLineSync();
@@ -243,9 +247,9 @@ public class ServerAppTest {
     public void shouldBeAbleToGetCurrentStateOfPlayingGameAfterSuccessfulAttempt(){
         //given
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player1");
+        messenger.send("ADD_PLAYER:player1");
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player2");
+        messenger.send("ADD_PLAYER:player2");
         messenger.readNextLineSync();
         messenger.send("START");
         messenger.readNextLineSync();
@@ -266,9 +270,9 @@ public class ServerAppTest {
     public void shouldBeAbleToGetCurrentStateOfPlayingGameAfterFailedAttempt(){
         //given
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player1");
+        messenger.send("ADD_PLAYER:player1");
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player2");
+        messenger.send("ADD_PLAYER:player2");
         messenger.readNextLineSync();
         messenger.send("START");
         messenger.readNextLineSync();
@@ -290,9 +294,9 @@ public class ServerAppTest {
     public void shouldBeAbleToPlayUntilWinning() {
         //given
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player1");
+        messenger.send("ADD_PLAYER:player1");
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player2");
+        messenger.send("ADD_PLAYER:player2");
         messenger.readNextLineSync();
         messenger.send("START");
         messenger.readNextLineSync();
@@ -314,9 +318,9 @@ public class ServerAppTest {
     public void shouldNotBeAbleToPlayAfterWinning() {
         //given
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player1");
+        messenger.send("ADD_PLAYER:player1");
         messenger.readNextLineSync();
-        messenger.send("ADD_NEW_PLAYER:player2");
+        messenger.send("ADD_PLAYER:player2");
         messenger.readNextLineSync();
         messenger.send("START");
         messenger.readNextLineSync();

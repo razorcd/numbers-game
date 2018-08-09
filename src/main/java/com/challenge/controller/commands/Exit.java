@@ -1,21 +1,21 @@
 package com.challenge.controller.commands;
 
-import com.challenge.ServerAppState;
+import com.challenge.GameContext;
 import com.challenge.server.Messenger;
 
 public class Exit implements Command<String> {
 
-    private ServerAppState serverAppState;
-    private Messenger<String, String> messenger;
+    private GameContext gameContext;
+    private Messenger messenger;
 
     /**
      * Exit command.
      *
-     * @param serverAppState holds the state of the application.
+     * @param gameContext holds the state of the application.
      * @param messenger socket adapter.
      */
-    public Exit(ServerAppState serverAppState, Messenger<String, String> messenger) {
-        this.serverAppState = serverAppState;
+    public Exit(GameContext gameContext, Messenger messenger) {
+        this.gameContext = gameContext;
         this.messenger = messenger;
     }
 

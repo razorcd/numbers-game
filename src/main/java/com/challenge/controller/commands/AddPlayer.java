@@ -1,21 +1,21 @@
 package com.challenge.controller.commands;
 
-import com.challenge.ServerAppState;
+import com.challenge.GameContext;
 import com.challenge.server.Messenger;
 
-public class AddNewPlayer implements Command<String> {
+public class AddPlayer implements Command<String> {
 
-    private ServerAppState serverAppState;
+    private GameContext gameContext;
     private Messenger messenger;
 
     /**
      * Add new player command.
      *
-     * @param serverAppState holds the state of the application.
+     * @param gameContext holds the state of the application.
      * @param messenger socket adapter.
      */
-    public AddNewPlayer(ServerAppState serverAppState, Messenger<String, String> messenger) {
-        this.serverAppState = serverAppState;
+    public AddPlayer(GameContext gameContext, Messenger messenger) {
+        this.gameContext = gameContext;
         this.messenger = messenger;
     }
 
@@ -26,7 +26,7 @@ public class AddNewPlayer implements Command<String> {
      */
     @Override
     public void execute(String name) {
-        serverAppState.addPlayer(name);
+        gameContext.addPlayer(name);
         messenger.send("Added player " + name + " to game.");
     }
 }

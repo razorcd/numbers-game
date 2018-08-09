@@ -1,6 +1,6 @@
 package com.challenge.controller.commands;
 
-import com.challenge.ServerAppState;
+import com.challenge.GameContext;
 import com.challenge.game.Game;
 import com.challenge.game.domain.GameRoundResult;
 import com.challenge.game.domain.PlayerAggregate;
@@ -8,17 +8,17 @@ import com.challenge.server.Messenger;
 
 public class Play implements Command<String> {
 
-    private ServerAppState serverAppState;
-    private Messenger<String, String> messenger;
+    private GameContext gameContext;
+    private Messenger messenger;
 
     /**
      * Play command.
      *
-     * @param serverAppState holds the state of the application.
+     * @param gameContext holds the state of the application.
      * @param messenger socket adapter.
      */
-    public Play(ServerAppState serverAppState, Messenger<String, String> messenger) {
-        this.serverAppState = serverAppState;
+    public Play(GameContext gameContext, Messenger messenger) {
+        this.gameContext = gameContext;
         this.messenger = messenger;
     }
 
@@ -29,18 +29,18 @@ public class Play implements Command<String> {
      */
     @Override
     public void execute(String inputNumber) {
-        Game gameBeforePlay = serverAppState.getGame();
+        Game gameBeforePlay = gameContext.getGame();
         PlayerAggregate playersBeforePlay = gameBeforePlay.getPlayers();
 
         try {
-            serverAppState.play(Integer.parseInt(inputNumber));
+            gameContext.play(Integer.parseInt(inputNumber));
         } catch (NumberFormatException | IllegalStateException ex) {
             String errMessage = buildErrorMessage(playersBeforePlay, ex);
             messenger.send(errMessage);
             return;
         }
 
-        Game gameAfterPlay = serverAppState.getGame();
+        Game gameAfterPlay = gameContext.getGame();
         GameRoundResult playingRoundResult = gameAfterPlay.getGameRoundResult();
 
         String message = buildFinalMessage(playersBeforePlay, playingRoundResult, inputNumber);

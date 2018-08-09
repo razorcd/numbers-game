@@ -1,6 +1,6 @@
 package com.challenge.controller.commands;
 
-import com.challenge.ServerAppState;
+import com.challenge.GameContext;
 import com.challenge.game.Game;
 import com.challenge.game.domain.GameRoundResult;
 import com.challenge.game.domain.PlayerAggregate;
@@ -12,19 +12,20 @@ import java.util.Random;
 
 public class Start implements Command<String> {
 
-    private static final String RANDOM_INPUT = PropertiesConfigLoader.getProperties().getProperty("com.challenge.random_start_input");
+    private static final String RANDOM_INPUT = PropertiesConfigLoader.getProperties().
+            getProperty("com.challenge.game.random_start_input");
 
-    private ServerAppState serverAppState;
+    private GameContext gameContext;
     private Messenger messenger;
 
     /**
      * Start command.
      *
-     * @param serverAppState holds the state of the application.
+     * @param gameContext holds the state of the application.
      * @param messenger socket adapter.
      */
-    public Start(ServerAppState serverAppState, Messenger<String, String> messenger) {
-        this.serverAppState = serverAppState;
+    public Start(GameContext gameContext, Messenger messenger) {
+        this.gameContext = gameContext;
         this.messenger = messenger;
     }
 
@@ -36,18 +37,18 @@ public class Start implements Command<String> {
     @Override
     public void execute(String data) {
         try {
-            serverAppState.startGame();
+            gameContext.startGame();
         } catch (IllegalArgumentException e) {
             messenger.send(buildIllegalArgumentErrorMessage(e));
             return;
         }
 
-        Game gameBeforePlay = serverAppState.getGame();
+        Game gameBeforePlay = gameContext.getGame();
 
         int inputNumber = getStartInputOrRandom();
-        serverAppState.play(inputNumber);
+        gameContext.play(inputNumber);
 
-        Game gameAfterPlay = serverAppState.getGame();
+        Game gameAfterPlay = gameContext.getGame();
 
         String finalMessage = buildFinalMessage(gameBeforePlay, gameAfterPlay, inputNumber);
         messenger.send(finalMessage);

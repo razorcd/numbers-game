@@ -25,7 +25,7 @@ public class Server {
      * @param port server port
      * @return {@code [Messenger<String, String>]} messenger to handle in/out connections.
      */
-    public Messenger<String, String> start(int port) {
+    public Messenger start(int port) {
         LOGGER.debug("Starting server.");
         try {
             serverSocket = new ServerSocket(port);
@@ -37,7 +37,7 @@ public class Server {
             LOGGER.error("IO exception while server is running.", e);
             stop();
         }
-        return new Messenger<>(in, out);
+        return new Messenger(in, out);
     }
 
     /**

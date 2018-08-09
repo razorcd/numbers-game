@@ -14,10 +14,9 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Application context class holds a mutable state of current application.
+ * Context class holds a mutable state of current application.
  */
-public class ServerAppState {
-
+public class GameContext {
 
     private Game game;
     private List<Player> players = new CopyOnWriteArrayList<>();
@@ -25,7 +24,7 @@ public class ServerAppState {
     /**
      * Build application context.
      */
-    public ServerAppState() {
+    public GameContext() {
         this.game = Game.NULL;
     }
 
@@ -42,7 +41,8 @@ public class ServerAppState {
     }
 
     /**
-     * Returns game in current state.
+     * Get game in current state.
+     *
      * @return [Game] game in current state.
      */
     public Game getGame() {
@@ -54,7 +54,7 @@ public class ServerAppState {
         WinLogic winLogic = new WinWhenOne();
         GameRoundService gameRoundService = new GameRoundService(gameAlgorithm, winLogic);
 
-        PlayerAggregate playerAggregate = new PlayerAggregate(players, 0);
+        PlayerAggregate playerAggregate = new PlayerAggregate(players, PlayerAggregate.DEFAULT_ROOT_INDEX);
 
         return new Game(gameRoundService, playerAggregate);
     }

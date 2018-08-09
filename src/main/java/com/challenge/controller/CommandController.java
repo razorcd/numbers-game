@@ -1,6 +1,6 @@
 package com.challenge.controller;
 
-import com.challenge.ServerAppState;
+import com.challenge.GameContext;
 import com.challenge.controller.commands.*;
 import com.challenge.controller.dto.UserInputDto;
 import com.challenge.controller.mapper.UserInputDeserializer;
@@ -11,20 +11,20 @@ import java.util.stream.Stream;
 
 public class CommandController implements Consumer<String> {
 
-    private ServerAppState serverAppState;
-    private Messenger<String, String> messenger;
+    private GameContext gameContext;
+    private Messenger messenger;
     private UserInputDeserializer userInputDeserializer;
 
     /**
      * Controller to handle user input commands.
      *
-     * @param serverAppState holds the state of the application.
+     * @param gameContext holds the state of the application.
      * @param messenger socket adapter.
      */
-    public CommandController(ServerAppState serverAppState,
-                             Messenger<String, String> messenger,
+    public CommandController(GameContext gameContext,
+                             Messenger messenger,
                              UserInputDeserializer userInputDeserializer) {
-        this.serverAppState = serverAppState;
+        this.gameContext = gameContext;
         this.messenger = messenger;
         this.userInputDeserializer = userInputDeserializer;
     }
@@ -43,24 +43,26 @@ public class CommandController implements Consumer<String> {
     }
 
     private void runCommand(UserInputDto userInputDto) {
-        switch (userInputDto.getCommand()) {
-            case "ADD_NEW_PLAYER":
-                new AddNewPlayer(serverAppState, messenger).execute(userInputDto.getData());
+        CommandType commandType = CommandType.valueOfString(userInputDto.getCommand());
+
+        switch (commandType) {
+            case ADD_PLAYER:
+                new AddPlayer(gameContext, messenger).execute(userInputDto.getData());
                 break;
-            case "START":
-                new Start(serverAppState, messenger).execute(userInputDto.getData());
+            case START:
+                new Start(gameContext, messenger).execute(userInputDto.getData());
                 break;
-            case "PLAY":
-                new Play(serverAppState, messenger).execute(userInputDto.getData());
+            case PLAY:
+                new Play(gameContext, messenger).execute(userInputDto.getData());
                 break;
-            case "STATE":
-                new State(serverAppState, messenger).execute(userInputDto.getData());
+            case STATE:
+                new State(gameContext, messenger).execute(userInputDto.getData());
                 break;
-            case "EXIT":
-                new Exit(serverAppState, messenger).execute(userInputDto.getData());
+            case EXIT:
+                new Exit(gameContext, messenger).execute(userInputDto.getData());
                 break;
             default:
-                new Unknown(serverAppState, messenger).execute(userInputDto.getData());
+                new Unknown(gameContext, messenger).execute(userInputDto.getData());
         }
     }
 }
