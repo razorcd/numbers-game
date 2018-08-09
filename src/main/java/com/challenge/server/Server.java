@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.function.Function;
 
 public class Server {
 
@@ -20,43 +19,40 @@ public class Server {
     private PrintWriter out;
     private BufferedReader in;
 
-    public void start(int port, Function<String,String> controller  ) {
+    /**
+     * Start server on specified port.
+     *
+     * @param port server port
+     * @return {@code [Messenger<String, String>]} messenger to handle in/out connections.
+     */
+    public Messenger<String, String> start(int port) {
+        LOGGER.debug("Starting server.");
         try {
             serverSocket = new ServerSocket(port);
             clientSocket = serverSocket.accept();
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-            do {
-                String incoming = in.readLine();
-                LOGGER.debug("Received data: {}", incoming);
-                if (incoming.equals("exit")) {
-                    break;
-                }
-
-                String response = controller.apply(incoming);
-
-                LOGGER.debug("Sending response: {}", response);
-                out.println(response);
-            } while (true);
-
-
+            LOGGER.debug("Server started.");
         } catch (IOException e) {
-            LOGGER.error("IOException while server is running.");
-        } finally {
+            LOGGER.error("IOException while server is running.", e);
             stop();
         }
+        return new Messenger<>(in, out);
     }
 
+    /**
+     * Stop server.
+     */
     public void stop() {
-        out.println("exit");
+        LOGGER.info("Stopping server.");
         try {
             in.close();
             out.close();
             clientSocket.close();
             serverSocket.close();
+            LOGGER.debug("Server stopped.");
         } catch (IOException ex) {
-            throw new RuntimeException("IO exception while closing connections.", ex);
+            throw new RuntimeException("IO exception while stopping server.", ex);
         }
     }
 }

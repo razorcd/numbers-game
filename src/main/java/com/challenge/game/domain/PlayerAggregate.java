@@ -1,12 +1,19 @@
 package com.challenge.game.domain;
 
 import com.challenge.game.model.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class PlayerAggregate {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerAggregate.class);
+
+    public static final PlayerAggregate NULL = new PlayerAggregate(Collections.emptyList(), -1);
     private static final int PLAYER_COUNT = 2;
 
     private final List<Player> players;
@@ -29,21 +36,29 @@ public class PlayerAggregate {
      * @return [Player] root player.
      */
     public Player getRootPlayer() {
-        return players.get(rootIndex);
+        return Optional.of(rootIndex)
+                .filter(this::isValidRootIndex)
+                .map(players::get)
+                .orElse(Player.NULL);
     }
 
+    /**
+     * Get new aggregate with root as next player.
+     *
+     * @return [PlayerAggregate] new aggregate with root as next player.
+     */
     public PlayerAggregate getNext() {
         return new PlayerAggregate(players, getNextRootIndex());
     }
 
     /**
      * Check if current aggregate root is valid.
+     *
      * @return [boolean] if current aggregate is valid.
      */
     public boolean isValid() {
         return players.size() == PLAYER_COUNT &&
-                rootIndex >= 0 &&
-                rootIndex < players.size();
+                isValidRootIndex(rootIndex);
     }
 
     /**
@@ -52,7 +67,17 @@ public class PlayerAggregate {
      * @return next index of root
      */
     private int getNextRootIndex() {
-        return (rootIndex + 1) % players.size();
+        try {
+            return (rootIndex + 1) % players.size();
+        } catch(ArithmeticException e) {
+            LOGGER.error("Can not divide by zero.");
+        }
+        return -1;
+    }
+
+    private boolean isValidRootIndex(int index) {
+        return index >= 0 &&
+               index < players.size();
     }
 
     @Override
@@ -71,10 +96,11 @@ public class PlayerAggregate {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("PlayerAggregate{");
-        sb.append("players=").append(players);
-        sb.append(", rootIndex=").append(rootIndex);
-        sb.append('}');
-        return sb.toString();
+        return new StringBuffer("players: ")
+                .append(players)
+                .append(" and player ")
+                .append(rootIndex+1)
+                .append(" has next turn.")
+                .toString();
     }
 }

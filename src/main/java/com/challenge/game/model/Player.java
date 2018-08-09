@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Player {
 
+    public static final Player NULL = new Player("unknown");
     private final String name;
 
     public Player(final String name) {
@@ -25,5 +26,12 @@ public class Player {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Player ")
+        .append(name);
+        return sb.toString();
     }
 }

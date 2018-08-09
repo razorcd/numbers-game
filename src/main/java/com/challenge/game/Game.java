@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public class Game {
 
+    public static Game NULL = new Game(null, PlayerAggregate.NULL, GameRoundResult.NULL);
     private final GameRoundService gameRoundService;
     private final PlayerAggregate players;
     private final GameRoundResult gameRoundResult;
@@ -23,7 +24,7 @@ public class Game {
         this.gameRoundService = gameRoundService;
         this.players = Optional.of(players)
                 .filter(PlayerAggregate::isValid)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("Can not start game with not valid "+players));
         this.gameRoundResult = GameRoundResult.NULL;
     }
 
@@ -47,14 +48,18 @@ public class Game {
      * @return [Game] a new Game object that will hold the new state of the game.
      */
     public Game play(final InputNumber inputNumber) {
-            Optional.of(gameRoundResult)
-                    .filter(GameRoundResult::canPlayNext)
-                    .orElseThrow(IllegalStateException::new);
+        Optional.of(gameRoundResult)
+                .filter(GameRoundResult::canPlayNext)
+                .orElseThrow(() -> new IllegalStateException("Can not play after "+gameRoundResult));
+
+        Optional.of(players)
+                .filter(PlayerAggregate::isValid)
+                .orElseThrow(() -> new IllegalStateException("Can not play game when "+players));
 
         return Optional.of(inputNumber)
                 .filter(input -> input.canPlayNumberAfter(gameRoundResult))
                 .map(validInput -> new Game(gameRoundService, players.getNext(), gameRoundService.play(validInput)))
-                .orElseThrow(IllegalStateException::new);
+                .orElseThrow(() -> new IllegalStateException("Can not play "+inputNumber+" after "+gameRoundResult));
     }
 
     /**

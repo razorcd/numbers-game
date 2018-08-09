@@ -38,9 +38,6 @@ public class OutputNumber {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("OutputNumber{");
-        sb.append("value=").append(value);
-        sb.append('}');
-        return sb.toString();
+        return String.valueOf(value);
     }
 }

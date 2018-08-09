@@ -65,9 +65,6 @@ public class InputNumber {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("InputNumber{");
-        sb.append("value=").append(value);
-        sb.append('}');
-        return sb.toString();
+        return String.valueOf(value);
     }
 }

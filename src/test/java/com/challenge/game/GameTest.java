@@ -1,17 +1,16 @@
 package com.challenge.game;
 
-import com.challenge.game.model.Player;
-import com.challenge.game.service.GameRoundService;
 import com.challenge.game.domain.GameRoundResult;
 import com.challenge.game.domain.InputNumber;
 import com.challenge.game.domain.PlayerAggregate;
+import com.challenge.game.model.Player;
+import com.challenge.game.service.GameRoundService;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

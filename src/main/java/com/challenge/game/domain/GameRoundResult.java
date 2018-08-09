@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class GameRoundResult {
 
-    public final static GameRoundResult NULL = new GameRoundResult(null, false);
+    public static final GameRoundResult NULL = new GameRoundResult(null, false);
 
     private final OutputNumber outputNumber;
     private final boolean winner;
@@ -53,10 +53,10 @@ public class GameRoundResult {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("GameRoundResult{");
-        sb.append("outputNumber=").append(outputNumber);
-        sb.append(", winner=").append(winner);
-        sb.append('}');
+        final StringBuffer sb = new StringBuffer("Round result: ");
+        sb.append("outputNumber ").append(outputNumber);
+        sb.append(", winner ").append(winner);
+        sb.append('.');
         return sb.toString();
     }
 }
