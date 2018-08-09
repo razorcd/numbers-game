@@ -14,21 +14,19 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Singleton class to hold mutable state of current application.
+ * Application context class holds a mutable state of current application.
  */
 public class ServerAppState {
 
-    private static final ServerAppState INSTANCE = new ServerAppState();
 
     private Game game;
     private List<Player> players = new CopyOnWriteArrayList<>();
 
-    private ServerAppState() {
+    /**
+     * Build application context.
+     */
+    public ServerAppState() {
         this.game = Game.NULL;
-    }
-
-    public static ServerAppState getInstance() {
-        return INSTANCE;
     }
 
     public void addPlayer(String playerName) {
@@ -36,7 +34,7 @@ public class ServerAppState {
     }
 
     public void startGame() {
-        game = buildGame(players);
+        game = buildNewGame(players);
     }
 
     public void play(int number) {
@@ -51,7 +49,7 @@ public class ServerAppState {
         return game;
     }
 
-    private Game buildGame(List<Player> players) {
+    private Game buildNewGame(List<Player> players) {
         GameAlgorithm gameAlgorithm = new DivideByThree();
         WinLogic winLogic = new WinWhenOne();
         GameRoundService gameRoundService = new GameRoundService(gameAlgorithm, winLogic);

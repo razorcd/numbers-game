@@ -18,18 +18,16 @@ public class ServerApp {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerApp.class);
 
-    //TODO: add glogal exception handling
-    //TODO: add global aplication state configuration singleton.
+    //TODO: add global exception handling
+    //TODO: add global application state configuration singleton.
     //TODO: implement command pattern
 
     public static void main(String[] args) {
-        String log4jConfPath = "./src/main/resources/log4j.properties";
-        PropertyConfigurator.configure(log4jConfPath);
-
+        PropertyConfigurator.configure(PropertyConfigurator.class.getClassLoader().getResourceAsStream("log4j.properties"));
         PropertiesConfigLoader.initialize("application.properties");
 
         LOGGER.info("Starting application.");
-        ServerAppState serverAppState = ServerAppState.getInstance();
+        ServerAppState serverAppState = new ServerAppState();
 
         Server server = new Server();
         Messenger<String, String> messenger = server.start(9999);

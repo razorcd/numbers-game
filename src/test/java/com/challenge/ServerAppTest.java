@@ -8,12 +8,8 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.Assert.*;
@@ -27,28 +23,12 @@ public class ServerAppTest {
     private Messenger<String, String> messenger;
 
     @Before
-    public void setUp() throws Exception {
-        Thread.sleep(200L);
+    public void startServer() throws Exception {
+        executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(() ->
+            ServerApp.main(new String[]{}));
 
-        executorService = new ThreadPoolExecutor(
-                1, 1,
-                0L, MILLISECONDS,
-                new LinkedBlockingQueue<Runnable>());
-
-//        Future<?> underTestAppThread =
-                executorService.execute(() -> {
-            ServerApp.main(new String[]{});
-//            new ServerApp();
-        });
-
-//        try {
-//            underTestAppThread.get();
-//        } catch (Exception e) {
-//            tearDown();
-//        }
-
-        Thread.sleep(1000L);
-//        executorService.awaitTermination(5, SECONDS); // time to allow app to start IO
+        Thread.sleep(400L); //for server under test to start
 
         client = new Client();
         messenger = client.start("127.0.0.1", 9999);
@@ -57,10 +37,10 @@ public class ServerAppTest {
     @After
     public void tearDown() throws Exception {
         messenger.send("EXIT");
-        client.stop();
         executorService.shutdown();
-        executorService.awaitTermination(1, SECONDS);
-        Thread.sleep(1000L);
+        executorService.awaitTermination(2, SECONDS);
+        client.stop();
+
     }
 
     @Test
@@ -177,10 +157,6 @@ public class ServerAppTest {
         messenger.readNextLine();
 
         //when
-//        String result = messenger.readNextLine();
-//        Matcher matcher = Pattern.compile("[0-9]+").matcher(result);
-//        matcher.find();matcher.find();matcher.find();
-//        String outputNumber = matcher.group();
         messenger.send("PLAY:27");
 
         //then
@@ -206,7 +182,7 @@ public class ServerAppTest {
         //then
         assertThat("Should not play player 2 with incorrect input number.",
                 messenger.readNextLine(),
-                matchesPattern("Player player2: Can not play 999 after Round result: outputNumber 27, winner false."));
+                matchesPattern("ERROR: Player player2: Can not play 999 after Round result: outputNumber 27, winner false."));
     }
 
     @Test
