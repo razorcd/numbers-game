@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class Messenger<I,O> {
 
@@ -36,7 +35,7 @@ public class Messenger<I,O> {
      *
      * @param consumer consumer to process incoming message.
      */
-    public void onMessageSubscribe(Consumer<I> consumer) {
+    public void userInputSubscribe(Consumer<I> consumer) {
         onMessageConsumers.add(consumer);
     }
 
@@ -58,7 +57,7 @@ public class Messenger<I,O> {
             do {
                 String incomingMessage = in.readLine();
                 if (!Objects.isNull(incomingMessage) && !incomingMessage.isEmpty()) {
-                    LOGGER.info(Thread.currentThread().getName() + ": Received message: {}", incomingMessage);
+                    LOGGER.info("Received message: {}", incomingMessage);
                     onMessageConsumers.forEach(consumer -> consumer.accept((I) incomingMessage));
                     if(incomingMessage.equals("EXIT")) break;
                 }
@@ -69,12 +68,17 @@ public class Messenger<I,O> {
         }
     }
 
-    public I readNextLine() {
+    /**
+     * Start listening only on first line.
+     *
+     * @return the first line.
+     */
+    public I readNextLineSync() {
         try {
             do {
                 String incomingMessage = in.readLine();
                 if (!Objects.isNull(incomingMessage) && !incomingMessage.isEmpty()) {
-                    LOGGER.info(Thread.currentThread().getName() + ": Reading one line: {}", incomingMessage);
+                    LOGGER.info("Reading one line: {}", incomingMessage);
                     return (I) incomingMessage;
                 }
             } while (true);

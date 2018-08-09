@@ -34,7 +34,7 @@ public class Server {
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             LOGGER.debug("Server started.");
         } catch (IOException e) {
-            LOGGER.error("IOException while server is running.", e);
+            LOGGER.error("IO exception while server is running.", e);
             stop();
         }
         return new Messenger<>(in, out);
@@ -52,7 +52,7 @@ public class Server {
             serverSocket.close();
             LOGGER.debug("Server stopped.");
         } catch (IOException ex) {
-            throw new RuntimeException("IO exception while stopping server.", ex);
+            throw new RuntimeException("IO exception while server is stopping.", ex);
         }
     }
 }
