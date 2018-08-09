@@ -357,7 +357,7 @@ public class ServerAppTest {
         //then
         assertThat("Should not be able to play after winning.",
                 messenger.readNextLine(),
-                matchesPattern("Player player1: Can not play after Round result: outputNumber 1, winner true."));
+                matchesPattern("ERROR: Player player1: Can not play after Round result: outputNumber 1, winner true."));
     }
 
     @Test
