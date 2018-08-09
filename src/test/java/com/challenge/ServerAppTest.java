@@ -2,18 +2,16 @@ package com.challenge;
 
 import com.challenge.server.Client;
 import com.challenge.server.Messenger;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.testng.annotations.BeforeSuite;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.concurrent.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -66,12 +64,12 @@ public class ServerAppTest {
     }
 
     @Test
-    public void shouldReceiveConnectedWhenConnection() throws IOException, InterruptedException {
+    public void shouldReceiveConnectedWhenConnection() {
         assertEquals("Client should receive connected first.", "connected", messenger.readNextLine());
     }
 
     @Test
-    public void shouldReceiveUnknownCommand() throws IOException, InterruptedException {
+    public void shouldReceiveUnknownCommand() {
         //given connected is read
         messenger.readNextLine();
 
@@ -83,7 +81,7 @@ public class ServerAppTest {
     }
 
     @Test
-    public void shouldAcceptPlayers() throws IOException, InterruptedException {
+    public void shouldAcceptPlayers() {
         //given connected is read
         messenger.readNextLine();
 
@@ -363,7 +361,7 @@ public class ServerAppTest {
     }
 
     @Test
-    public void shouldReceiveUnknownCommandWhenSendingUnknownCommand() throws IOException, InterruptedException {
+    public void shouldReceiveUnknownCommandWhenSendingUnknownCommand() {
         //given connected is read
         messenger.readNextLine();
 

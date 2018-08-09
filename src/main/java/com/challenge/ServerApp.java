@@ -74,7 +74,7 @@ public class ServerApp {
                     int randomNumber = Optional.ofNullable((randomInput))
                             .map(Integer::parseInt)
                             .orElse(new Random().nextInt(150) + 10);
-                    
+
                     serverAppState.play(randomNumber);
 
                     Game afterStartGame = serverAppState.getGame();
