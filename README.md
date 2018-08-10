@@ -127,11 +127,11 @@ mvn test
 ```
 
 ### Todo
- - [] implement logic for the computer to play alone.
- - [] accept multiple streams on separate threads and broadcast server response 
- - [] add feature for player to choose to -1, 0, 1 instead of the server to calculate the next valid input (like it's now implemented) 
- - [] define a better interface for Game module to reduce the leaking in controller.
- - [] allow ip and port to be overwritten with the command args, not only file configuration. 
+ - [ ] implement logic for the computer to play alone.
+ - [ ] accept multiple streams on separate threads and broadcast server response 
+ - [ ] add feature for player to choose to -1, 0, 1 instead of the server to calculate the next valid input (like it's now implemented) 
+ - [ ] define a better interface for Game module to reduce the leaking in controller.
+ - [ ] allow ip and port to be overwritten with the command args, not only file configuration. 
  
 ### Other 
  This was done in about 3 days so far.
