@@ -110,7 +110,7 @@ public class AcceptanceTest {
 
         //then
         assertEquals("Should not be able to start game with invalid players.",
-            "ERROR: Can not start game with not valid players: [Player player1] and player 1 has next turn.",
+            "ERROR: can not create a game with invalid players",
             messenger.readNextLineSync());
     }
 
@@ -124,7 +124,7 @@ public class AcceptanceTest {
 
         //then
         assertEquals("Should not be able to play game that was not started and has invalid players.",
-                "ERROR: Player unknown: Can not play game when players: [] and player 0 has next turn.", messenger.readNextLineSync());
+                "ERROR: Player unknown: can not play game when players: [] and player 0 has next turn.", messenger.readNextLineSync());
     }
 
     @Test
@@ -186,7 +186,7 @@ public class AcceptanceTest {
         //then
         assertThat("Should not play player 2 with incorrect input number.",
                 messenger.readNextLineSync(),
-                matchesPattern("ERROR: Player player2: Can not play 999 after Round result: outputNumber 27, winner false."));
+                matchesPattern("ERROR: Player player2: can not play 999 after Round result: outputNumber 27, winner false."));
     }
 
     @Test
@@ -337,7 +337,7 @@ public class AcceptanceTest {
         //then
         assertThat("Should not be able to play after winning.",
                 messenger.readNextLineSync(),
-                matchesPattern("ERROR: Player player1: Can not play after Round result: outputNumber 1, winner true."));
+                matchesPattern("ERROR: Player player1: can not play after Round result: outputNumber 1, winner true."));
     }
 
     @Test

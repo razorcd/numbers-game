@@ -31,7 +31,7 @@ public class State implements Command<String> {
     public void execute(String data) {
         Game currentGame = gameContext.getGame();
 
-        PlayerAggregate players = currentGame.getPlayers();
+        PlayerAggregate players = currentGame.getPlayerAggregate();
         GameRoundResult currentRoundResult = currentGame.getGameRoundResult();
 
         String finalMessage = buildFinalMessage(players, currentRoundResult);

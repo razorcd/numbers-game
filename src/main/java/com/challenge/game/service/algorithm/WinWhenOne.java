@@ -2,7 +2,7 @@ package com.challenge.game.service.algorithm;
 
 import com.challenge.game.domain.OutputNumber;
 
-public class WinWhenOne implements WinLogic {
+public class WinWhenOne implements IWinLogic {
 
     private static final OutputNumber WINNING_VALUE = new OutputNumber(1);
 

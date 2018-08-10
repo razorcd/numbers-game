@@ -1,5 +1,6 @@
 package com.challenge.game.service;
 
+import com.challenge.game.exception.GameRoundException;
 import com.challenge.game.service.algorithm.DivideByThree;
 import com.challenge.game.service.algorithm.WinWhenOne;
 import com.challenge.game.domain.GameRoundResult;
@@ -20,12 +21,12 @@ public class GameRoundServiceTest {
     }
 
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = GameRoundException.class)
     public void playGameWithANumberBelowLimitShouldThrow() {
         gameRoundService.play(new InputNumber(1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = GameRoundException.class)
     public void playGameWithANumberBelowZeroShouldThrow() {
         gameRoundService.play(new InputNumber(-1));
     }

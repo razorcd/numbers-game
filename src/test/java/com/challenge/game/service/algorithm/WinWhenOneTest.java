@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class WinWhenOneTest {
 
-    private WinLogic winWhenOne;
+    private IWinLogic winWhenOne;
 
     @Before
     public void setUp() throws Exception {

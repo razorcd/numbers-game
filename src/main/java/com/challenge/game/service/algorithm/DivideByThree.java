@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * E.g. For input 16, it will find that by adding -1 will result in 15 and then it will divide 15 by 3 returning 5.
  */
-public class DivideByThree implements GameAlgorithm {
+public class DivideByThree implements IGameAlgorithm {
 
     /**
      * The divider value.

@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 
 public class DivideByThreeTest {
 
-    private GameAlgorithm divideByThree;
+    private IGameAlgorithm divideByThree;
 
     @Before
     public void setUp() throws Exception {

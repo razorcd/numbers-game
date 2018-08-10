@@ -4,6 +4,7 @@ import com.challenge.GameContext;
 import com.challenge.game.Game;
 import com.challenge.game.domain.GameRoundResult;
 import com.challenge.game.domain.PlayerAggregate;
+import com.challenge.game.exception.GameException;
 import com.challenge.server.Messenger;
 
 public class Play implements Command<String> {
@@ -30,11 +31,11 @@ public class Play implements Command<String> {
     @Override
     public void execute(String inputNumber) {
         Game gameBeforePlay = gameContext.getGame();
-        PlayerAggregate playersBeforePlay = gameBeforePlay.getPlayers();
+        PlayerAggregate playersBeforePlay = gameBeforePlay.getPlayerAggregate();
 
         try {
             gameContext.play(Integer.parseInt(inputNumber));
-        } catch (NumberFormatException | IllegalStateException ex) {
+        } catch (GameException | NumberFormatException ex) {
             String errMessage = buildErrorMessage(playersBeforePlay, ex);
             messenger.send(errMessage);
             return;

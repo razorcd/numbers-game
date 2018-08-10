@@ -4,6 +4,7 @@ import com.challenge.GameContext;
 import com.challenge.game.Game;
 import com.challenge.game.domain.GameRoundResult;
 import com.challenge.game.domain.PlayerAggregate;
+import com.challenge.game.exception.GameException;
 import com.challenge.server.Messenger;
 import com.challenge.utils.PropertiesConfigLoader;
 
@@ -38,8 +39,8 @@ public class Start implements Command<String> {
     public void execute(String data) {
         try {
             gameContext.startGame();
-        } catch (IllegalArgumentException e) {
-            messenger.send(buildIllegalArgumentErrorMessage(e));
+        } catch (GameException e) {
+            messenger.send(buildGameExceptionMessage(e));
             return;
         }
 
@@ -66,7 +67,7 @@ public class Start implements Command<String> {
     }
 
     private String buildFinalMessage(Game beforePlay, Game afterPlay, int inputNumber) {
-        PlayerAggregate playersBeforePlay = beforePlay.getPlayers();
+        PlayerAggregate playersBeforePlay = beforePlay.getPlayerAggregate();
         GameRoundResult gameRoundEndResult = afterPlay.getGameRoundResult();
 
         return String.valueOf(playersBeforePlay.getRootPlayer()) +
@@ -76,7 +77,7 @@ public class Start implements Command<String> {
                 gameRoundEndResult;
     }
 
-    private String buildIllegalArgumentErrorMessage(IllegalArgumentException e) {
+    private String buildGameExceptionMessage(GameException e) {
         return "ERROR: " + e.getMessage();
     }
 }

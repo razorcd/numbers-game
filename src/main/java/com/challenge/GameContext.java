@@ -3,11 +3,12 @@ package com.challenge;
 import com.challenge.game.Game;
 import com.challenge.game.domain.InputNumber;
 import com.challenge.game.domain.PlayerAggregate;
+import com.challenge.game.exception.GameException;
 import com.challenge.game.model.Player;
 import com.challenge.game.service.GameRoundService;
 import com.challenge.game.service.algorithm.DivideByThree;
-import com.challenge.game.service.algorithm.GameAlgorithm;
-import com.challenge.game.service.algorithm.WinLogic;
+import com.challenge.game.service.algorithm.IGameAlgorithm;
+import com.challenge.game.service.algorithm.IWinLogic;
 import com.challenge.game.service.algorithm.WinWhenOne;
 
 import java.util.List;
@@ -50,12 +51,13 @@ public class GameContext {
     }
 
     private Game buildNewGame(List<Player> players) {
-        GameAlgorithm gameAlgorithm = new DivideByThree();
-        WinLogic winLogic = new WinWhenOne();
-        GameRoundService gameRoundService = new GameRoundService(gameAlgorithm, winLogic);
+        IGameAlgorithm IGameAlgorithm = new DivideByThree();
+        IWinLogic IWinLogic = new WinWhenOne();
+        GameRoundService gameRoundService = new GameRoundService(IGameAlgorithm, IWinLogic);
 
         PlayerAggregate playerAggregate = new PlayerAggregate(players, PlayerAggregate.DEFAULT_ROOT_INDEX);
 
+//        if (!playerAggregate.isValid()) throw new GameException("can not create a game with invalid players");
         return new Game(gameRoundService, playerAggregate);
     }
 }

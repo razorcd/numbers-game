@@ -33,7 +33,7 @@ public class GameRoundResult {
      *
       * @return [boolean] if can play next round.
      */
-    public boolean canPlayNext() {
+    public boolean canPlayAgain() {
         return !isWinner();
     }
 

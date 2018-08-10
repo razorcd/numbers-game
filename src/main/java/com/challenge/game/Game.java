@@ -1,5 +1,6 @@
 package com.challenge.game;
 
+import com.challenge.game.exception.GameException;
 import com.challenge.game.service.GameRoundService;
 import com.challenge.game.domain.GameRoundResult;
 import com.challenge.game.domain.InputNumber;
@@ -11,20 +12,21 @@ public class Game {
 
     public static final Game NULL = new Game(null, PlayerAggregate.NULL, GameRoundResult.NULL);
     private final GameRoundService gameRoundService;
-    private final PlayerAggregate players;
+    private final PlayerAggregate playerAggregate;
     private final GameRoundResult gameRoundResult;
 
     /**
      * Create a new game.
      *
      * @param gameRoundService the service for each game round.
-     * @param players the players aggregate holding the root as current player.
+     * @param playerAggregate the playerAggregate aggregate holding the root as current player.
+     * @throws GameException if invalid playerAggregate.
      */
-    public Game(final GameRoundService gameRoundService, final PlayerAggregate players) {
+    public Game(final GameRoundService gameRoundService, final PlayerAggregate playerAggregate) {
         this.gameRoundService = gameRoundService;
-        this.players = Optional.of(players)
+        this.playerAggregate = Optional.of(playerAggregate)
                 .filter(PlayerAggregate::isValid)
-                .orElseThrow(() -> new IllegalArgumentException("Can not start game with not valid "+players));
+                .orElseThrow(() -> new GameException("can not create a game with invalid players"));
         this.gameRoundResult = GameRoundResult.NULL;
     }
 
@@ -32,12 +34,12 @@ public class Game {
      * Private constructor to create a new game object.
      *
      * @param gameRoundService the service for each game round.
-     * @param players the players aggregate holding the root as current player.
+     * @param playerAggregate the playerAggregate aggregate holding the root as current player.
      * @param gameRoundResult the result of the played round.
      */
-    private Game(final GameRoundService gameRoundService, final PlayerAggregate players, final GameRoundResult gameRoundResult) {
+    private Game(final GameRoundService gameRoundService, final PlayerAggregate playerAggregate, final GameRoundResult gameRoundResult) {
         this.gameRoundService = gameRoundService;
-        this.players = players;
+        this.playerAggregate = playerAggregate;
         this.gameRoundResult = gameRoundResult;
     }
 
@@ -45,21 +47,23 @@ public class Game {
      * Play a new number.
      *
      * @param inputNumber the input number to play.
-     * @return [Game] a new Game object that will hold the new state of the game.
+     * @return {@link Game} a new Game object that will hold the new state of the game.
+     * @throws GameException if can not play input number in current game state.
      */
     public Game play(final InputNumber inputNumber) {
+        //TODO: replace with state pattern
         Optional.of(gameRoundResult)
-                .filter(GameRoundResult::canPlayNext)
-                .orElseThrow(() -> new IllegalStateException("Can not play after "+gameRoundResult));
+                .filter(GameRoundResult::canPlayAgain)
+                .orElseThrow(() -> new GameException("can not play after "+gameRoundResult));
 
-        Optional.of(players)
+        Optional.of(playerAggregate)
                 .filter(PlayerAggregate::isValid)
-                .orElseThrow(() -> new IllegalStateException("Can not play game when "+players));
+                .orElseThrow(() -> new GameException("can not play game when "+ playerAggregate));
 
         return Optional.of(inputNumber)
                 .filter(input -> input.canPlayNumberAfter(gameRoundResult))
-                .map(validInput -> new Game(gameRoundService, players.getNext(), gameRoundService.play(validInput)))
-                .orElseThrow(() -> new IllegalStateException("Can not play "+inputNumber+" after "+gameRoundResult));
+                .map(validInput -> new Game(gameRoundService, playerAggregate.getNext(), gameRoundService.play(validInput)))
+                .orElseThrow(() -> new GameException("can not play "+inputNumber+" after "+gameRoundResult));
     }
 
     /**
@@ -67,8 +71,8 @@ public class Game {
      *
      * @return [PlayerAggregate] player aggregate with current player as root.
      */
-    public PlayerAggregate getPlayers() {
-        return players;
+    public PlayerAggregate getPlayerAggregate() {
+        return playerAggregate;
     }
 
     /**

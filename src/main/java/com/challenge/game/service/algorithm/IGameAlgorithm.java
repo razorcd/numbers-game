@@ -6,5 +6,5 @@ import com.challenge.game.domain.OutputNumber;
 import java.util.function.Function;
 
 @FunctionalInterface
-public interface GameAlgorithm extends Function<InputNumber, OutputNumber> {
+public interface IGameAlgorithm extends Function<InputNumber, OutputNumber> {
 }
