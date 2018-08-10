@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.Assert.*;
 
 @FixMethodOrder(MethodSorters.JVM)
-public class ServerAppTest {
+public class AcceptanceTest {
 
     private static final String IP = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.ip", "127.0.0.1");
     private static final String PORT = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.port", "9999");
