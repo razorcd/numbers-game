@@ -18,8 +18,8 @@ import static org.junit.Assert.*;
 @FixMethodOrder(MethodSorters.JVM)
 public class AcceptanceTest {
 
-    private static final String IP = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.ip", "127.0.0.1");
-    private static final String PORT = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.port", "9999");
+    private static final String SERVER_IP = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.ip", "127.0.0.1");
+    private static final String SERVER_PORT = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.port", "9999");
 
     private ExecutorService executorService;
 
@@ -35,7 +35,7 @@ public class AcceptanceTest {
         Thread.sleep(400L); //for server under test to start
 
         client = new Client();
-        messenger = client.start(IP, Integer.parseInt(PORT));
+        messenger = client.start(SERVER_IP, Integer.parseInt(SERVER_PORT));
     }
 
     @After
