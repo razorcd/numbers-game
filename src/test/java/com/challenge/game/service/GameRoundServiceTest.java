@@ -6,6 +6,7 @@ import com.challenge.game.service.algorithm.WinWhenOne;
 import com.challenge.game.domain.GameRoundResult;
 import com.challenge.game.domain.InputNumber;
 import com.challenge.game.domain.OutputNumber;
+import com.challenge.game.service.algorithm.validator.DivideByThreeInputValidator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,12 +23,20 @@ public class GameRoundServiceTest {
 
 
     @Test(expected = GameRoundException.class)
-    public void playGameWithANumberBelowLimitShouldThrow() {
+    public void gameWithCustomDivideByThreeValidator_shouldplayGameWithANumberBelowLimitShouldThrow() {
+        DivideByThree divideByThree = new DivideByThree();
+        divideByThree.addValidator(new DivideByThreeInputValidator());
+        gameRoundService = new GameRoundService(divideByThree, new WinWhenOne());
+
         gameRoundService.play(new InputNumber(1));
     }
 
     @Test(expected = GameRoundException.class)
-    public void playGameWithANumberBelowZeroShouldThrow() {
+    public void gameWithCustomDivideByThreeValidator_shouldPlayGameWithANumberBelowZeroShouldThrow() {
+        DivideByThree divideByThree = new DivideByThree();
+        divideByThree.addValidator(new DivideByThreeInputValidator());
+        gameRoundService = new GameRoundService(divideByThree, new WinWhenOne());
+
         gameRoundService.play(new InputNumber(-1));
     }
 

@@ -7,9 +7,6 @@ import com.challenge.game.exception.GameRoundException;
 import com.challenge.game.service.algorithm.IGameAlgorithm;
 import com.challenge.game.service.algorithm.IWinLogic;
 
-import java.util.Optional;
-import java.util.stream.Stream;
-
 public class GameRoundService {
     private final IGameAlgorithm gameAlgorithm;
     private final IWinLogic winLogic;
@@ -32,15 +29,8 @@ public class GameRoundService {
      * @throws GameRoundException if invalid input number.
      */
     public GameRoundResult play(final InputNumber inputNumber) {
-        OutputNumber outputNumber = Stream.of(inputNumber)
-                .filter(InputNumber::isValid)
-                .map(gameAlgorithm)
-                .findFirst()
-                .orElseThrow(() -> new GameRoundException("can not play game round, invalid input number "+inputNumber));
-
-        boolean winner = Optional.of(outputNumber)
-                .map(winLogic)
-                .orElse(false);
+        OutputNumber outputNumber = gameAlgorithm.apply(inputNumber);
+        boolean winner = winLogic.apply(outputNumber);
 
         return new GameRoundResult(outputNumber, winner);
     }

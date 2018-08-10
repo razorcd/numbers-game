@@ -6,12 +6,15 @@ import com.challenge.game.domain.PlayerAggregate;
 import com.challenge.game.exception.GameException;
 import com.challenge.game.model.Player;
 import com.challenge.game.service.GameRoundService;
+import com.challenge.game.validator.CanPlayGameValidator;
+import com.challenge.game.validator.NewGameValidator;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,13 +27,6 @@ public class GameTest {
         gameRoundServiceMock = mock(GameRoundService.class);
     }
 
-    @Test(expected = GameException.class)
-    public void gameShouldNotInitializeWithInvalidAggregate() {
-        Player player1 = new Player("player1");
-        PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1), 0);
-        new Game(gameRoundServiceMock, playerAggregate);
-    }
-
     @Test
     public void gameShouldInitialize() {
         Player player1 = new Player("player1");
@@ -41,6 +37,15 @@ public class GameTest {
 
         assertEquals("New game should have NULL round result.", GameRoundResult.NULL, game.getGameRoundResult());
         assertEquals("New game should hold the player aggregate.", playerAggregate, game.getPlayerAggregate());
+    }
+
+    @Test
+    public void gameShouldInvalidate_withNewGameValidator_whenGameInitializedWithInvalidAggregate() {
+        Player player1 = new Player("player1");
+        PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1), 0);
+        Game game = new Game(gameRoundServiceMock, playerAggregate);
+        assertFalse("Game should invalidate with NewGameValidator when game initialized with invalid playerAggregate",
+                game.validate(new NewGameValidator()));
     }
 
     @Test
@@ -72,8 +77,8 @@ public class GameTest {
         Game nextGgame = new Game(gameRoundServiceMock, playerAggregate).play(inputNumber);
     }
 
-    @Test(expected = GameException.class)
-    public void gameShouldNotPlayAfterWinn() {
+    @Test
+    public void gameShouldInvalidate_withCanPlayGameValidator_afterWinning() {
         Player player1 = new Player("player1");
         Player player2 = new Player("player2");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
@@ -83,6 +88,10 @@ public class GameTest {
         when(gameRoundServiceMock.play(inputNumber)).thenReturn(gameRoundResult);
 
         Game nextGgame = new Game(gameRoundServiceMock, playerAggregate).play(inputNumber);
+
+        boolean validGameForPlaying = nextGgame.validate(new CanPlayGameValidator());
+
+        assertFalse("Should invalidate with CanPlayGameValidator after winning.", validGameForPlaying);
 
         nextGgame.play(new InputNumber(5));
     }

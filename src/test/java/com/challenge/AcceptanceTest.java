@@ -210,6 +210,26 @@ public class AcceptanceTest {
     }
 
     @Test
+    public void shouldNotPlayNegativeInput(){
+        //given
+        messenger.readNextLineSync();
+        messenger.send("ADD_PLAYER:player1");
+        messenger.readNextLineSync();
+        messenger.send("ADD_PLAYER:player2");
+        messenger.readNextLineSync();
+        messenger.send("START");
+        messenger.readNextLineSync();
+
+        //when
+        messenger.send("PLAY:-1");
+
+        //then
+        assertEquals("Should not play negative input.",
+                "ERROR: Player player2: can not play -1 after Round result: outputNumber 27, winner false.",
+                messenger.readNextLineSync());
+    }
+
+    @Test
     public void shouldBeAbleToGetCurrentStateOfNewGame(){
         //given
         messenger.readNextLineSync();
@@ -337,7 +357,7 @@ public class AcceptanceTest {
         //then
         assertThat("Should not be able to play after winning.",
                 messenger.readNextLineSync(),
-                matchesPattern("ERROR: Player player1: can not play after Round result: outputNumber 1, winner true."));
+                matchesPattern("ERROR: Player player1: can not play game when Round result: outputNumber 1, winner true."));
     }
 
     @Test

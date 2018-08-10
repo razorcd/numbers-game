@@ -6,8 +6,6 @@ import java.util.stream.Stream;
 
 public class InputNumber {
 
-    private static final int LOW_BOUNDARY = 2;
-
     private final int value;
 
     /**
@@ -17,16 +15,6 @@ public class InputNumber {
      */
     public InputNumber(final int value) {
         this.value = value;
-    }
-
-
-    /**
-     * Validates value is within expected boundaries.
-     *
-     * @return [boolean] if valid value.
-     */
-    public boolean isValid() {
-        return value >= LOW_BOUNDARY;
     }
 
     /**
@@ -44,6 +32,10 @@ public class InputNumber {
 
     public int getValue() {
         return value;
+    }
+
+    public boolean isBiggerOrEqualThan(int lowBoundary) {
+        return value >= lowBoundary;
     }
 
     public boolean hasSameValue(OutputNumber outputNumber) {

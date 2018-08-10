@@ -10,9 +10,15 @@ import com.challenge.game.service.algorithm.DivideByThree;
 import com.challenge.game.service.algorithm.IGameAlgorithm;
 import com.challenge.game.service.algorithm.IWinLogic;
 import com.challenge.game.service.algorithm.WinWhenOne;
+import com.challenge.game.service.algorithm.validator.DivideByThreeInputValidator;
+import com.challenge.game.validator.CanPlayGameValidator;
+import com.challenge.game.validator.CanPlayInputNumberGameValidator;
+import com.challenge.game.validator.NewGameValidator;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Stream;
 
 /**
  * Context class holds a mutable state of current application.
@@ -38,7 +44,12 @@ public class GameContext {
     }
 
     public void play(int number) {
-        game = game.play(new InputNumber(number));
+        game = Stream.of(game)
+                .peek(g -> g.validateOrThrow(new CanPlayGameValidator()))
+                .peek(g -> g.validateOrThrow(new CanPlayInputNumberGameValidator(new InputNumber(number))))
+                .map(g -> g.play(new InputNumber(number)))
+                .findAny()
+                .orElseThrow(() -> new RuntimeException("Error while playing number "+number+" with game "+game));
     }
 
     /**
@@ -51,13 +62,17 @@ public class GameContext {
     }
 
     private Game buildNewGame(List<Player> players) {
-        IGameAlgorithm IGameAlgorithm = new DivideByThree();
-        IWinLogic IWinLogic = new WinWhenOne();
-        GameRoundService gameRoundService = new GameRoundService(IGameAlgorithm, IWinLogic);
+        DivideByThree gameAlgorithm = new DivideByThree();
+        gameAlgorithm.addValidator(new DivideByThreeInputValidator());
+
+        IWinLogic winLogic = new WinWhenOne();
+
+        GameRoundService gameRoundService = new GameRoundService(gameAlgorithm, winLogic);
 
         PlayerAggregate playerAggregate = new PlayerAggregate(players, PlayerAggregate.DEFAULT_ROOT_INDEX);
 
-//        if (!playerAggregate.isValid()) throw new GameException("can not create a game with invalid players");
-        return new Game(gameRoundService, playerAggregate);
+        return Optional.of(new Game(gameRoundService, playerAggregate))
+                .filter(g -> g.validate(new NewGameValidator()))
+                .orElseThrow(() -> new GameException("can not create a game with invalid players"));
     }
 }

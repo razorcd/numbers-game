@@ -2,8 +2,12 @@ package com.challenge.game.service.algorithm;
 
 import com.challenge.game.domain.InputNumber;
 import com.challenge.game.domain.OutputNumber;
+import com.challenge.game.service.algorithm.validator.Validatable;
+import com.challenge.game.validator.Validator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,12 +16,21 @@ import java.util.Map;
  *
  * E.g. For input 16, it will find that by adding -1 will result in 15 and then it will divide 15 by 3 returning 5.
  */
-public class DivideByThree implements IGameAlgorithm {
+public class DivideByThree implements IGameAlgorithm, Validatable<InputNumber> {
 
     /**
      * The divider value.
      */
     private static final int DIVIDER = 3;
+
+    private final List<Validator<InputNumber>> validators;
+
+    /**
+     * Create new divide by three algorithm.
+     */
+    public DivideByThree() {
+        this.validators = new ArrayList<>();
+    }
 
     /**
      * The values that can be added to <b>input</b> to find the number that is divisible by {@link #DIVIDER}.
@@ -40,7 +53,27 @@ public class DivideByThree implements IGameAlgorithm {
      */
     @Override
     public OutputNumber apply(final InputNumber inputNumber) {
+        validateOrThrow(inputNumber);
         return new OutputNumber(getClosestDivisibleValue(inputNumber) / DIVIDER);
+    }
+
+    /**
+     * Add validator to customize current algorithm.
+     *
+     * @param validator the input number validator.
+     */
+    public void addValidator(Validator<InputNumber> validator) {
+        validators.add(validator);
+    }
+
+
+    /**
+     * Validates input number if any validators are defined.
+     *
+     * @param inputNumber input number to validate.
+     */
+    private void validateOrThrow(InputNumber inputNumber) {
+        validators.forEach(validator -> validator.validateOrThrow(inputNumber));
     }
 
     private int getClosestDivisibleValue(final InputNumber inputNumber) {
