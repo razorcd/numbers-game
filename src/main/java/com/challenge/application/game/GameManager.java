@@ -1,54 +1,69 @@
 package com.challenge.application.game;
 
-import com.challenge.application.game.Game;
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.GameException;
+import com.challenge.application.game.exception.ValidationException;
 import com.challenge.application.game.model.Player;
 import com.challenge.application.game.service.GameRoundService;
 import com.challenge.application.game.service.algorithm.DivideByThree;
 import com.challenge.application.game.service.algorithm.IWinLogic;
 import com.challenge.application.game.service.algorithm.WinWhenOne;
 import com.challenge.application.game.service.algorithm.validator.DivideByThreeInputValidator;
-import com.challenge.application.game.validator.CanPlayGameValidator;
-import com.challenge.application.game.validator.CanPlayInputNumberGameValidator;
-import com.challenge.application.game.validator.NewGameValidator;
+import com.challenge.application.game.validator.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 /**
  * Context class holds a mutable state of current application.
  */
-public class GameManager {
-
-    private Game game;
-    private List<Player> players = new CopyOnWriteArrayList<>();
+public class GameManager implements CanValidate<GameManager> {
+    private volatile AtomicReference<Game> game;
+    private volatile List<Player> players = new CopyOnWriteArrayList<>();
 
     /**
      * Build application context.
      */
     public GameManager() {
-        this.game = Game.NULL;
+        this.game = new AtomicReference<>(Game.NULL);
     }
 
-    public void addPlayer(String playerName) {
-        players.add(new Player(playerName));
+    /**
+     * Add new player.
+     *
+     * @param player player to add to player list.
+     */
+    public void addPlayer(Player player) {
+        players.add(player);
     }
 
+    /**
+     * Start playing the game with the added players.
+     */
     public void startGame() {
-        game = buildNewGame(players);
+        game.set(buildNewGame(players));
     }
 
-    public void play(int number) {
-        game = Stream.of(game)
-                .peek(g -> g.validateOrThrow(new CanPlayGameValidator()))
-                .peek(g -> g.validateOrThrow(new CanPlayInputNumberGameValidator(new InputNumber(number))))
-                .map(g -> g.play(new InputNumber(number)))
-                .findAny()
-                .orElseThrow(() -> new RuntimeException("Error while playing number "+number+" with game "+game));
+    /**
+     * Play a number.
+     *
+     * @param inputNumber the number to play.
+     * @param playerInTurn the current authorized player
+     */
+    public synchronized void play(InputNumber inputNumber, Player playerInTurn) {
+        System.out.println(playerInTurn.getId() + " =a?n= " + game.get().getPlayerAggregate().getNext().getRootPlayer().getId()+game.get().getPlayerAggregate().getNext().getRootPlayer().getName());
+        Game newGame = Stream.of(game.get())
+            .peek(g -> g.validateOrThrow(new CanPlayGameValidator()))
+            .peek(g -> g.validateOrThrow(new CanPlayInputNumberGameValidator(inputNumber)))
+            .peek(g -> g.validateOrThrow(new IsCurrentPlayerGameValidator(playerInTurn)))  //TODO: extract
+            .map(g -> g.play(inputNumber))
+            .findAny()
+            .orElseThrow(() -> new RuntimeException("Error while playing number "+inputNumber+" with game "+game));
+        game.set(newGame);
     }
 
     /**
@@ -57,7 +72,33 @@ public class GameManager {
      * @return [Game] game in current state.
      */
     public Game getGame() {
-        return game;
+        return game.get();
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    /**
+     * Validate current game manager with a validator.
+     *
+     * @param validator the validator to validate with.
+     * @return [boolean] if current game manager is valid by specified validator.
+     */
+    @Override
+    public boolean validate(Validator<GameManager> validator) {
+        return validator.validate(this);
+    }
+
+    /**
+     * Validate current game manager with a validator or throw exception.
+     *
+     * @param validator the validator to validate with.
+     * @throws ValidationException if game is invalid
+     */
+    @Override
+    public void validateOrThrow(Validator<GameManager> validator) {
+        validator.validateOrThrow(this);
     }
 
     private Game buildNewGame(List<Player> players) {

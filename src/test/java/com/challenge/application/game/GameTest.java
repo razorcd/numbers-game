@@ -29,8 +29,8 @@ public class GameTest {
 
     @Test
     public void gameShouldInitialize() {
-        Player player1 = new Player("player1");
-        Player player2 = new Player("player2");
+        Player player1 = new Player("1", "player1");
+        Player player2 = new Player("2", "player2");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
 
         Game game = new Game(gameRoundServiceMock, playerAggregate);
@@ -41,7 +41,7 @@ public class GameTest {
 
     @Test
     public void gameShouldInvalidate_withNewGameValidator_whenGameInitializedWithInvalidAggregate() {
-        Player player1 = new Player("player1");
+        Player player1 = new Player("1", "player1");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1), 0);
         Game game = new Game(gameRoundServiceMock, playerAggregate);
         assertFalse("Game should invalidate with NewGameValidator when game initialized with invalid playerAggregate",
@@ -50,8 +50,8 @@ public class GameTest {
 
     @Test
     public void gameShouldPlay() {
-        Player player1 = new Player("player1");
-        Player player2 = new Player("player2");
+        Player player1 = new Player("1", "player1");
+        Player player2 = new Player("1", "player2");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
         InputNumber inputNumber = new InputNumber(100);
 
@@ -66,21 +66,20 @@ public class GameTest {
 
     @Test(expected = GameException.class)
     public void gameShouldNotPlayInvalidInitialInput() {
-        Player player1 = new Player("player1");
-        Player player2 = new Player("player2");
+        Player player1 = new Player("1", "player1");
+        Player player2 = new Player("2", "player2");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
         InputNumber inputNumber = new InputNumber(0);
 
         when(gameRoundServiceMock.play(inputNumber)).thenThrow(GameException.class);
-
 
         Game nextGgame = new Game(gameRoundServiceMock, playerAggregate).play(inputNumber);
     }
 
     @Test
     public void gameShouldInvalidate_withCanPlayGameValidator_afterWinning() {
-        Player player1 = new Player("player1");
-        Player player2 = new Player("player2");
+        Player player1 = new Player("1", "player1");
+        Player player2 = new Player("2", "player2");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
         InputNumber inputNumber = new InputNumber(0);
 

@@ -2,6 +2,7 @@ package com.challenge.application.game;
 
 import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.InputNumber;
+import com.challenge.application.game.exception.ValidationException;
 import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.GameException;
 import com.challenge.application.game.service.GameRoundService;
@@ -12,7 +13,7 @@ import java.util.Objects;
 
 public class Game implements CanValidate<Game> {
 
-    public static final Game NULL = new Game(null, PlayerAggregate.NULL, GameRoundResult.NULL);
+    static final Game NULL = new Game(null, PlayerAggregate.NULL, GameRoundResult.NULL);
     private final GameRoundService gameRoundService;
     private final PlayerAggregate playerAggregate;
     private final GameRoundResult gameRoundResult;
@@ -36,7 +37,7 @@ public class Game implements CanValidate<Game> {
      * Consider validating game with NewGameValidator after initializing.
      *
      * @param gameRoundService the service for each game round.
-     * @param playerAggregate the playerAggregate aggregate holding the root as current player.
+     * @param playerAggregate the playerAggregate aggregate holding the root as current player (who is about to play next number).
      * @param gameRoundResult the result of the played round.
      */
     private Game(final GameRoundService gameRoundService, final PlayerAggregate playerAggregate, final GameRoundResult gameRoundResult) {
@@ -90,7 +91,7 @@ public class Game implements CanValidate<Game> {
      * Validate current game with a validator or throw exception.
      *
      * @param validator the validator to validate with.
-     * @throws com.challenge.application.game.exception.ValidationException if game is invalid
+     * @throws ValidationException if game is invalid
      */
     @Override
     public void validateOrThrow(Validator<Game> validator) {

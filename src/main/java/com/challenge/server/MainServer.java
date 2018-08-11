@@ -3,10 +3,11 @@ package com.challenge.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-public class MainServer {
+public class MainServer implements Closeable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainServer.class);
 
@@ -40,9 +41,13 @@ public class MainServer {
     /**
      * Close main server socket.
      */
-    public void stop() {
+    public void close() {
         try {
             serverSocket.close();
+            LOGGER.debug("Closing MainServer.");
+            for (;;) {
+                if(serverSocket.isClosed()) return;
+            }
         } catch (IOException e) {
             LOGGER.error("IO exception while closing main server socket.");
             throw new RuntimeException(e);

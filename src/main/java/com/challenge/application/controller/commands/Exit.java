@@ -26,6 +26,6 @@ public class Exit implements Command<String> {
      */
     @Override
     public void execute(String data) {
-        socketChannel.send("server socket shutdown");
+        socketChannel.broadcast("Goodbye.");
     }
 }

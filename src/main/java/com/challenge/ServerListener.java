@@ -5,20 +5,31 @@ import com.challenge.application.controller.mapper.UserInputDeserializer;
 import com.challenge.application.game.GameManager;
 import com.challenge.server.ServerStream;
 import com.challenge.server.SocketChannel;
+import com.challenge.server.SocketChannelRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.ServerSocket;
 
 public class ServerListener implements Runnable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServerListener.class);
+
     private ServerSocket mainServerSocket;
+    private ThreadLocal<SocketChannelRegistry> socketChannelRegistry;
+    private ThreadLocal<GameManager> gameManager;
 
     /**
      * Start listener on server socket.
      *
      * @param mainServerSocket the main server socket to connect to
      */
-    public ServerListener(ServerSocket mainServerSocket) {
+    public ServerListener(ServerSocket mainServerSocket,
+                          ThreadLocal<SocketChannelRegistry> socketChannelRegistry,
+                          ThreadLocal<GameManager> gameManager) {
         this.mainServerSocket = mainServerSocket;
+        this.socketChannelRegistry = socketChannelRegistry;
+        this.gameManager = gameManager;
     }
 
     /**
@@ -29,10 +40,11 @@ public class ServerListener implements Runnable {
     public void run() {
         try (ServerStream serverStream = new ServerStream(mainServerSocket)) {
             SocketChannel socketChannel = serverStream.start();
+            socketChannelRegistry.get().register(Thread.currentThread().getName(), socketChannel);
+            socketChannel.setActiveSocketChannels(socketChannelRegistry.get().getActiveSocketChannels());
 
-            //setup application
-            GameManager gameManager = new GameManager();
-            CommandController commandController = new CommandController(gameManager, socketChannel, new UserInputDeserializer());
+            //setup application controller
+            CommandController commandController = new CommandController(gameManager.get(), socketChannel, new UserInputDeserializer());
 
             //listen on input stream
             socketChannel.send("connected");
@@ -40,6 +52,10 @@ public class ServerListener implements Runnable {
                     .peek(commandController)
                     .filter(msg -> msg.equals("EXIT"))
                     .findAny();
+
+            LOGGER.debug("ServerListener {} shutting down.", this.hashCode());
+        } catch (Exception e) {
+            LOGGER.error("ServerListener {} exited with exception.", this.hashCode());
         }
     }
 }

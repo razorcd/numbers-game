@@ -39,7 +39,7 @@ public class State implements Command<String> {
     }
 
     private String buildFinalMessage(PlayerAggregate players, GameRoundResult currentRoundResult) {
-        return String.valueOf(players.getRootPlayer()) +
+        return players.getRootPlayer() +
                 " is next. Last " +
                 currentRoundResult;
     }

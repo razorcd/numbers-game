@@ -1,7 +1,9 @@
 package com.challenge;
 
-import com.challenge.server.MainServer;
+import com.challenge.application.game.GameManager;
 import com.challenge.application.utils.PropertiesConfigLoader;
+import com.challenge.server.MainServer;
+import com.challenge.server.SocketChannelRegistry;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 public class ServerApp {
     static {initializeGlobalConfiguration();}
 
+    private static ExecutorService executorService;
+
     private static final String PORT = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.port");
     private static final String SERVER_LISTENERS_COUNT = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.server_listeners_count");
 
@@ -23,12 +27,11 @@ public class ServerApp {
     public static void main(String[] args) {
         LOGGER.info("Starting application.");
 
-        MainServer server = new MainServer(Integer.parseInt(PORT));
-        ServerSocket mainServerSocket = server.start();
+        try(MainServer server = new MainServer(Integer.parseInt(PORT))) {
+            ServerSocket mainServerSocket = server.start();
 
-        runServerListenerThreads(mainServerSocket);
-
-        server.stop();
+            runServerListenerThreads(mainServerSocket);
+        }
 
         LOGGER.info("Application closed.");
     }
@@ -40,20 +43,32 @@ public class ServerApp {
      */
     private static void runServerListenerThreads(ServerSocket mainServerSocket) {
         int serverListenersCount = Integer.parseInt(SERVER_LISTENERS_COUNT);
-        ExecutorService executorService = new ThreadPoolExecutor(
+        executorService = new ThreadPoolExecutor(
                 serverListenersCount, serverListenersCount,0, TimeUnit.SECONDS, new LinkedBlockingDeque<>());
 
+        //initialize global game manager
+        GameManager gameManager = new GameManager();
+        SocketChannelRegistry socketChannelRegistry = new SocketChannelRegistry();
+
+        ThreadLocal<GameManager> globalGameManager = InheritableThreadLocal.withInitial(() -> gameManager);
+        ThreadLocal<SocketChannelRegistry> globalSocketChannelRegistry = InheritableThreadLocal.withInitial(() -> socketChannelRegistry);
+
         for (int i = 0; i < serverListenersCount; i++) {
-            executorService.execute(new ServerListener(mainServerSocket));
+            executorService.execute(new ServerListener(mainServerSocket, globalSocketChannelRegistry, globalGameManager));
         }
         executorService.shutdown();
 
         try {
             executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            LOGGER.error("InterruptedException while running main thread. {}", e);
-            throw new RuntimeException(e);
+//            LOGGER.error("InterruptedException while running main thread. {}", e);
+//            throw new RuntimeException(e);
         }
+    }
+
+    public static void exit() {
+        executorService.shutdownNow();
+        do {} while (executorService.isTerminated());
     }
 
     /**

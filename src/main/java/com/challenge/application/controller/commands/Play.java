@@ -1,10 +1,13 @@
 package com.challenge.application.controller.commands;
 
-import com.challenge.application.game.GameManager;
+import com.challenge.application.controller.exceptionhandler.GameExceptionHandler;
 import com.challenge.application.game.Game;
+import com.challenge.application.game.GameManager;
 import com.challenge.application.game.domain.GameRoundResult;
+import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.GameException;
+import com.challenge.application.game.model.Player;
 import com.challenge.server.SocketChannel;
 
 public class Play implements Command<String> {
@@ -26,40 +29,43 @@ public class Play implements Command<String> {
     /**
      * Execute play command.
      *
-     * @param inputNumber the played input number.
+     * @param rawInputNumber the played input number.
      */
-    @Override
-    public void execute(String inputNumber) {
+    @Override //TODO: test
+    public void execute(String rawInputNumber) {
         Game gameBeforePlay = gameManager.getGame();
-        PlayerAggregate playersBeforePlay = gameBeforePlay.getPlayerAggregate();
+        PlayerAggregate playersBeforePlay = gameBeforePlay.getPlayerAggregate();  //TODO: same as authorized?!
+        Player authorizedPlayer = new Player(Thread.currentThread().getName(), "");  //TODO: inject authorized user!!!
 
         try {
-            gameManager.play(Integer.parseInt(inputNumber));
-        } catch (GameException | NumberFormatException ex) {
-            String errMessage = buildErrorMessage(playersBeforePlay, ex);
-            socketChannel.send(errMessage);
+            gameManager.play(parseRawInputNumber(rawInputNumber), authorizedPlayer);
+        } catch (GameException ex) {
+            new GameExceptionHandler(socketChannel).handle(ex, authorizedPlayer);
             return;
         }
 
         Game gameAfterPlay = gameManager.getGame();
-        GameRoundResult playingRoundResult = gameAfterPlay.getGameRoundResult();
+        String message = buildFinalMessage(playersBeforePlay.getRootPlayer(), gameAfterPlay, rawInputNumber);
 
-        String message = buildFinalMessage(playersBeforePlay, playingRoundResult, inputNumber);
-        socketChannel.send(message);
+        socketChannel.broadcast(message);
     }
 
-    private String buildFinalMessage(PlayerAggregate playersBeforePlay, GameRoundResult playingRoundResult, String inputNumber) {
-        return String.valueOf(playersBeforePlay.getRootPlayer()) +
+    private String buildFinalMessage(Player playingCurrentPlayer, Game gameAfterPlay, String inputNumber) {
+        GameRoundResult playingRoundResult = gameAfterPlay.getGameRoundResult();
+
+        return playingCurrentPlayer +
                 " played number " +
                 inputNumber +
                 ". The result is " +
                 playingRoundResult;
     }
 
-    private String buildErrorMessage(PlayerAggregate playersBeforePlay, RuntimeException ex) {
-        return "ERROR: " +
-                playersBeforePlay.getRootPlayer() +
-                ": " +
-                ex.getMessage();
+    private InputNumber parseRawInputNumber(String rawInputNumber) {
+        try {
+            return new InputNumber(Integer.parseInt(rawInputNumber));
+        } catch (NumberFormatException ex) {
+            socketChannel.send("ERROR: "+ex.getMessage());
+        }
+        return null;
     }
 }

@@ -27,6 +27,7 @@ public class CommandController implements Consumer<String> {
         this.gameManager = gameManager;
         this.socketChannel = socketChannel;
         this.userInputDeserializer = userInputDeserializer;
+
     }
 
     /**
