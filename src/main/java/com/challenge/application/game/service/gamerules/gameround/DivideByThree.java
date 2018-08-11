@@ -1,8 +1,8 @@
-package com.challenge.application.game.service.algorithm;
+package com.challenge.application.game.service.gamerules.gameround;
 
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.OutputNumber;
-import com.challenge.application.game.service.algorithm.validator.Validatable;
+import com.challenge.application.game.service.gamerules.validator.Validatable;
 import com.challenge.application.game.validator.Validator;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * E.g. For input 16, it will find that by adding -1 will result in 15 and then it will divide 15 by 3 returning 5.
  */
-public class DivideByThree implements IGameAlgorithm, Validatable<InputNumber> {
+public class DivideByThree implements IGameRoundRule, Validatable<InputNumber> {
 
     /**
      * The divider value.

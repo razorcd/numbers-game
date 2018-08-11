@@ -1,10 +1,36 @@
 package com.challenge.application.game.domain;
 
+import com.challenge.application.utils.PropertiesConfigLoader;
+
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 
 public class OutputNumber {
 
+    private static final String FIXED_INPUT_NUMBER = PropertiesConfigLoader.getProperties().
+            getProperty("com.challenge.application.game.random_start_input_number");
+    private static final String MIN_POSSIBLE_INPUT_NUMBER = PropertiesConfigLoader.getProperties().
+            getProperty("com.challenge.application.game.min_possible_start_input_number");
+    private static final String MAX_POSSIBLE_INPUT_NUMBER = PropertiesConfigLoader.getProperties().
+            getProperty("com.challenge.application.game.max_possible_start_input_number");
+
     private final int value;
+
+    /**
+     * Get game starting number. This can be configured otherwise is random.
+     *
+     * @return [OutputNumber] game starting number.
+     */
+    public static OutputNumber getStartNumber() {
+        int minPossibleInputNumber = Integer.parseInt(MIN_POSSIBLE_INPUT_NUMBER);
+        int maxPossibleInputNumber = Integer.parseInt(MAX_POSSIBLE_INPUT_NUMBER);
+
+        int inputNumberValue = Optional.ofNullable(FIXED_INPUT_NUMBER)
+                .map(Integer::parseInt)
+                .orElse(getRondomIntBetween(minPossibleInputNumber, maxPossibleInputNumber));
+        return new OutputNumber(inputNumberValue);
+    }
 
     /**
      * Initialise a value object for game round output.
@@ -39,5 +65,9 @@ public class OutputNumber {
     @Override
     public String toString() {
         return String.valueOf(value);
+    }
+
+    private static int getRondomIntBetween(int minPossibleInputNumber, int maxPossibleInputNumber) {
+        return new Random().nextInt(maxPossibleInputNumber-minPossibleInputNumber) + minPossibleInputNumber;
     }
 }

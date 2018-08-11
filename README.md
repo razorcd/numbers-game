@@ -127,12 +127,30 @@ mvn test
 ```
 
 ### Todo
- - [ ] implement logic for the computer to play alone.
  - [ ] add feature for player to choose -1, 0 or 1 instead of the server to calculate the next valid input (like it's now implemented) 
  - [ ] define a better interface for Game module to reduce the leaking in controller.
  - [ ] allow ip and port to be overwritten with the command args, not only file configuration. 
- 
+ - [ ] global properties class
 ### Other 
  This was done in about 5 days so far, including the small server implementation.
  
  
+
+
+Design patterns I used on application:
+ - observer
+ - strategy
+ - factory !
+ - visitor
+ - command
+ - chain of responsibility (middleware)
+ - singleton (global configurable properties)
+ - mediator (like controller)
+ - memento (GameManager holds state of games. Can hold history)
+ builder?
+
+- and of course composition over inheritance where applicable and di.
+
+Game, gameround are immutable and can be streamed through a reducer. (functional programming style)
+
+reduce functional for readability

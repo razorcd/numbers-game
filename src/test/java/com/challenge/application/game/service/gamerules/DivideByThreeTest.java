@@ -1,7 +1,9 @@
-package com.challenge.application.game.service.algorithm;
+package com.challenge.application.game.service.gamerules;
 
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.OutputNumber;
+import com.challenge.application.game.service.gamerules.gameround.DivideByThree;
+import com.challenge.application.game.service.gamerules.gameround.IGameRoundRule;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,7 +11,7 @@ import static org.junit.Assert.*;
 
 public class DivideByThreeTest {
 
-    private IGameAlgorithm divideByThree;
+    private IGameRoundRule divideByThree;
 
     @Before
     public void setUp() throws Exception {

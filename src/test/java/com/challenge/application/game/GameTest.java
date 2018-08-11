@@ -4,7 +4,7 @@ import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.GameException;
-import com.challenge.application.game.model.Player;
+import com.challenge.application.game.model.Human;
 import com.challenge.application.game.service.GameRoundService;
 import com.challenge.application.game.validator.CanPlayGameValidator;
 import com.challenge.application.game.validator.NewGameValidator;
@@ -29,8 +29,8 @@ public class GameTest {
 
     @Test
     public void gameShouldInitialize() {
-        Player player1 = new Player("1", "player1");
-        Player player2 = new Player("2", "player2");
+        Human player1 = new Human("1", "player1");
+        Human player2 = new Human("2", "player2");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
 
         Game game = new Game(gameRoundServiceMock, playerAggregate);
@@ -41,7 +41,7 @@ public class GameTest {
 
     @Test
     public void gameShouldInvalidate_withNewGameValidator_whenGameInitializedWithInvalidAggregate() {
-        Player player1 = new Player("1", "player1");
+        Human player1 = new Human("1", "player1");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1), 0);
         Game game = new Game(gameRoundServiceMock, playerAggregate);
         assertFalse("Game should invalidate with NewGameValidator when game initialized with invalid playerAggregate",
@@ -50,8 +50,8 @@ public class GameTest {
 
     @Test
     public void gameShouldPlay() {
-        Player player1 = new Player("1", "player1");
-        Player player2 = new Player("1", "player2");
+        Human player1 = new Human("1", "player1");
+        Human player2 = new Human("1", "player2");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
         InputNumber inputNumber = new InputNumber(100);
 
@@ -66,8 +66,8 @@ public class GameTest {
 
     @Test(expected = GameException.class)
     public void gameShouldNotPlayInvalidInitialInput() {
-        Player player1 = new Player("1", "player1");
-        Player player2 = new Player("2", "player2");
+        Human player1 = new Human("1", "player1");
+        Human player2 = new Human("2", "player2");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
         InputNumber inputNumber = new InputNumber(0);
 
@@ -78,8 +78,8 @@ public class GameTest {
 
     @Test
     public void gameShouldInvalidate_withCanPlayGameValidator_afterWinning() {
-        Player player1 = new Player("1", "player1");
-        Player player2 = new Player("2", "player2");
+        Human player1 = new Human("1", "player1");
+        Human player2 = new Human("2", "player2");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
         InputNumber inputNumber = new InputNumber(0);
 

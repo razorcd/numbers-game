@@ -2,7 +2,8 @@ package com.challenge.application.game.validator;
 
 import com.challenge.application.game.GameManager;
 import com.challenge.application.game.exception.ValidationException;
-import com.challenge.application.game.model.Player;
+import com.challenge.application.game.model.Human;
+import com.challenge.application.game.model.IPlayer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,11 +23,11 @@ public class UniquePlayerValidatorTest {
     private UniquePlayerValidator uniquePlayerValidator;
 
     private GameManager gameManager;
-    private Player newPlayer;
+    private IPlayer newPlayer;
 
     @Before
     public void setUp() throws Exception {
-        newPlayer = new Player("id1", "name1");
+        newPlayer = new Human("id1", "name1");
         gameManager = mock(GameManager.class);
 
         uniquePlayerValidator = new UniquePlayerValidator(newPlayer);
@@ -35,7 +36,7 @@ public class UniquePlayerValidatorTest {
     @Test
     public void shouldInvalidateWhenPlayerAlreadyExists() {
         when(gameManager.getPlayers())
-                .thenReturn(Arrays.asList(new Player("id1", "n1"), new Player("otherId2", "n2")));
+                .thenReturn(Arrays.asList(new Human("id1", "n1"), new Human("otherId2", "n2")));
 
         boolean result = uniquePlayerValidator.validate(gameManager);
 
@@ -48,7 +49,7 @@ public class UniquePlayerValidatorTest {
     @Test
     public void shouldValidateWhenPlayerDoesNotAlreadyExist() {
         when(gameManager.getPlayers())
-                .thenReturn(Arrays.asList(new Player("otherId1", "n1"), new Player("otherId2", "n2")));
+                .thenReturn(Arrays.asList(new Human("otherId1", "n1"), new Human("otherId2", "n2")));
 
         boolean result = uniquePlayerValidator.validate(gameManager);
 
@@ -60,7 +61,7 @@ public class UniquePlayerValidatorTest {
     @Test(expected = ValidationException.class)
     public void shouldThrowWhenPlayerAlreadyExists() {
         when(gameManager.getPlayers())
-                .thenReturn(Arrays.asList(new Player("id1", "n1"), new Player("otherId2", "n2")));
+                .thenReturn(Arrays.asList(new Human("id1", "n1"), new Human("otherId2", "n2")));
 
         uniquePlayerValidator.validateOrThrow(gameManager);
 

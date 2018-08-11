@@ -1,33 +1,37 @@
 package com.challenge.application.controller.commands;
 
 import com.challenge.application.game.GameManager;
+import com.challenge.application.game.model.Machine;
 import com.challenge.server.SocketChannel;
 
-public class Exit extends ChainableCommand<String> {
+public class AddMachine extends ChainableCommand<String> {
 
     private GameManager gameManager;
     private SocketChannel socketChannel;
 
     /**
-     * Exit command.
+     * Add new machine player command.
      *
      * @param gameManager holds the state of the application.
      * @param socketChannel socket adapter.
      */
-    public Exit(GameManager gameManager, SocketChannel socketChannel) {
+    public AddMachine(GameManager gameManager, SocketChannel socketChannel) {
         this.gameManager = gameManager;
         this.socketChannel = socketChannel;
     }
 
     /**
-     * Execute exit command.
+     * Execute add new machine player command.
      *
      * @param data the input data.
      */
     @Override
     public void execute(String data) {
-        socketChannel.broadcast("Goodbye.");
-//TODO: remove yourself from game and reset game
+        Machine newPlayer = Machine.generate();
+
+        gameManager.addPlayer(newPlayer);
+        socketChannel.broadcast("Added AI player " + newPlayer.getName() + " to game.");
+
         doNext(data);
     }
 }

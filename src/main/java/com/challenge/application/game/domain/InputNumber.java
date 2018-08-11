@@ -1,21 +1,10 @@
 package com.challenge.application.game.domain;
 
 
-import com.challenge.application.utils.PropertiesConfigLoader;
-
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Stream;
 
 public class InputNumber {
-
-    private static final String FIXED_INPUT_NUMBER = PropertiesConfigLoader.getProperties().
-            getProperty("com.challenge.application.game.random_start_input_number");
-    private static final String MIN_POSSIBLE_INPUT_NUMBER = PropertiesConfigLoader.getProperties().
-            getProperty("com.challenge.application.game.min_possible_start_input_number");
-    private static final String MAX_POSSIBLE_INPUT_NUMBER = PropertiesConfigLoader.getProperties().
-            getProperty("com.challenge.application.game.max_possible_start_input_number");
 
     private final int value;
 
@@ -28,15 +17,6 @@ public class InputNumber {
         this.value = value;
     }
 
-    public static InputNumber getStartNumber() {
-        int minPossibleInputNumber = Integer.parseInt(MIN_POSSIBLE_INPUT_NUMBER);
-        int maxPossibleInputNumber = Integer.parseInt(MAX_POSSIBLE_INPUT_NUMBER);
-
-        int inputNumberValue = Optional.ofNullable(FIXED_INPUT_NUMBER)
-                .map(Integer::parseInt)
-                .orElse(getRondomIntBetween(minPossibleInputNumber, maxPossibleInputNumber));
-        return new InputNumber(inputNumberValue);
-    }
 
     /**
      * Validate current input number is playable after specified game round result.
@@ -79,9 +59,5 @@ public class InputNumber {
     @Override
     public String toString() {
         return String.valueOf(value);
-    }
-
-    private static int getRondomIntBetween(int minPossibleInputNumber, int maxPossibleInputNumber) {
-        return new Random().nextInt(maxPossibleInputNumber-minPossibleInputNumber) + minPossibleInputNumber;
     }
 }

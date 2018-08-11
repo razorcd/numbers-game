@@ -7,10 +7,12 @@ import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.GameException;
-import com.challenge.application.game.model.Player;
+import com.challenge.application.game.model.Human;
+import com.challenge.application.game.model.IPlayer;
+import com.challenge.application.game.service.ai.DividableByThreeAi;
 import com.challenge.server.SocketChannel;
 
-public class Play implements Command<String> {
+public class Play extends ChainableCommand<String> {
 
     private GameManager gameManager;
     private SocketChannel socketChannel;
@@ -33,12 +35,14 @@ public class Play implements Command<String> {
      */
     @Override //TODO: test
     public void execute(String rawInputNumber) {
+        IPlayer authorizedPlayer = new Human(Thread.currentThread().getName(), "");  //TODO: inject authorized user!!!
+        InputNumber parsedRawInputNumber = parseRawInputNumber(rawInputNumber);
+
         Game gameBeforePlay = gameManager.getGame();
         PlayerAggregate playersBeforePlay = gameBeforePlay.getPlayerAggregate();  //TODO: same as authorized?!
-        Player authorizedPlayer = new Player(Thread.currentThread().getName(), "");  //TODO: inject authorized user!!!
 
         try {
-            gameManager.play(parseRawInputNumber(rawInputNumber), authorizedPlayer);
+            gameManager.play(parsedRawInputNumber, authorizedPlayer);
         } catch (GameException ex) {
             new GameExceptionHandler(socketChannel).handle(ex, authorizedPlayer);
             return;
@@ -48,9 +52,12 @@ public class Play implements Command<String> {
         String message = buildFinalMessage(playersBeforePlay.getRootPlayer(), gameAfterPlay, rawInputNumber);
 
         socketChannel.broadcast(message);
+
+        GameRoundResult gameRoundResultAfterPlay = gameAfterPlay.getGameRoundResult();
+        doNext(String.valueOf(gameRoundResultAfterPlay.getOutputNumber().getValue()));
     }
 
-    private String buildFinalMessage(Player playingCurrentPlayer, Game gameAfterPlay, String inputNumber) {
+    private String buildFinalMessage(IPlayer playingCurrentPlayer, Game gameAfterPlay, String inputNumber) {
         GameRoundResult playingRoundResult = gameAfterPlay.getGameRoundResult();
 
         return playingCurrentPlayer +
@@ -60,6 +67,7 @@ public class Play implements Command<String> {
                 playingRoundResult;
     }
 
+    //TODO: extract
     private InputNumber parseRawInputNumber(String rawInputNumber) {
         try {
             return new InputNumber(Integer.parseInt(rawInputNumber));

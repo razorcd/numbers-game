@@ -2,7 +2,7 @@ package com.challenge.application.game.validator;
 
 import com.challenge.application.game.GameManager;
 import com.challenge.application.game.exception.ValidationException;
-import com.challenge.application.game.model.Player;
+import com.challenge.application.game.model.IPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +12,9 @@ public class UniquePlayerValidator implements Validator<GameManager> {
     static final String NOT_UNQUE_MSG = "can not add another player.";
 
     private List<String> messages = new ArrayList<>();
-    private Player newPlayer;
+    private IPlayer newPlayer;
 
-    public UniquePlayerValidator(Player newPlayer) {
+    public UniquePlayerValidator(IPlayer newPlayer) {
         this.newPlayer = newPlayer;
     }
 
@@ -49,7 +49,7 @@ public class UniquePlayerValidator implements Validator<GameManager> {
         return messages;
     }
 
-    private boolean isUniqueNewPlayer(List<Player> players, Player newPlayer) {
+    private boolean isUniqueNewPlayer(List<IPlayer> players, IPlayer newPlayer) {
         return !players.stream()
                 .anyMatch(player -> player.isSame(newPlayer));
     }

@@ -1,6 +1,7 @@
 package com.challenge.application.game.domain;
 
-import com.challenge.application.game.model.Player;
+import com.challenge.application.game.model.Human;
+import com.challenge.application.game.model.IPlayer;
 import com.challenge.application.utils.PropertiesConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ public class PlayerAggregate {
     public static final PlayerAggregate NULL = new PlayerAggregate(Collections.emptyList(), -1);
     private static final int PLAYER_COUNT = 2;
 
-    private final List<Player> players;
+    private final List<IPlayer> players;
     private final int rootIndex;
 
     /**
@@ -29,7 +30,7 @@ public class PlayerAggregate {
      * @param players list of available players.
      * @param rootIndex the index of the root player from the players list representing current player.
      */
-    public PlayerAggregate(List<Player> players, int rootIndex) {
+    public PlayerAggregate(List<IPlayer> players, int rootIndex) {
         this.players = players;
         this.rootIndex = rootIndex;
     }
@@ -39,11 +40,11 @@ public class PlayerAggregate {
      *
      * @return [Player] root player.
      */
-    public Player getRootPlayer() {
+    public IPlayer getRootPlayer() {
         return Optional.of(rootIndex)
                 .filter(this::isValidRootIndex)
                 .map(players::get)
-                .orElse(Player.NULL);
+                .orElse(Human.NULL);
     }
 
     /**

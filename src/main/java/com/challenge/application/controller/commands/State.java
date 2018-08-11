@@ -6,7 +6,7 @@ import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.server.SocketChannel;
 
-public class State implements Command<String> {
+public class State extends ChainableCommand<String> {
 
     private GameManager gameManager;
     private SocketChannel socketChannel;
@@ -36,6 +36,8 @@ public class State implements Command<String> {
 
         String finalMessage = buildFinalMessage(players, currentRoundResult);
         socketChannel.send(finalMessage);
+
+        doNext(data);
     }
 
     private String buildFinalMessage(PlayerAggregate players, GameRoundResult currentRoundResult) {

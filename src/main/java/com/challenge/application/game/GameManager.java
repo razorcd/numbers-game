@@ -1,15 +1,16 @@
 package com.challenge.application.game;
 
+import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.GameException;
 import com.challenge.application.game.exception.ValidationException;
-import com.challenge.application.game.model.Player;
+import com.challenge.application.game.model.IPlayer;
 import com.challenge.application.game.service.GameRoundService;
-import com.challenge.application.game.service.algorithm.DivideByThree;
-import com.challenge.application.game.service.algorithm.IWinLogic;
-import com.challenge.application.game.service.algorithm.WinWhenOne;
-import com.challenge.application.game.service.algorithm.validator.DivideByThreeInputValidator;
+import com.challenge.application.game.service.gamerules.gameround.DivideByThree;
+import com.challenge.application.game.service.gamerules.gamewinlogic.IGameWinLogic;
+import com.challenge.application.game.service.gamerules.gamewinlogic.WinWhenOne;
+import com.challenge.application.game.service.gamerules.validator.DivideByThreeInputValidator;
 import com.challenge.application.game.validator.*;
 
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.stream.Stream;
  */
 public class GameManager implements CanValidate<GameManager> {
     private volatile AtomicReference<Game> game;
-    private volatile List<Player> players = new CopyOnWriteArrayList<>();
+    private volatile List<IPlayer> players = new CopyOnWriteArrayList<>();
 
     /**
      * Build application context.
@@ -37,7 +38,7 @@ public class GameManager implements CanValidate<GameManager> {
      *
      * @param player player to add to player list.
      */
-    public void addPlayer(Player player) {
+    public void addPlayer(IPlayer player) {
         players.add(player);
     }
 
@@ -54,12 +55,12 @@ public class GameManager implements CanValidate<GameManager> {
      * @param inputNumber the number to play.
      * @param playerInTurn the current authorized player
      */
-    public synchronized void play(InputNumber inputNumber, Player playerInTurn) {
+    public synchronized void play(InputNumber inputNumber, IPlayer playerInTurn) {
         System.out.println(playerInTurn.getId() + " =a?n= " + game.get().getPlayerAggregate().getNext().getRootPlayer().getId()+game.get().getPlayerAggregate().getNext().getRootPlayer().getName());
         Game newGame = Stream.of(game.get())
             .peek(g -> g.validateOrThrow(new CanPlayGameValidator()))
+            .peek(g -> g.validateOrThrow(new IsCurrentPlayerGameValidator(playerInTurn)))
             .peek(g -> g.validateOrThrow(new CanPlayInputNumberGameValidator(inputNumber)))
-            .peek(g -> g.validateOrThrow(new IsCurrentPlayerGameValidator(playerInTurn)))  //TODO: extract
             .map(g -> g.play(inputNumber))
             .findAny()
             .orElseThrow(() -> new RuntimeException("Error while playing number "+inputNumber+" with game "+game));
@@ -75,7 +76,7 @@ public class GameManager implements CanValidate<GameManager> {
         return game.get();
     }
 
-    public List<Player> getPlayers() {
+    public List<IPlayer> getPlayers() {
         return players;
     }
 
@@ -101,17 +102,16 @@ public class GameManager implements CanValidate<GameManager> {
         validator.validateOrThrow(this);
     }
 
-    private Game buildNewGame(List<Player> players) {
+    private Game buildNewGame(List<IPlayer> players) {
         DivideByThree gameAlgorithm = new DivideByThree();
         gameAlgorithm.addValidator(new DivideByThreeInputValidator());
-
-        IWinLogic winLogic = new WinWhenOne();
+        IGameWinLogic winLogic = new WinWhenOne();
 
         GameRoundService gameRoundService = new GameRoundService(gameAlgorithm, winLogic);
 
         PlayerAggregate playerAggregate = new PlayerAggregate(players, PlayerAggregate.DEFAULT_ROOT_INDEX);
 
-        return Optional.of(new Game(gameRoundService, playerAggregate))
+        return Optional.of(new Game(gameRoundService, playerAggregate, GameRoundResult.INITIAL))
                 .filter(g -> g.validate(new NewGameValidator()))
                 .orElseThrow(() -> new GameException("can not create a game with invalid players"));
     }

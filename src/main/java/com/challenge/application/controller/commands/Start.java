@@ -1,16 +1,15 @@
 package com.challenge.application.controller.commands;
 
 import com.challenge.application.controller.exceptionhandler.GameExceptionHandler;
-import com.challenge.application.game.GameManager;
 import com.challenge.application.game.Game;
+import com.challenge.application.game.GameManager;
 import com.challenge.application.game.domain.GameRoundResult;
-import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.GameException;
-import com.challenge.application.game.model.Player;
+import com.challenge.application.game.model.Human;
 import com.challenge.server.SocketChannel;
 
-public class Start implements Command<String> {
+public class Start extends ChainableCommand<String> {
 
     private GameManager gameManager;
     private SocketChannel socketChannel;
@@ -33,7 +32,7 @@ public class Start implements Command<String> {
      */
     @Override
     public void execute(String data) {
-        Player authorizedCurrentPlayer = new Player(Thread.currentThread().getName(), "");
+        Human authorizedCurrentPlayer = new Human(Thread.currentThread().getName(), "");
         try {
             gameManager.startGame();
         } catch (GameException e) {
@@ -41,28 +40,23 @@ public class Start implements Command<String> {
             return;
         }
 
-        Game gameBeforePlay = gameManager.getGame();
-        InputNumber beginningInputNumber = InputNumber.getStartNumber();
-        try {
-            gameManager.play(beginningInputNumber, authorizedCurrentPlayer);
-        } catch (GameException ex) {
-            new GameExceptionHandler(socketChannel).handle(ex, authorizedCurrentPlayer);
-        }
-
-        Game gameAfterPlay = gameManager.getGame();
-        String finalMessage = buildFinalMessage(gameBeforePlay, gameAfterPlay, beginningInputNumber);
+        Game gameAfterStart = gameManager.getGame();
+        String finalMessage = buildFinalMessage(gameAfterStart);
 
         socketChannel.broadcast(finalMessage);
+
+        GameRoundResult gameRoundResultAfterStart = gameAfterStart.getGameRoundResult();
+        doNext(String.valueOf(gameRoundResultAfterStart.getOutputNumber().getValue()));
     }
 
-    private String buildFinalMessage(Game beforePlay, Game afterPlay, InputNumber beginningInputNumber) {
-        PlayerAggregate playersBeforePlay = beforePlay.getPlayerAggregate();
-        GameRoundResult gameRoundEndResult = afterPlay.getGameRoundResult();
+    private String buildFinalMessage(Game gameAfterStart) {
+        PlayerAggregate playerAfterStart = gameAfterStart.getPlayerAggregate();
+        GameRoundResult gameRoundEndResult = gameAfterStart.getGameRoundResult();
 
-        return playersBeforePlay.getRootPlayer() +
-                " started game and played a random number " +
-                beginningInputNumber +
-                ". The result is " +
-                gameRoundEndResult;
+        return "Game started. The starting number is " +
+                gameRoundEndResult.getOutputNumber() +
+                "." +
+                " Next to play is " + playerAfterStart.getRootPlayer() +
+                ".";
     }
 }

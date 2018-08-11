@@ -1,4 +1,4 @@
-package com.challenge.application.game.service.algorithm.validator;
+package com.challenge.application.game.service.gamerules.validator;
 
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.exception.GameRoundException;

@@ -1,7 +1,7 @@
 package com.challenge.application.controller.exceptionhandler;
 
 import com.challenge.application.game.exception.GameException;
-import com.challenge.application.game.model.Player;
+import com.challenge.application.game.model.IPlayer;
 import com.challenge.server.SocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +22,13 @@ public class GameExceptionHandler implements ExceptionHandler<GameException> {
      * @param currentPlayer the authorized current player
      */
     @Override
-    public void handle(GameException ex, Player currentPlayer) {
+    public void handle(GameException ex, IPlayer currentPlayer) {
         LOGGER.debug("GameException for player {}. Error message: {}.", currentPlayer, ex.getMessage());
         String errMessage = buildErrorMessage(ex, currentPlayer);
         socketChannel.send(errMessage);
     }
 
-    private String buildErrorMessage(GameException ex, Player currentPlayer) {
+    private String buildErrorMessage(GameException ex, IPlayer currentPlayer) {
         return "ERROR: " +
 //                player +
 //                ": " +

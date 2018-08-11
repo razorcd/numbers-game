@@ -4,21 +4,21 @@ import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.OutputNumber;
 import com.challenge.application.game.exception.GameRoundException;
-import com.challenge.application.game.service.algorithm.IGameAlgorithm;
-import com.challenge.application.game.service.algorithm.IWinLogic;
+import com.challenge.application.game.service.gamerules.gameround.IGameRoundRule;
+import com.challenge.application.game.service.gamerules.gamewinlogic.IGameWinLogic;
 
 public class GameRoundService {
-    private final IGameAlgorithm gameAlgorithm;
-    private final IWinLogic winLogic;
+    private final IGameRoundRule gameRoundRule;
+    private final IGameWinLogic winLogic;
 
     /**
      * Initialize game round.
      *
-     * @param gameAlgorithm the algorithm that will generate the game output of the played round.
+     * @param gameRoundRule the algorithm that will generate the game output of the played round.
      * @param winLogic the logic that determines if played round is a win.
      */
-    public GameRoundService(final IGameAlgorithm gameAlgorithm, final IWinLogic winLogic) {
-        this.gameAlgorithm = gameAlgorithm;
+    public GameRoundService(final IGameRoundRule gameRoundRule, final IGameWinLogic winLogic) {
+        this.gameRoundRule = gameRoundRule;
         this.winLogic = winLogic;
     }
 
@@ -29,7 +29,7 @@ public class GameRoundService {
      * @throws GameRoundException if invalid input number.
      */
     public GameRoundResult play(final InputNumber inputNumber) {
-        OutputNumber outputNumber = gameAlgorithm.apply(inputNumber);
+        OutputNumber outputNumber = gameRoundRule.apply(inputNumber);
         boolean winner = winLogic.apply(outputNumber);
 
         return new GameRoundResult(outputNumber, winner);

@@ -1,12 +1,10 @@
 package com.challenge.application.game.validator;
 
 import com.challenge.application.game.Game;
-import com.challenge.application.game.domain.GameRoundResult;
-import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.PlayerAggregate;
-import com.challenge.application.game.exception.GameException;
 import com.challenge.application.game.exception.NotCurrentPlayerException;
-import com.challenge.application.game.model.Player;
+import com.challenge.application.game.model.Human;
+import com.challenge.application.game.model.IPlayer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,13 +19,13 @@ import static org.mockito.Mockito.when;
 public class IsCurrentPlayerGameValidatorTest {
 
     private IsCurrentPlayerGameValidator isCurrentPlayerGameValidator;
-    private Player player;
+    private IPlayer player;
     private Game game;
 
     @Before
     public void setUp() throws Exception {
         isCurrentPlayerGameValidator = mock(IsCurrentPlayerGameValidator.class);
-        player = new Player("id1", "some name");
+        player = new Human("id1", "some name");
         game = mock(Game.class);
 
         isCurrentPlayerGameValidator = new IsCurrentPlayerGameValidator(player);
@@ -35,7 +33,7 @@ public class IsCurrentPlayerGameValidatorTest {
 
     @Test
     public void shouldInvalidateWhenPlayerHasDifferentId() {
-        PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(new Player("other id1", "p1"), new Player("other id2", "p2")), 0);
+        PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(new Human("other id1", "p1"), new Human("other id2", "p2")), 0);
         when(game.getPlayerAggregate()).thenReturn(playerAggregate);
 
         boolean result = isCurrentPlayerGameValidator.validate(game);
@@ -49,7 +47,7 @@ public class IsCurrentPlayerGameValidatorTest {
     @Test
     public void shouldInvalidateWhenPlayerHasSameIdWithNotNextInTurnPlayer() {
         PlayerAggregate playerAggregate = new PlayerAggregate(
-                Arrays.asList(new Player("other id2", "p2"), new Player("id1", "p1")), 0);
+                Arrays.asList(new Human("other id2", "p2"), new Human("id1", "p1")), 0);
         when(game.getPlayerAggregate()).thenReturn(playerAggregate);
 
         boolean result = isCurrentPlayerGameValidator.validate(game);
@@ -63,7 +61,7 @@ public class IsCurrentPlayerGameValidatorTest {
     @Test
     public void shouldValidateWhenPlayerHasSameIdWithNextInTurnPlayer() {
         PlayerAggregate playerAggregate = new PlayerAggregate(
-                Arrays.asList(new Player("id1", "p1"), new Player("other id2", "p2")), 0);
+                Arrays.asList(new Human("id1", "p1"), new Human("other id2", "p2")), 0);
         when(game.getPlayerAggregate()).thenReturn(playerAggregate);
 
         boolean result = isCurrentPlayerGameValidator.validate(game);
@@ -76,7 +74,7 @@ public class IsCurrentPlayerGameValidatorTest {
     @Test(expected = NotCurrentPlayerException.class)
     public void shouldThrowWhenPlayerHasSameIdWithNotNextInTurnPlayer() {
         PlayerAggregate playerAggregate = new PlayerAggregate(
-                Arrays.asList(new Player("other id2", "p2"), new Player("id1", "p1")), 0);
+                Arrays.asList(new Human("other id2", "p2"), new Human("id1", "p1")), 0);
         when(game.getPlayerAggregate()).thenReturn(playerAggregate);
 
         isCurrentPlayerGameValidator.validateOrThrow(game);

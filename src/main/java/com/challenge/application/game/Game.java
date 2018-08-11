@@ -40,7 +40,7 @@ public class Game implements CanValidate<Game> {
      * @param playerAggregate the playerAggregate aggregate holding the root as current player (who is about to play next number).
      * @param gameRoundResult the result of the played round.
      */
-    private Game(final GameRoundService gameRoundService, final PlayerAggregate playerAggregate, final GameRoundResult gameRoundResult) {
+    public Game(final GameRoundService gameRoundService, final PlayerAggregate playerAggregate, final GameRoundResult gameRoundResult) {
         this.gameRoundService = gameRoundService;
         this.playerAggregate = playerAggregate;
         this.gameRoundResult = gameRoundResult;

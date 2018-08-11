@@ -3,7 +3,7 @@ package com.challenge.application.game.validator;
 import com.challenge.application.game.Game;
 import com.challenge.application.game.exception.NotCurrentPlayerException;
 import com.challenge.application.game.exception.ValidationException;
-import com.challenge.application.game.model.Player;
+import com.challenge.application.game.model.IPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +15,14 @@ public class IsCurrentPlayerGameValidator implements Validator<Game> {
 
     private List<String> messages = new ArrayList<>();
 
-    private Player expectedPlayer;
+    private IPlayer expectedPlayer;
 
     /**
      * Create validator to validate if current player is next to play.
      *
      * @param expectedPlayer the expected current player
      */
-    public IsCurrentPlayerGameValidator(Player expectedPlayer) {
+    public IsCurrentPlayerGameValidator(IPlayer expectedPlayer) {
         this.expectedPlayer = expectedPlayer;
     }
 
@@ -57,7 +57,7 @@ public class IsCurrentPlayerGameValidator implements Validator<Game> {
         return messages;
     }
 
-    private boolean isNextTurnPlayer(Game game, Player expectedCurrentPlayer) {
+    private boolean isNextTurnPlayer(Game game, IPlayer expectedCurrentPlayer) {
         return Optional.of(game.getPlayerAggregate())
                 .map(agg -> agg.getRootPlayer())
                 .filter(rootPlayer -> rootPlayer.isSame(expectedCurrentPlayer))

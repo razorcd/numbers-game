@@ -15,7 +15,7 @@ public class NewGameValidator implements Validator<Game> {
     private List<String> messages = new ArrayList<>();
 
     /**
-     * Check if game initialization is valid.
+     * Check if game initialization is valid by checking there are enough players.
      * If game is invalid, error messages will be set to current state.
      *
      * @param game the game to validate.
@@ -29,6 +29,7 @@ public class NewGameValidator implements Validator<Game> {
 
     /**
      * Check if game initialization is valid or throw exception.
+     * Game initialization is valid if there are enough players.
      *
      * @param game the game to validate.
      * @throws ValidationException if game initialization failed.

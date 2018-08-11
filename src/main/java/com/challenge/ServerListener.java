@@ -53,9 +53,9 @@ public class ServerListener implements Runnable {
                     .filter(msg -> msg.equals("EXIT"))
                     .findAny();
 
-            LOGGER.debug("ServerListener {} shutting down.", this.hashCode());
+            LOGGER.debug("ServerListener shutting down.");
         } catch (Exception e) {
-            LOGGER.error("ServerListener {} exited with exception.", this.hashCode());
+            LOGGER.error("ServerListener {} exited with exception.", e);
         }
     }
 }

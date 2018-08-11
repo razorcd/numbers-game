@@ -5,6 +5,7 @@ import java.util.Objects;
 public class GameRoundResult {
 
     public static final GameRoundResult NULL = new GameRoundResult(null, false);
+    public static final GameRoundResult INITIAL = new GameRoundResult(OutputNumber.getStartNumber(), false);
 
     private final OutputNumber outputNumber;
     private final boolean winner;

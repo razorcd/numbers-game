@@ -1,8 +1,8 @@
-package com.challenge.application.game.service.algorithm;
+package com.challenge.application.game.service.gamerules.gamewinlogic;
 
 import com.challenge.application.game.domain.OutputNumber;
 
-public class WinWhenOne implements IWinLogic {
+public class WinWhenOne implements IGameWinLogic {
 
     private static final OutputNumber WINNING_VALUE = new OutputNumber(1);
 

@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
@@ -83,6 +84,10 @@ public class SocketChannel {
                 .peek(msg -> LOGGER.info("Received message: {}", msg))
                 .findFirst()
                 .orElse("stream closed");
+    }
+
+    public Iterator<String> getInputiterator() {
+        return getValidInputStream().iterator();
     }
 
     public boolean inputIsEmpty() {

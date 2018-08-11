@@ -1,6 +1,6 @@
 package com.challenge.application.controller.exceptionhandler;
 
-import com.challenge.application.game.model.Player;
+import com.challenge.application.game.model.IPlayer;
 
 public interface ExceptionHandler<E extends RuntimeException> {
 
@@ -10,5 +10,5 @@ public interface ExceptionHandler<E extends RuntimeException> {
      * @param ex the exception to handle
      * @param currentPlayer the current player
      */
-    void handle(E ex, Player currentPlayer);
+    void handle(E ex, IPlayer currentPlayer);
 }

@@ -1,12 +1,12 @@
 package com.challenge.application.game.service;
 
 import com.challenge.application.game.exception.GameRoundException;
-import com.challenge.application.game.service.algorithm.DivideByThree;
-import com.challenge.application.game.service.algorithm.WinWhenOne;
+import com.challenge.application.game.service.gamerules.gameround.DivideByThree;
+import com.challenge.application.game.service.gamerules.gamewinlogic.WinWhenOne;
 import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.OutputNumber;
-import com.challenge.application.game.service.algorithm.validator.DivideByThreeInputValidator;
+import com.challenge.application.game.service.gamerules.validator.DivideByThreeInputValidator;
 import org.junit.Before;
 import org.junit.Test;
 

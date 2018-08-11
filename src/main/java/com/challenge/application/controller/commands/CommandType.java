@@ -3,7 +3,7 @@ package com.challenge.application.controller.commands;
 import java.util.Arrays;
 
 public enum CommandType {
-    ADD_PLAYER, START, PLAY, STATE, EXIT, UNKNOWN;
+    ADD_PLAYER, ADD_MACHINE, START, PLAY, STATE, EXIT, UNKNOWN;
 
     /**
      * Get value of enum for the input string or {@link #UNKNOWN} as default.

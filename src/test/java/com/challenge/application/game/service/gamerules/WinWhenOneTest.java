@@ -1,6 +1,8 @@
-package com.challenge.application.game.service.algorithm;
+package com.challenge.application.game.service.gamerules;
 
 import com.challenge.application.game.domain.OutputNumber;
+import com.challenge.application.game.service.gamerules.gamewinlogic.IGameWinLogic;
+import com.challenge.application.game.service.gamerules.gamewinlogic.WinWhenOne;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class WinWhenOneTest {
 
-    private IWinLogic winWhenOne;
+    private IGameWinLogic winWhenOne;
 
     @Before
     public void setUp() throws Exception {

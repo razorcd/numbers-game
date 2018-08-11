@@ -1,4 +1,4 @@
-package com.challenge.application.game.service.algorithm;
+package com.challenge.application.game.service.gamerules.gameround;
 
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.OutputNumber;
@@ -6,5 +6,5 @@ import com.challenge.application.game.domain.OutputNumber;
 import java.util.function.Function;
 
 @FunctionalInterface
-public interface IGameAlgorithm extends Function<InputNumber, OutputNumber> {
+public interface IGameRoundRule extends Function<InputNumber, OutputNumber> {
 }

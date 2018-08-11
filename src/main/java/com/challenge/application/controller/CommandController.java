@@ -4,6 +4,7 @@ import com.challenge.application.game.GameManager;
 import com.challenge.application.controller.commands.*;
 import com.challenge.application.controller.dto.UserInputDto;
 import com.challenge.application.controller.mapper.UserInputDeserializer;
+import com.challenge.application.game.service.ai.DividableByThreeAi;
 import com.challenge.server.SocketChannel;
 
 import java.util.function.Consumer;
@@ -48,13 +49,21 @@ public class CommandController implements Consumer<String> {
 
         switch (commandType) {
             case ADD_PLAYER:
-                new AddPlayer(gameManager, socketChannel).execute(userInputDto.getData());
+                new AddHuman(gameManager, socketChannel).execute(userInputDto.getData());
+                break;
+            case ADD_MACHINE:
+                new AddMachine(gameManager, socketChannel).execute(userInputDto.getData());
                 break;
             case START:
-                new Start(gameManager, socketChannel).execute(userInputDto.getData());
+                Start start = new Start(gameManager, socketChannel);
+                PlayMachine playMachine = new PlayMachine(gameManager, socketChannel, new DividableByThreeAi());
+                start.setSuccessor(playMachine);
+                start.execute(userInputDto.getData());
                 break;
             case PLAY:
-                new Play(gameManager, socketChannel).execute(userInputDto.getData());
+                Play playCommand = new Play(gameManager, socketChannel);
+                playCommand.setSuccessor(new PlayMachine(gameManager, socketChannel, new DividableByThreeAi()));
+                playCommand.execute(userInputDto.getData());
                 break;
             case STATE:
                 new State(gameManager, socketChannel).execute(userInputDto.getData());
