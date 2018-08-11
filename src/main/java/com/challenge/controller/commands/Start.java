@@ -5,7 +5,7 @@ import com.challenge.game.Game;
 import com.challenge.game.domain.GameRoundResult;
 import com.challenge.game.domain.PlayerAggregate;
 import com.challenge.game.exception.GameException;
-import com.challenge.server.Messenger;
+import com.challenge.server.SocketChannel;
 import com.challenge.utils.PropertiesConfigLoader;
 
 import java.util.Optional;
@@ -17,17 +17,17 @@ public class Start implements Command<String> {
             getProperty("com.challenge.game.random_start_input");
 
     private GameContext gameContext;
-    private Messenger messenger;
+    private SocketChannel socketChannel;
 
     /**
      * Start command.
      *
      * @param gameContext holds the state of the application.
-     * @param messenger socket adapter.
+     * @param socketChannel socket adapter.
      */
-    public Start(GameContext gameContext, Messenger messenger) {
+    public Start(GameContext gameContext, SocketChannel socketChannel) {
         this.gameContext = gameContext;
-        this.messenger = messenger;
+        this.socketChannel = socketChannel;
     }
 
     /**
@@ -40,7 +40,7 @@ public class Start implements Command<String> {
         try {
             gameContext.startGame();
         } catch (GameException e) {
-            messenger.send(buildGameExceptionMessage(e));
+            socketChannel.send(buildGameExceptionMessage(e));
             return;
         }
 
@@ -52,7 +52,7 @@ public class Start implements Command<String> {
         Game gameAfterPlay = gameContext.getGame();
 
         String finalMessage = buildFinalMessage(gameBeforePlay, gameAfterPlay, inputNumber);
-        messenger.send(finalMessage);
+        socketChannel.send(finalMessage);
     }
 
     /**

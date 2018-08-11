@@ -7,7 +7,6 @@ import com.challenge.game.exception.GameException;
 import com.challenge.game.model.Player;
 import com.challenge.game.service.GameRoundService;
 import com.challenge.game.service.algorithm.DivideByThree;
-import com.challenge.game.service.algorithm.IGameAlgorithm;
 import com.challenge.game.service.algorithm.IWinLogic;
 import com.challenge.game.service.algorithm.WinWhenOne;
 import com.challenge.game.service.algorithm.validator.DivideByThreeInputValidator;

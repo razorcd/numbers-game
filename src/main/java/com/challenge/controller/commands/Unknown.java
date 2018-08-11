@@ -1,22 +1,22 @@
 package com.challenge.controller.commands;
 
 import com.challenge.GameContext;
-import com.challenge.server.Messenger;
+import com.challenge.server.SocketChannel;
 
 public class Unknown implements Command<String> {
 
     private GameContext gameContext;
-    private Messenger messenger;
+    private SocketChannel socketChannel;
 
     /**
      * Unknown command.
      *
      * @param gameContext holds the state of the application.
-     * @param messenger socket adapter.
+     * @param socketChannel socket adapter.
      */
-    public Unknown(GameContext gameContext, Messenger messenger) {
+    public Unknown(GameContext gameContext, SocketChannel socketChannel) {
         this.gameContext = gameContext;
-        this.messenger = messenger;
+        this.socketChannel = socketChannel;
     }
 
     /**
@@ -26,6 +26,6 @@ public class Unknown implements Command<String> {
      */
     @Override
     public void execute(String data) {
-        messenger.send("unknown command. Available commands are: ADD_PLAYER:player_name, START, PLAY:number, STATE, EXIT.");
+        socketChannel.send("unknown command. Available commands are: ADD_PLAYER:player_name, START, PLAY:number, STATE, EXIT.");
     }
 }

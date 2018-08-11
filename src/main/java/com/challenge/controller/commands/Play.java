@@ -5,22 +5,22 @@ import com.challenge.game.Game;
 import com.challenge.game.domain.GameRoundResult;
 import com.challenge.game.domain.PlayerAggregate;
 import com.challenge.game.exception.GameException;
-import com.challenge.server.Messenger;
+import com.challenge.server.SocketChannel;
 
 public class Play implements Command<String> {
 
     private GameContext gameContext;
-    private Messenger messenger;
+    private SocketChannel socketChannel;
 
     /**
      * Play command.
      *
      * @param gameContext holds the state of the application.
-     * @param messenger socket adapter.
+     * @param socketChannel socket adapter.
      */
-    public Play(GameContext gameContext, Messenger messenger) {
+    public Play(GameContext gameContext, SocketChannel socketChannel) {
         this.gameContext = gameContext;
-        this.messenger = messenger;
+        this.socketChannel = socketChannel;
     }
 
     /**
@@ -37,7 +37,7 @@ public class Play implements Command<String> {
             gameContext.play(Integer.parseInt(inputNumber));
         } catch (GameException | NumberFormatException ex) {
             String errMessage = buildErrorMessage(playersBeforePlay, ex);
-            messenger.send(errMessage);
+            socketChannel.send(errMessage);
             return;
         }
 
@@ -45,7 +45,7 @@ public class Play implements Command<String> {
         GameRoundResult playingRoundResult = gameAfterPlay.getGameRoundResult();
 
         String message = buildFinalMessage(playersBeforePlay, playingRoundResult, inputNumber);
-        messenger.send(message);
+        socketChannel.send(message);
     }
 
     private String buildFinalMessage(PlayerAggregate playersBeforePlay, GameRoundResult playingRoundResult, String inputNumber) {

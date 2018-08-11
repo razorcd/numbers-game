@@ -4,22 +4,22 @@ import com.challenge.GameContext;
 import com.challenge.game.Game;
 import com.challenge.game.domain.GameRoundResult;
 import com.challenge.game.domain.PlayerAggregate;
-import com.challenge.server.Messenger;
+import com.challenge.server.SocketChannel;
 
 public class State implements Command<String> {
 
     private GameContext gameContext;
-    private Messenger messenger;
+    private SocketChannel socketChannel;
 
     /**
      * State command.
      *
      * @param gameContext holds the state of the application.
-     * @param messenger socket adapter.
+     * @param socketChannel socket adapter.
      */
-    public State(GameContext gameContext, Messenger messenger) {
+    public State(GameContext gameContext, SocketChannel socketChannel) {
         this.gameContext = gameContext;
-        this.messenger = messenger;
+        this.socketChannel = socketChannel;
     }
 
     /**
@@ -35,7 +35,7 @@ public class State implements Command<String> {
         GameRoundResult currentRoundResult = currentGame.getGameRoundResult();
 
         String finalMessage = buildFinalMessage(players, currentRoundResult);
-        messenger.send(finalMessage);
+        socketChannel.send(finalMessage);
     }
 
     private String buildFinalMessage(PlayerAggregate players, GameRoundResult currentRoundResult) {

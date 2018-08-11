@@ -8,20 +8,20 @@ import java.io.PrintWriter;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public class Messenger {
+public class SocketChannel {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Messenger.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SocketChannel.class);
 
     private BufferedReader in;
     private PrintWriter out;
 
     /**
-     * Messenger to handle in/out communication.
+     * SocketChannel to handle in/out communication.
      *
      * @param in the input stream
      * @param out the output writer
      */
-    public Messenger(BufferedReader in, PrintWriter out) {
+    public SocketChannel(BufferedReader in, PrintWriter out) {
         this.in = in;
         this.out = out;
     }
@@ -46,8 +46,9 @@ public class Messenger {
 
     /**
      * Start listening only on first message.
+     * Will block thread until a message is received.
      *
-     * @return the first line.
+     * @return the new incoming message.
      */
     public String readNextLineSync() {
         return getValidInputStream()

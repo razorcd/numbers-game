@@ -1,22 +1,22 @@
 package com.challenge.controller.commands;
 
 import com.challenge.GameContext;
-import com.challenge.server.Messenger;
+import com.challenge.server.SocketChannel;
 
 public class AddPlayer implements Command<String> {
 
     private GameContext gameContext;
-    private Messenger messenger;
+    private SocketChannel socketChannel;
 
     /**
      * Add new player command.
      *
      * @param gameContext holds the state of the application.
-     * @param messenger socket adapter.
+     * @param socketChannel socket adapter.
      */
-    public AddPlayer(GameContext gameContext, Messenger messenger) {
+    public AddPlayer(GameContext gameContext, SocketChannel socketChannel) {
         this.gameContext = gameContext;
-        this.messenger = messenger;
+        this.socketChannel = socketChannel;
     }
 
     /**
@@ -27,6 +27,6 @@ public class AddPlayer implements Command<String> {
     @Override
     public void execute(String name) {
         gameContext.addPlayer(name);
-        messenger.send("Added player " + name + " to game.");
+        socketChannel.send("Added player " + name + " to game.");
     }
 }

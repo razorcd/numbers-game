@@ -21,9 +21,9 @@ public class Client {
      * Start current client on specified port.
      * @param ip servers ip
      * @param port servers port
-     * @return {@code [Messenger<String, String>]} messenger to handle in/out communication
+     * @return {@code [SocketChannel<String, String>]} messenger to handle in/out communication
      */
-    public Messenger start(String ip, int port) {
+    public SocketChannel start(String ip, int port) {
         LOGGER.info("Connecting to ip: {}, port: {}.", ip, port);
         try {
             clientSocket = new Socket(ip, port);
@@ -34,7 +34,7 @@ public class Client {
             stop();
         }
 
-        return new Messenger(in, out);
+        return new SocketChannel(in, out);
     }
 
     /**

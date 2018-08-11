@@ -1,22 +1,22 @@
 package com.challenge.controller.commands;
 
 import com.challenge.GameContext;
-import com.challenge.server.Messenger;
+import com.challenge.server.SocketChannel;
 
 public class Exit implements Command<String> {
 
     private GameContext gameContext;
-    private Messenger messenger;
+    private SocketChannel socketChannel;
 
     /**
      * Exit command.
      *
      * @param gameContext holds the state of the application.
-     * @param messenger socket adapter.
+     * @param socketChannel socket adapter.
      */
-    public Exit(GameContext gameContext, Messenger messenger) {
+    public Exit(GameContext gameContext, SocketChannel socketChannel) {
         this.gameContext = gameContext;
-        this.messenger = messenger;
+        this.socketChannel = socketChannel;
     }
 
     /**
@@ -26,6 +26,6 @@ public class Exit implements Command<String> {
      */
     @Override
     public void execute(String data) {
-        messenger.send("server socket shutdown");
+        socketChannel.send("server socket shutdown");
     }
 }
