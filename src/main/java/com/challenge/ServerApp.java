@@ -1,7 +1,7 @@
 package com.challenge;
 
 import com.challenge.server.MainServer;
-import com.challenge.utils.PropertiesConfigLoader;
+import com.challenge.application.utils.PropertiesConfigLoader;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

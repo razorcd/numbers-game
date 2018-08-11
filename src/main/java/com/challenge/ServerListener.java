@@ -1,7 +1,8 @@
 package com.challenge;
 
-import com.challenge.controller.CommandController;
-import com.challenge.controller.mapper.UserInputDeserializer;
+import com.challenge.application.controller.CommandController;
+import com.challenge.application.controller.mapper.UserInputDeserializer;
+import com.challenge.application.game.GameManager;
 import com.challenge.server.ServerStream;
 import com.challenge.server.SocketChannel;
 
@@ -30,8 +31,8 @@ public class ServerListener implements Runnable {
             SocketChannel socketChannel = serverStream.start();
 
             //setup application
-            GameContext gameContext = new GameContext();
-            CommandController commandController = new CommandController(gameContext, socketChannel, new UserInputDeserializer());
+            GameManager gameManager = new GameManager();
+            CommandController commandController = new CommandController(gameManager, socketChannel, new UserInputDeserializer());
 
             //listen on input stream
             socketChannel.send("connected");

@@ -2,7 +2,7 @@ package com.challenge;
 
 import com.challenge.server.Client;
 import com.challenge.server.SocketChannel;
-import com.challenge.utils.PropertiesConfigLoader;
+import com.challenge.application.utils.PropertiesConfigLoader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
