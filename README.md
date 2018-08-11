@@ -134,6 +134,6 @@ mvn test
  - [ ] allow ip and port to be overwritten with the command args, not only file configuration. 
  
 ### Other 
- This was done in about 3 days so far.
+ This was done in about 4 days so far.
  
  
