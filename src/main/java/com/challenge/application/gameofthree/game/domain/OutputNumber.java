@@ -9,7 +9,7 @@ import java.util.Random;
 public class OutputNumber {
 
     private static final String FIXED_INPUT_NUMBER = PropertiesConfigLoader.getProperties().
-            getProperty("com.challenge.application.game.random_start_input_number", "64");
+            getProperty("com.challenge.application.game.random_start_input_number");
     private static final String MIN_POSSIBLE_INPUT_NUMBER = PropertiesConfigLoader.getProperties().
             getProperty("com.challenge.application.game.min_possible_start_input_number", "10");
     private static final String MAX_POSSIBLE_INPUT_NUMBER = PropertiesConfigLoader.getProperties().

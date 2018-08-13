@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.Assert.*;
 
 @FixMethodOrder(MethodSorters.JVM)
-public class AcceptanceTwoPlayersTest {
+public class AcceptanceTest {
     static {
         PropertiesConfigLoader.initialize("application.properties");
     }
