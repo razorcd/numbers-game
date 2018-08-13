@@ -30,7 +30,7 @@ public class AddHuman extends ChainableCommand<String> {
      */
     @Override
     public void execute(String name) {
-        Human newPlayer = new Human(Thread.currentThread().getName(), name);  //TODO: inject authorized user!!!
+        Human newPlayer = new Human(Thread.currentThread().getName(), name);  //inject authorized user
 
         if (!validateGameManagerForAddingNewPlayer(newPlayer)) return;
 

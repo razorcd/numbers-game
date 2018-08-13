@@ -1,12 +1,13 @@
-package com.challenge.application.game.service.gamerules;
+package com.challenge.application.game.gameround.gamerules;
 
 import com.challenge.application.game.domain.OutputNumber;
-import com.challenge.application.game.service.gamerules.gamewinlogic.IGameWinLogic;
-import com.challenge.application.game.service.gamerules.gamewinlogic.WinWhenOne;
+import com.challenge.application.game.gameround.gamerules.gamewinlogic.IGameWinLogic;
+import com.challenge.application.game.gameround.gamerules.gamewinlogic.WinWhenOne;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class WinWhenOneTest {
 

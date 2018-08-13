@@ -1,16 +1,14 @@
 package com.challenge.application.game.validator;
 
 import com.challenge.application.game.Game;
-import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.ValidationException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class NewGameValidator implements Validator<Game> {
 
-    public static final String INVALID_PLAYER_AGGREGATE_MSG = "Game initialization failed due to invalid players.";
+    static final String INVALID_PLAYER_AGGREGATE_MSG = "Game initialization failed due to invalid players.";
 
     private List<String> messages = new ArrayList<>();
 
@@ -23,8 +21,8 @@ public class NewGameValidator implements Validator<Game> {
      */
     @Override
     public boolean validate(Game game) {
-        return getValidPlayerAggregate(game).findAny().isPresent() || setInvalidState(INVALID_PLAYER_AGGREGATE_MSG);
-
+        return isValidPlayerAggregate(game) ||
+                setInvalidState(INVALID_PLAYER_AGGREGATE_MSG);
     }
 
     /**
@@ -36,8 +34,9 @@ public class NewGameValidator implements Validator<Game> {
      */
     @Override
     public void validateOrThrow(Game game) {
-        getValidPlayerAggregate(game).findAny()
-                .orElseThrow(() -> new ValidationException(INVALID_PLAYER_AGGREGATE_MSG));
+        if (!isValidPlayerAggregate(game)) {
+            throw new ValidationException(INVALID_PLAYER_AGGREGATE_MSG);
+        }
     }
 
     @Override
@@ -45,9 +44,8 @@ public class NewGameValidator implements Validator<Game> {
         return messages;
     }
 
-    private Stream<PlayerAggregate> getValidPlayerAggregate(Game game) {
-        return Stream.of(game.getPlayerAggregate())
-                .filter(PlayerAggregate::isValid);
+    private boolean isValidPlayerAggregate(Game game) {
+        return game.getPlayerAggregate().isValid();
     }
 
     private boolean setInvalidState(String message) {

@@ -1,7 +1,7 @@
 package com.challenge.application.controller.commands;
 
-import com.challenge.application.game.GameManager;
 import com.challenge.application.game.Game;
+import com.challenge.application.game.GameManager;
 import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.server.SocketChannel;

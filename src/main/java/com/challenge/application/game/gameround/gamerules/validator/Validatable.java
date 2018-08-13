@@ -1,4 +1,4 @@
-package com.challenge.application.game.service.gamerules.validator;
+package com.challenge.application.game.gameround.gamerules.validator;
 
 import com.challenge.application.game.validator.Validator;
 

@@ -9,7 +9,6 @@ import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.GameException;
 import com.challenge.application.game.model.Human;
 import com.challenge.application.game.model.IPlayer;
-import com.challenge.application.game.service.ai.DividableByThreeAi;
 import com.challenge.server.SocketChannel;
 
 public class Play extends ChainableCommand<String> {
@@ -31,15 +30,15 @@ public class Play extends ChainableCommand<String> {
     /**
      * Execute play command.
      *
-     * @param rawInputNumber the played input number.
+     * @param rawInputNumber the playing input number.
      */
     @Override //TODO: test
     public void execute(String rawInputNumber) {
-        IPlayer authorizedPlayer = new Human(Thread.currentThread().getName(), "");  //TODO: inject authorized user!!!
+        IPlayer authorizedPlayer = new Human(Thread.currentThread().getName(), "");  //inject authorized user
         InputNumber parsedRawInputNumber = parseRawInputNumber(rawInputNumber);
 
         Game gameBeforePlay = gameManager.getGame();
-        PlayerAggregate playersBeforePlay = gameBeforePlay.getPlayerAggregate();  //TODO: same as authorized?!
+        PlayerAggregate playersBeforePlay = gameBeforePlay.getPlayerAggregate();
 
         try {
             gameManager.play(parsedRawInputNumber, authorizedPlayer);
@@ -67,7 +66,6 @@ public class Play extends ChainableCommand<String> {
                 playingRoundResult;
     }
 
-    //TODO: extract
     private InputNumber parseRawInputNumber(String rawInputNumber) {
         try {
             return new InputNumber(Integer.parseInt(rawInputNumber));

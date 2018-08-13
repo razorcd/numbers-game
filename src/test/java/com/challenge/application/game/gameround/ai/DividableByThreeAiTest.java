@@ -1,4 +1,4 @@
-package com.challenge.application.game.service.ai;
+package com.challenge.application.game.gameround.ai;
 
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.OutputNumber;
@@ -9,46 +9,46 @@ import static org.junit.Assert.assertEquals;
 
 public class DividableByThreeAiTest {
 
-    DividableByThreeAi dividableByThreeAi;
+    private DivideByThreeAi dividableByThreeAi;
 
     @Before
     public void setUp() throws Exception {
-        dividableByThreeAi = new DividableByThreeAi();
+        dividableByThreeAi = new DivideByThreeAi();
     }
 
     @Test
-    public void shouldCalculateClosestDividableNumberFor10() {
+    public void shouldCalculateClosestAdditionForDividableByThreeWhen10() {
         OutputNumber outputNumber = new OutputNumber(10);
 
         InputNumber result = dividableByThreeAi.calculateNextInputNumberFor(outputNumber);
 
-        assertEquals("Closest divisible by three number for 10 should be 9.", new InputNumber(9), result);
+        assertEquals("Closest addition dividable by three for 10 should be -1.", new InputNumber(-1), result);
     }
 
     @Test
-    public void shouldCalculateClosestDividableNumberFor11() {
+    public void shouldCalculateClosestAdditionForDividableByThreeWhen11() {
         OutputNumber outputNumber = new OutputNumber(11);
 
         InputNumber result = dividableByThreeAi.calculateNextInputNumberFor(outputNumber);
 
-        assertEquals("Closest divisible by three number for 11 should be 12.", new InputNumber(12), result);
+        assertEquals("Closest addition dividable by three for 10 should be 1.", new InputNumber(1), result);
     }
 
     @Test
-    public void shouldCalculateClosestDividableNumberFor12() {
+    public void shouldCalculateClosestAdditionForDividableByThreeWhen12() {
         OutputNumber outputNumber = new OutputNumber(12);
 
         InputNumber result = dividableByThreeAi.calculateNextInputNumberFor(outputNumber);
 
-        assertEquals("Closest divisible by three number for 12 should be 12.", new InputNumber(12), result);
+        assertEquals("Closest addition dividable by three for 12 should be 0.", new InputNumber(0), result);
     }
 
     @Test
-    public void shouldCalculateClosestDividableNumberFor0() {
+    public void shouldCalculateClosestAdditionForDividableByThreeWhen0() {
         OutputNumber outputNumber = new OutputNumber(0);
 
         InputNumber result = dividableByThreeAi.calculateNextInputNumberFor(outputNumber);
 
-        assertEquals("Closest divisible by three number for 0 should be 0.", new InputNumber(0), result);
+        assertEquals("Closest addition dividable by three for 0 should be 0.", new InputNumber(0), result);
     }
 }

@@ -117,14 +117,19 @@ public class AcceptanceTwoPlayersTest {
         //when
         socketPlayer1.sendWithDelay("ADD_MACHINE");
         //then
-        assertEquals("Player 1 should receive added machine1.", "Added AI player Machine1 to game.", socketPlayer1.readNextLineSync());
-        assertEquals("Player 2 should receive added machine1.", "Added AI player Machine1 to game.", socketPlayer2.readNextLineSync());
+
+        assertThat("Player1 should receive added machine1.", socketPlayer1.readNextLineSync(),
+                matchesPattern("Added AI player Machine[0-9]+ to game."));
+        assertThat("Player2 should receive added machine1.", socketPlayer2.readNextLineSync(),
+                matchesPattern("Added AI player Machine[0-9]+ to game."));
 
         //and when
         socketPlayer2.sendWithDelay("ADD_MACHINE");
         //then
-        assertEquals("Player 1 should receive added machine2.", "Added AI player Machine2 to game.", socketPlayer1.readNextLineSync());
-        assertEquals("Player 2 should receive added machine2.", "Added AI player Machine2 to game.", socketPlayer2.readNextLineSync());
+        assertThat("Player1 should receive added machine1.", socketPlayer1.readNextLineSync(),
+                matchesPattern("Added AI player Machine[0-9]+ to game."));
+        assertThat("Player2 should receive added machine1.", socketPlayer2.readNextLineSync(),
+                matchesPattern("Added AI player Machine[0-9]+ to game."));
     }
 
     @Test(timeout = TEST_TIMEOUT)
@@ -164,140 +169,10 @@ public class AcceptanceTwoPlayersTest {
         //then
         assertThat("Player 1 should receive game started with number and next player.",
                 socketPlayer1.readNextLineSync(),
-                matchesPattern("Game started. The starting number is 81. Next to play is player player1."));
+                matchesPattern("Game started. The starting number is 64. Next to play is player player1."));
         assertThat("Player 2 should receive starting game by player1 with output number.",
                 socketPlayer2.readNextLineSync(),
-                matchesPattern("Game started. The starting number is 81. Next to play is player player1."));
-    }
-
-    @Test(timeout = TEST_TIMEOUT)
-    public void shouldPlayGameWithMachineWhenPlayerIsFirst() {
-        //given
-        socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
-        socketPlayer1.sendWithDelay("ADD_MACHINE");
-        socketPlayer1.clearInput();
-        socketPlayer2.clearInput();
-
-        //when
-        socketPlayer1.sendWithDelay("START");
-
-        //then
-        assertThat("Player 1 should receive starting game by player1 with output number.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("Game started. The starting number is 81. Next to play is player player1."));
-        assertThat("Player 2 should receive starting game by player1 with output number.",
-                socketPlayer2.readNextLineSync(),
-                matchesPattern("Game started. The starting number is 81. Next to play is player player1."));
-
-        //and when
-        socketPlayer1.sendWithDelay("PLAY:81");
-
-        //and then
-        assertThat("Player 1 should receive that Player1 1 played correct input number.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("player player1 played number 81. The result is Round result: outputNumber 27, winner false."));
-        assertThat("Player 2 should receive that Player 1 played correct input number.",
-                socketPlayer2.readNextLineSync(),
-                matchesPattern("player player1 played number 81. The result is Round result: outputNumber 27, winner false."));
-
-        //and then
-        assertThat("Player 1 should receive that Machine 1 played correct input number.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("machine Machine[0-9]+ played number 27. The result is Round result: outputNumber 9, winner false."));
-        assertThat("Player 2 should receive that Machine 1 played correct input number.",
-                socketPlayer2.readNextLineSync(),
-                matchesPattern("machine Machine[0-9]+ played number 27. The result is Round result: outputNumber 9, winner false."));
-    }
-
-    @Test(timeout = TEST_TIMEOUT)
-    public void shouldStartAndPlayGameWhenMachineAndHuman() throws InterruptedException {
-//        ConcurrentLinkedQueue<String> messagesPlayer1 = new ConcurrentLinkedQueue<>();
-//        ConcurrentLinkedQueue<String> messagesPlayer2 = new ConcurrentLinkedQueue<>();
-//        Thread t = new Thread(() -> {
-//            socketPlayer1.getInputStream().forEach(m -> {
-//                messagesPlayer1.add(m);
-//            });
-//            socketPlayer2.getInputStream().forEach(m -> messagesPlayer2.add(m));
-//        });
-//        t.start();
-//        Thread.sleep(100);
-
-        //given
-        socketPlayer1.sendWithDelay("ADD_MACHINE");
-        socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
-        socketPlayer1.clearInput();
-        socketPlayer2.clearInput();
-
-        //when
-        socketPlayer1.sendWithDelay("START");
-
-        //then
-        assertThat("Player 1 should receive game started with number and next player.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("Game started. The starting number is 81. Next to play is machine Machine[0-9]+."));
-        assertThat("Player 2 should receive starting game by player1 with output number.",
-                socketPlayer2.readNextLineSync(),
-                matchesPattern("Game started. The starting number is 81. Next to play is machine Machine[0-9]+."));
-
-        //and then
-        assertThat("Player 1 should receive that Machine 1 played correct input number.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("machine Machine[0-9]+ played number 81. The result is Round result: outputNumber 27, winner false."));
-        assertThat("Player 2 should receive that Machine 1 played correct input number.",
-                socketPlayer2.readNextLineSync(),
-                matchesPattern("machine Machine[0-9]+ played number 81. The result is Round result: outputNumber 27, winner false."));
-    }
-
-    @Test(timeout = TEST_TIMEOUT)
-    public void shouldStartAndPlayGameWhenMachineAndMachine() {
-        //given
-        socketPlayer1.sendWithDelay("ADD_MACHINE");
-        socketPlayer2.sendWithDelay("ADD_MACHINE");
-        socketPlayer1.clearInput();
-        socketPlayer2.clearInput();
-
-        //when
-        socketPlayer1.sendWithDelay("START");
-
-        //then
-        assertThat("Player 1 should receive game started with number and next player.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("Game started. The starting number is 81. Next to play is machine Machine[0-9]+."));
-        assertThat("Player 2 should receive starting game by player1 with output number.",
-                socketPlayer2.readNextLineSync(),
-                matchesPattern("Game started. The starting number is 81. Next to play is machine Machine[0-9]+."));
-
-        //and then
-        assertThat("Player 1 should receive that Machine 1 played correct input number.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("machine Machine[0-9]+ played number 81. The result is Round result: outputNumber 27, winner false."));
-        assertThat("Player 2 should receive that Machine 1 played correct input number.",
-                socketPlayer2.readNextLineSync(),
-                matchesPattern("machine Machine[0-9]+ played number 81. The result is Round result: outputNumber 27, winner false."));
-
-        //and then
-        assertThat("Player 1 should receive that Machine 1 played correct input number.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("machine Machine[0-9]+ played number 27. The result is Round result: outputNumber 9, winner false."));
-        assertThat("Player 2 should receive that Machine 1 played correct input number.",
-                socketPlayer2.readNextLineSync(),
-                matchesPattern("machine Machine[0-9]+ played number 27. The result is Round result: outputNumber 9, winner false."));
-
-        //and then
-        assertThat("Player 1 should receive that Machine 1 played correct input number.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("machine Machine[0-9]+ played number 9. The result is Round result: outputNumber 3, winner false."));
-        assertThat("Player 2 should receive that Machine 1 played correct input number.",
-                socketPlayer2.readNextLineSync(),
-                matchesPattern("machine Machine[0-9]+ played number 9. The result is Round result: outputNumber 3, winner false."));
-
-        //and then
-        assertThat("Player 1 should receive that Machine 1 played correct input number.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("machine Machine[0-9]+ played number 3. The result is Round result: outputNumber 1, winner true."));
-        assertThat("Player 2 should receive that Machine 1 played correct input number.",
-                socketPlayer2.readNextLineSync(),
-                matchesPattern("machine Machine[0-9]+ played number 3. The result is Round result: outputNumber 1, winner true."));
+                matchesPattern("Game started. The starting number is 64. Next to play is player player1."));
     }
 
 
@@ -324,7 +199,7 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer2.clearInput();
 
         //when
-        socketPlayer1.sendWithDelay("PLAY:11");
+        socketPlayer1.sendWithDelay("PLAY:1");
 
         //then
         assertEquals("Should not be able to play game that was not started and has invalid players.",
@@ -342,7 +217,7 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer2.clearInput();
 
         //when
-        socketPlayer2.sendWithDelay("PLAY:81");
+        socketPlayer2.sendWithDelay("PLAY:0");
 
         //then
         assertTrue("Player 1 should not receive anything.", socketPlayer1.inputIsEmpty());
@@ -386,35 +261,11 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer1.sendWithDelay("PLAY:999");
 
         //then
-        assertThat("Should not play player 1 with incorrect input number.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("ERROR: can not play 999 after Round result: outputNumber 81, winner false."));
-        assertTrue("Player 2 should not receive anything.", socketPlayer2.inputIsEmpty());
+        assertEquals("Player1 should not play with incorrect input number.",
+                socketPlayer1.readNextLineSync(), "ERROR: can not play game because 999 is not within [-1, 0, 1]");
+        assertTrue("Player2 should not receive anything.", socketPlayer2.inputIsEmpty());
 
     }
-
-    @Test(timeout = TEST_TIMEOUT)
-    public void shouldBeAbleToRestartAnAlreadyInitializedGame(){
-        //given
-        socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
-        socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
-        socketPlayer1.sendWithDelay("START");
-        socketPlayer1.sendWithDelay("PLAY:81");
-        socketPlayer1.clearInput();
-        socketPlayer2.clearInput();
-
-        //when
-        socketPlayer1.sendWithDelay("START");
-
-        //then
-        assertThat("Player 1 should be able to restart an already started game.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("Game started. The starting number is 81. Next to play is player player1."));
-        assertThat("Player 2 should receive same message when player 1 is able to restart an already started game.",
-                socketPlayer2.readNextLineSync(),
-                matchesPattern("Game started. The starting number is 81. Next to play is player player1."));
-    }
-
 
     @Test(timeout = TEST_TIMEOUT)
     public void shouldPlayGoodNumber(){
@@ -426,15 +277,35 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer2.clearInput();
 
         //when
-        socketPlayer1.sendWithDelay("PLAY:81");
+        socketPlayer1.sendWithDelay("PLAY:-1");
 
         //then
-        assertThat("Player 1 should play player 1 with correct input number.",
+        assertThat("Player1 should play 1 and receive success message.",
                 socketPlayer1.readNextLineSync(),
-                matchesPattern("player player1 played number 81. The result is Round result: outputNumber 27, winner false."));
-        assertThat("Player 2 should receive same: player 1 played with correct input number.",
+                matchesPattern("player player1 played number -1. The result is Round result: outputNumber 21, winner false."));
+        assertThat("Player2 should receive that player1 played successfully.",
                 socketPlayer2.readNextLineSync(),
-                matchesPattern("player player1 played number 81. The result is Round result: outputNumber 27, winner false."));
+                matchesPattern("player player1 played number -1. The result is Round result: outputNumber 21, winner false."));
+    }
+
+
+    @Test(timeout = TEST_TIMEOUT)
+    public void shouldNotPlayWrongAdditionInput(){
+        //given
+        socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
+        socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
+        socketPlayer1.sendWithDelay("START");
+        socketPlayer1.clearInput();
+        socketPlayer2.clearInput();
+
+        //when
+        socketPlayer1.sendWithDelay("PLAY:0");
+
+        //then
+        assertEquals("Player1 should not be able to play wrong addition input.",
+                "ERROR: could not play this round because of invalid input last round output was 64 and your input was 0",
+                socketPlayer1.readNextLineSync());
+        assertTrue("Player 2 should not receive anything.", socketPlayer2.inputIsEmpty());
     }
 
     @Test(timeout = TEST_TIMEOUT)
@@ -456,23 +327,27 @@ public class AcceptanceTwoPlayersTest {
         assertTrue("Player 2 should not receive anything.", socketPlayer2.inputIsEmpty());
     }
 
+
     @Test(timeout = TEST_TIMEOUT)
-    public void shouldNotPlayNegativeInput(){
+    public void shouldBeAbleToRestartAnAlreadyInitializedGame(){
         //given
         socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
         socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
         socketPlayer1.sendWithDelay("START");
+        socketPlayer1.sendWithDelay("PLAY:0");
         socketPlayer1.clearInput();
         socketPlayer2.clearInput();
 
         //when
-        socketPlayer1.sendWithDelay("PLAY:-5");
+        socketPlayer1.sendWithDelay("START");
 
         //then
-        assertEquals("Player 1 should not play negative input.",
-                "ERROR: can not play -5 after Round result: outputNumber 81, winner false.",
-                socketPlayer1.readNextLineSync());
-        assertTrue("Player 2 should not receive anything.", socketPlayer2.inputIsEmpty());
+        assertThat("Player1 should be able to restart an already started game.",
+                socketPlayer1.readNextLineSync(),
+                matchesPattern("Game started. The starting number is 64. Next to play is player player1."));
+        assertThat("Player2 should receive same message when player1 is able to restart an already started game.",
+                socketPlayer2.readNextLineSync(),
+                matchesPattern("Game started. The starting number is 64. Next to play is player player1."));
     }
 
     @Test(timeout = TEST_TIMEOUT)
@@ -485,17 +360,17 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer1.sendWithDelay("STATE");
 
         //then
-        assertThat("Player 1 should be able to get correct current state of new game.",
+        assertThat("Player1 should be able to get correct current state of new game.",
                 socketPlayer1.readNextLineSync(),
                 matchesPattern("player unknown is next. Last Round result: outputNumber null, winner false."));
-        assertTrue("Player 2 should not receive anything.", socketPlayer2.inputIsEmpty());
+        assertTrue("Player2 should not receive anything.", socketPlayer2.inputIsEmpty());
 
         //and when
         socketPlayer2.sendWithDelay("STATE");
 
         //then
-        assertTrue("Player 1 should not receive anything.", socketPlayer1.inputIsEmpty());
-        assertThat("Player 2 should be able to get correct current state of new game.",
+        assertTrue("Player1 should not receive anything.", socketPlayer1.inputIsEmpty());
+        assertThat("Player2 should be able to get correct current state of new game.",
                 socketPlayer2.readNextLineSync(),
                 matchesPattern("player unknown is next. Last Round result: outputNumber null, winner false."));
     }
@@ -513,10 +388,10 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer1.sendWithDelay("STATE");
 
         //then
-        assertThat("Player 1 should be able to get correct current state of game.",
+        assertThat("Player1 should be able to get correct current state of game.",
                 socketPlayer1.readNextLineSync(),
-                matchesPattern("player player1 is next. Last Round result: outputNumber 81, winner false."));
-        assertTrue("Player 2 should not receive anything.", socketPlayer2.inputIsEmpty());
+                matchesPattern("player player1 is next. Last Round result: outputNumber 64, winner false."));
+        assertTrue("Player2 should not receive anything.", socketPlayer2.inputIsEmpty());
 
     }
 
@@ -526,7 +401,7 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
         socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
         socketPlayer1.sendWithDelay("START");
-        socketPlayer1.sendWithDelay("PLAY:81");
+        socketPlayer1.sendWithDelay("PLAY:-1");
         socketPlayer1.clearInput();
         socketPlayer2.clearInput();
 
@@ -534,10 +409,10 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer1.sendWithDelay("STATE");
 
         //then
-        assertThat("Player 1 should be able to get correct current state of game after a failed attempt.",
+        assertThat("Player1 should be able to get correct current state of game after a failed attempt.",
                 socketPlayer1.readNextLineSync(),
-                matchesPattern("player player2 is next. Last Round result: outputNumber 27, winner false."));
-        assertTrue("Player 2 should not receive anything.", socketPlayer2.inputIsEmpty());
+                matchesPattern("player player2 is next. Last Round result: outputNumber 21, winner false."));
+        assertTrue("Player2 should not receive anything.", socketPlayer2.inputIsEmpty());
     }
 
 
@@ -547,7 +422,7 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
         socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
         socketPlayer1.sendWithDelay("START");
-        socketPlayer1.sendWithDelay("PLAY:81");
+        socketPlayer1.sendWithDelay("PLAY:-1");
         socketPlayer1.sendWithDelay("PLAY:999");
         socketPlayer1.clearInput();
         socketPlayer2.clearInput();
@@ -556,10 +431,10 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer1.sendWithDelay("STATE");
 
         //then
-        assertThat("Player 1 should be able to get correct current state of game after a failed attempt.",
+        assertThat("Player1 should be able to get correct current state of game after a failed attempt.",
                 socketPlayer1.readNextLineSync(),
-                matchesPattern("player player2 is next. Last Round result: outputNumber 27, winner false."));
-        assertTrue("Player 2 should not receive anything.", socketPlayer2.inputIsEmpty());
+                matchesPattern("player player2 is next. Last Round result: outputNumber 21, winner false."));
+        assertTrue("Player2 should not receive anything.", socketPlayer2.inputIsEmpty());
     }
 
     @Test(timeout = TEST_TIMEOUT)
@@ -568,22 +443,22 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
         socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
         socketPlayer1.sendWithDelay("START");
-        socketPlayer1.sendWithDelay("PLAY:81");
-        socketPlayer2.sendWithDelay("PLAY:27");
-        socketPlayer1.sendWithDelay("PLAY:9");
+        socketPlayer1.sendWithDelay("PLAY:-1");
+        socketPlayer2.sendWithDelay("PLAY:0");
+        socketPlayer1.sendWithDelay("PLAY:-1");
         socketPlayer1.clearInput();
         socketPlayer2.clearInput();
 
         //when
-        socketPlayer2.sendWithDelay("PLAY:3");
+        socketPlayer2.sendWithDelay("PLAY:1");
 
         //then
-        assertThat("Player 2 should be able to play until winning.",
+        assertThat("Player2 should be able to play until winning.",
                 socketPlayer2.readNextLineSync(),
-                matchesPattern("player player2 played number 3. The result is Round result: outputNumber 1, winner true."));
-        assertThat("Player 2 should receive same message: able to play until winning.",
+                matchesPattern("player player2 played number 1. The result is Round result: outputNumber 1, winner true."));
+        assertThat("Player1 should receive same message when checking if able to play until winning.",
                 socketPlayer1.readNextLineSync(),
-                matchesPattern("player player2 played number 3. The result is Round result: outputNumber 1, winner true."));
+                matchesPattern("player player2 played number 1. The result is Round result: outputNumber 1, winner true."));
     }
 
     @Test(timeout = TEST_TIMEOUT)
@@ -592,21 +467,21 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
         socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
         socketPlayer1.sendWithDelay("START");
-        socketPlayer1.sendWithDelay("PLAY:81");
-        socketPlayer2.sendWithDelay("PLAY:27");
-        socketPlayer1.sendWithDelay("PLAY:9");
-        socketPlayer2.sendWithDelay("PLAY:3");
+        socketPlayer1.sendWithDelay("PLAY:-1");
+        socketPlayer2.sendWithDelay("PLAY:0");
+        socketPlayer1.sendWithDelay("PLAY:-1");
+        socketPlayer2.sendWithDelay("PLAY:1");
         socketPlayer1.clearInput();
         socketPlayer2.clearInput();
 
         //when
-        socketPlayer1.sendWithDelay("PLAY:2");
+        socketPlayer1.sendWithDelay("PLAY:1");
 
         //then
-        assertThat("Player 1 should not be able to play after winning.",
+        assertThat("Player1 should not be able to play after winning.",
                 socketPlayer1.readNextLineSync(),
                 matchesPattern("ERROR: can not play game when Round result: outputNumber 1, winner true."));
-        assertTrue("Player 2 should not receive anything.", socketPlayer2.inputIsEmpty());
+        assertTrue("Player2 should not receive anything.", socketPlayer2.inputIsEmpty());
     }
 
 
@@ -616,11 +491,11 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
         socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
         socketPlayer1.sendWithDelay("START");
-        socketPlayer1.sendWithDelay("PLAY:81");
-        socketPlayer2.sendWithDelay("PLAY:27");
-        socketPlayer1.sendWithDelay("PLAY:9");
-        socketPlayer2.sendWithDelay("PLAY:3");
-        socketPlayer1.sendWithDelay("PLAY:2");
+        socketPlayer1.sendWithDelay("PLAY:-1");
+        socketPlayer2.sendWithDelay("PLAY:0");
+        socketPlayer1.sendWithDelay("PLAY:-1");
+        socketPlayer2.sendWithDelay("PLAY:1");
+        socketPlayer1.sendWithDelay("PLAY:1");
         socketPlayer1.clearInput();
         socketPlayer2.clearInput();
 
@@ -628,13 +503,145 @@ public class AcceptanceTwoPlayersTest {
         socketPlayer2.sendWithDelay("START");
 
         //then
-        assertThat("Player 1 should receive new game started.",
+        assertThat("Player1 should receive new game started.",
                 socketPlayer1.readNextLineSync(),
-                matchesPattern("Game started. The starting number is 81. Next to play is player player1."));
-        assertThat("Player 2 should receive new game started.",
+                matchesPattern("Game started. The starting number is 64. Next to play is player player1."));
+        assertThat("Player2 should receive new game started.",
                 socketPlayer2.readNextLineSync(),
-                matchesPattern("Game started. The starting number is 81. Next to play is player player1."));
+                matchesPattern("Game started. The starting number is 64. Next to play is player player1."));
     }
+
+
+    @Test(timeout = TEST_TIMEOUT)
+    public void shouldPlayGameWithMachineWhenPlayerIsFirst() {
+        //given
+        socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
+        socketPlayer1.sendWithDelay("ADD_MACHINE");
+        socketPlayer1.clearInput();
+        socketPlayer2.clearInput();
+
+        //when
+        socketPlayer1.sendWithDelay("START");
+
+        //then
+        assertThat("Player1 should receive starting game by player1 with output number.",
+                socketPlayer1.readNextLineSync(),
+                matchesPattern("Game started. The starting number is 64. Next to play is player player1."));
+        assertThat("Player2 should receive starting game by player1 with output number.",
+                socketPlayer2.readNextLineSync(),
+                matchesPattern("Game started. The starting number is 64. Next to play is player player1."));
+
+        //and when
+        socketPlayer1.sendWithDelay("PLAY:-1");
+
+        //and then
+        assertThat("Player1 should receive that Player1 1 played correct input number.",
+                socketPlayer1.readNextLineSync(),
+                matchesPattern("player player1 played number -1. The result is Round result: outputNumber 21, winner false."));
+        assertThat("Player2 should receive that Player 1 played correct input number.",
+                socketPlayer2.readNextLineSync(),
+                matchesPattern("player player1 played number -1. The result is Round result: outputNumber 21, winner false."));
+
+        //and then
+        assertThat("Player1 should receive that Machine1 played correct input number.",
+                socketPlayer1.readNextLineSync(),
+                matchesPattern("machine Machine[0-9]+ played number 0. The result is Round result: outputNumber 7, winner false."));
+        assertThat("Player2 should receive that Machine 1 played correct input number.",
+                socketPlayer2.readNextLineSync(),
+                matchesPattern("machine Machine[0-9]+ played number 0. The result is Round result: outputNumber 7, winner false."));
+    }
+
+    @Test(timeout = TEST_TIMEOUT)
+    public void shouldStartAndPlayGameWhenMachineAndHuman() throws InterruptedException {
+//        ConcurrentLinkedQueue<String> messagesPlayer1 = new ConcurrentLinkedQueue<>();
+//        ConcurrentLinkedQueue<String> messagesPlayer2 = new ConcurrentLinkedQueue<>();
+//        Thread t = new Thread(() -> {
+//            socketPlayer1.getInputStream().forEach(m -> {
+//                messagesPlayer1.add(m);
+//            });
+//            socketPlayer2.getInputStream().forEach(m -> messagesPlayer2.add(m));
+//        });
+//        t.start();
+//        Thread.sleep(100);
+
+        //given
+        socketPlayer1.sendWithDelay("ADD_MACHINE");
+        socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
+        socketPlayer1.clearInput();
+        socketPlayer2.clearInput();
+
+        //when
+        socketPlayer1.sendWithDelay("START");
+
+        //then
+        assertThat("Player1 should receive game started with number and next player.",
+                socketPlayer1.readNextLineSync(),
+                matchesPattern("Game started. The starting number is 64. Next to play is machine Machine[0-9]+."));
+        assertThat("Player2 should receive starting game by player1 with output number.",
+                socketPlayer2.readNextLineSync(),
+                matchesPattern("Game started. The starting number is 64. Next to play is machine Machine[0-9]+."));
+
+        //and then
+        assertThat("Player1 should receive that Machine 1 played correct input number.",
+                socketPlayer1.readNextLineSync(),
+                matchesPattern("machine Machine[0-9]+ played number -1. The result is Round result: outputNumber 21, winner false."));
+        assertThat("Player2 should receive that Machine 1 played correct input number.",
+                socketPlayer2.readNextLineSync(),
+                matchesPattern("machine Machine[0-9]+ played number -1. The result is Round result: outputNumber 21, winner false."));
+    }
+
+    @Test(timeout = TEST_TIMEOUT)
+    public void shouldStartAndPlayGameWhenMachineAndMachine() {
+        //given
+        socketPlayer1.sendWithDelay("ADD_MACHINE");
+        socketPlayer2.sendWithDelay("ADD_MACHINE");
+        socketPlayer1.clearInput();
+        socketPlayer2.clearInput();
+
+        //when
+        socketPlayer1.sendWithDelay("START");
+
+        //then
+        assertThat("Player1 should receive game started with number and next player.",
+                socketPlayer1.readNextLineSync(),
+                matchesPattern("Game started. The starting number is 64. Next to play is machine Machine[0-9]+."));
+        assertThat("Player2 should receive starting game by player1 with output number.",
+                socketPlayer2.readNextLineSync(),
+                matchesPattern("Game started. The starting number is 64. Next to play is machine Machine[0-9]+."));
+
+        //and then
+        assertThat("Player1 should receive that Machine 1 played correct input number.",
+                socketPlayer1.readNextLineSync(),
+                matchesPattern("machine Machine[0-9]+ played number -1. The result is Round result: outputNumber 21, winner false."));
+        assertThat("Player2 should receive that Machine 1 played correct input number.",
+                socketPlayer2.readNextLineSync(),
+                matchesPattern("machine Machine[0-9]+ played number -1. The result is Round result: outputNumber 21, winner false."));
+
+        //and then
+        assertThat("Player1 should receive that Machine 1 played correct input number.",
+                socketPlayer1.readNextLineSync(),
+                matchesPattern("machine Machine[0-9]+ played number 0. The result is Round result: outputNumber 7, winner false."));
+        assertThat("Player2 should receive that Machine 1 played correct input number.",
+                socketPlayer2.readNextLineSync(),
+                matchesPattern("machine Machine[0-9]+ played number 0. The result is Round result: outputNumber 7, winner false."));
+
+        //and then
+        assertThat("Player1 should receive that Machine 1 played correct input number.",
+                socketPlayer1.readNextLineSync(),
+                matchesPattern("machine Machine[0-9]+ played number -1. The result is Round result: outputNumber 2, winner false."));
+        assertThat("Player2 should receive that Machine 1 played correct input number.",
+                socketPlayer2.readNextLineSync(),
+                matchesPattern("machine Machine[0-9]+ played number -1. The result is Round result: outputNumber 2, winner false."));
+
+        //and then
+        assertThat("Player1 should receive that Machine 1 played correct input number.",
+                socketPlayer1.readNextLineSync(),
+                matchesPattern("machine Machine[0-9]+ played number 1. The result is Round result: outputNumber 1, winner true."));
+        assertThat("Player2 should receive that Machine 1 played correct input number.",
+                socketPlayer2.readNextLineSync(),
+                matchesPattern("machine Machine[0-9]+ played number 1. The result is Round result: outputNumber 1, winner true."));
+    }
+
 
     @Test(timeout = TEST_TIMEOUT)
     public void whenExitUnknownPlayerShouldReceiveUnknownPlayerExited() {

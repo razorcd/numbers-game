@@ -5,10 +5,18 @@ import java.util.Objects;
 public class GameRoundResult {
 
     public static final GameRoundResult NULL = new GameRoundResult(null, false);
-    public static final GameRoundResult INITIAL = new GameRoundResult(OutputNumber.getStartNumber(), false);
 
     private final OutputNumber outputNumber;
     private final boolean winner;
+
+    /**
+     * Get game round result in before first round form.
+     *
+     * @return [GameRoundResult] game round result before first round.
+     */
+    public static GameRoundResult getInitial() {
+        return new GameRoundResult(OutputNumber.getStartNumber(), false);
+    }
 
     /**
      * Initialize a new round result of a played game.

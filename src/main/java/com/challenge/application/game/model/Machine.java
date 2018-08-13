@@ -2,6 +2,7 @@ package com.challenge.application.game.model;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Entity representing a AI player.
@@ -9,7 +10,7 @@ import java.util.UUID;
 public class Machine implements IPlayer {
 
     public static final Machine NULL = new Machine("-", "unknown");
-    private static int nameCounter = 1;
+    private static final AtomicInteger nameCounter = new AtomicInteger(1);
     private static final String MACHINE_NAME = "Machine";
 
     private final String id;
@@ -26,7 +27,7 @@ public class Machine implements IPlayer {
      * @return [Machine] generated machine player
      */
     public static Machine generate() {
-        return new Machine(UUID.randomUUID().toString(), MACHINE_NAME+nameCounter++);
+        return new Machine(UUID.randomUUID().toString(), MACHINE_NAME+nameCounter.incrementAndGet());
     }
 
     public String getName() {

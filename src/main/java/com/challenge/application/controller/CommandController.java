@@ -1,10 +1,10 @@
 package com.challenge.application.controller;
 
-import com.challenge.application.game.GameManager;
 import com.challenge.application.controller.commands.*;
 import com.challenge.application.controller.dto.UserInputDto;
 import com.challenge.application.controller.mapper.UserInputDeserializer;
-import com.challenge.application.game.service.ai.DividableByThreeAi;
+import com.challenge.application.game.GameManager;
+import com.challenge.application.game.gameround.ai.DivideByThreeAi;
 import com.challenge.server.SocketChannel;
 
 import java.util.function.Consumer;
@@ -56,13 +56,13 @@ public class CommandController implements Consumer<String> {
                 break;
             case START:
                 Start start = new Start(gameManager, socketChannel);
-                PlayMachine playMachine = new PlayMachine(gameManager, socketChannel, new DividableByThreeAi());
+                PlayMachine playMachine = new PlayMachine(gameManager, socketChannel, new DivideByThreeAi());
                 start.setSuccessor(playMachine);
                 start.execute(userInputDto.getData());
                 break;
             case PLAY:
                 Play playCommand = new Play(gameManager, socketChannel);
-                playCommand.setSuccessor(new PlayMachine(gameManager, socketChannel, new DividableByThreeAi()));
+                playCommand.setSuccessor(new PlayMachine(gameManager, socketChannel, new DivideByThreeAi()));
                 playCommand.execute(userInputDto.getData());
                 break;
             case STATE:

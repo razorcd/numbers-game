@@ -26,7 +26,7 @@ public class Unknown extends ChainableCommand<String> {
      */
     @Override
     public void execute(String data) {
-        socketChannel.send("unknown command. Available commands are: ADD_PLAYER:player_name, START, PLAY:number, STATE, EXIT.");
+        socketChannel.send("unknown command. Available commands are: ADD_PLAYER:player_name, ADD_MACHINE, START, PLAY:number, STATE, EXIT.");
         doNext(data);
     }
 }

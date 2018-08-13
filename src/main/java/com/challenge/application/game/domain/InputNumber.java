@@ -2,7 +2,6 @@ package com.challenge.application.game.domain;
 
 
 import java.util.Objects;
-import java.util.stream.Stream;
 
 public class InputNumber {
 
@@ -17,32 +16,10 @@ public class InputNumber {
         this.value = value;
     }
 
-
-    /**
-     * Validate current input number is playable after specified game round result.
-     *
-     * @param gameRoundResult the previous game round result.
-     * @return [boolean] if can play current input after specified game round result.
-     */
-    public boolean canPlayNumberAfter(GameRoundResult gameRoundResult) {
-        return Stream.of(gameRoundResult)
-                .allMatch(roundResult ->
-                        Objects.isNull(roundResult.getOutputNumber()) ||
-                        hasSameValue(roundResult.getOutputNumber()));
-    }
-
     public int getValue() {
         return value;
     }
-
-    public boolean isBiggerOrEqualThan(int lowBoundary) {
-        return value >= lowBoundary;
-    }
-
-    public boolean hasSameValue(OutputNumber outputNumber) {
-        return this.value == outputNumber.getValue();
-    }
-
+//TODO: add validator here?
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

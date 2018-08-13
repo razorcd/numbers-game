@@ -12,9 +12,7 @@ import java.util.Arrays;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,7 +41,7 @@ public class UniquePlayerValidatorTest {
         assertFalse("Should invalidate when game manager already has the new player.", result);
         assertThat("Should set messages when game manager already has the new player.",
                 uniquePlayerValidator.getValidationMessages(),
-                containsInAnyOrder(UniquePlayerValidator.NOT_UNQUE_MSG));
+                containsInAnyOrder(UniquePlayerValidator.NOT_UNIQUE_MSG));
     }
 
     @Test

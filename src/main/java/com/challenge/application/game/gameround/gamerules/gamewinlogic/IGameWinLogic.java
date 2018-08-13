@@ -1,4 +1,4 @@
-package com.challenge.application.game.service.gamerules.gamewinlogic;
+package com.challenge.application.game.gameround.gamerules.gamewinlogic;
 
 import com.challenge.application.game.domain.OutputNumber;
 

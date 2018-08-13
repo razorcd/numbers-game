@@ -1,4 +1,4 @@
-package com.challenge.application.game.service.ai;
+package com.challenge.application.game.gameround.ai;
 
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.OutputNumber;

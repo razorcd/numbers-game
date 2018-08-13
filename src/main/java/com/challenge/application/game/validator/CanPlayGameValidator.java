@@ -1,20 +1,17 @@
 package com.challenge.application.game.validator;
 
 import com.challenge.application.game.Game;
-import com.challenge.application.game.domain.GameRoundResult;
-import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.GameException;
 import com.challenge.application.game.exception.ValidationException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 public class CanPlayGameValidator implements Validator<Game> {
 
-    public static final String INVALID_GAME_ROUND_STATE_MSG = "can not play game when ";
-    public static final String INVALID_PLAYER_AGGREGATE_MSG = "can not play game when ";
+    static final String INVALID_GAME_ROUND_STATE_MSG = "can not play game when ";
+    static final String INVALID_PLAYER_AGGREGATE_MSG = "can not play game when ";
 
     private List<String> messages = new ArrayList<>();
 
@@ -27,9 +24,9 @@ public class CanPlayGameValidator implements Validator<Game> {
      */
     @Override
     public boolean validate(Game game) {
-        return Stream.of(
-            getValidGameRoundResult(game).isPresent() || setInvalidState(INVALID_GAME_ROUND_STATE_MSG+game.getGameRoundResult()),
-            getVlalidPlayerAggregate(game).isPresent() || setInvalidState(INVALID_PLAYER_AGGREGATE_MSG+game.getPlayerAggregate())
+        return Stream.of(  //TODO: split in 2 more readable validators
+            isValidGameRoundResult(game) || setInvalidState(INVALID_GAME_ROUND_STATE_MSG+game.getGameRoundResult()),
+            isValidPlayerAggregate(game) || setInvalidState(INVALID_PLAYER_AGGREGATE_MSG+game.getPlayerAggregate())
         ).allMatch(Boolean::booleanValue);
     }
 
@@ -41,11 +38,13 @@ public class CanPlayGameValidator implements Validator<Game> {
      */
     @Override
     public void validateOrThrow(Game game) {
-        getValidGameRoundResult(game)
-                .orElseThrow(() -> new ValidationException(INVALID_GAME_ROUND_STATE_MSG+game.getGameRoundResult()));
+        if (!isValidGameRoundResult(game)) {
+            throw new ValidationException(INVALID_GAME_ROUND_STATE_MSG+game.getGameRoundResult());
+        }
 
-        getVlalidPlayerAggregate(game)
-                .orElseThrow(() -> new GameException(INVALID_PLAYER_AGGREGATE_MSG+game.getPlayerAggregate()));
+        if (!isValidPlayerAggregate(game)) {
+            throw new GameException(INVALID_PLAYER_AGGREGATE_MSG + game.getPlayerAggregate());
+        }
     }
 
     @Override
@@ -53,14 +52,12 @@ public class CanPlayGameValidator implements Validator<Game> {
         return messages;
     }
 
-    private Optional<GameRoundResult> getValidGameRoundResult(Game game) {
-        return Optional.of(game.getGameRoundResult())
-                .filter(GameRoundResult::canPlayAgain);
+    private boolean isValidGameRoundResult(Game game) {
+        return game.getGameRoundResult().canPlayAgain();
     }
 
-    private Optional<PlayerAggregate> getVlalidPlayerAggregate(Game game) {
-        return Optional.of(game.getPlayerAggregate())
-                .filter(PlayerAggregate::isValid);
+    private boolean isValidPlayerAggregate(Game game) {
+        return game.getPlayerAggregate().isValid();
     }
 
     private boolean setInvalidState(String message) {

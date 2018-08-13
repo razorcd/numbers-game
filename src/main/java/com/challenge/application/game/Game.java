@@ -1,11 +1,12 @@
 package com.challenge.application.game;
 
+import com.challenge.application.game.domain.GameRoundInput;
 import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.InputNumber;
-import com.challenge.application.game.exception.ValidationException;
 import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.GameException;
-import com.challenge.application.game.service.GameRoundService;
+import com.challenge.application.game.exception.ValidationException;
+import com.challenge.application.game.gameround.GameRoundService;
 import com.challenge.application.game.validator.CanValidate;
 import com.challenge.application.game.validator.Validator;
 
@@ -23,7 +24,7 @@ public class Game implements CanValidate<Game> {
      * Consider validating game with NewGameValidator after initializing.
      *
      * @param gameRoundService the service for each game round.
-     * @param playerAggregate the playerAggregate aggregate holding the root as current player.
+     * @param playerAggregate the player aggregate holding the root as the <b>player that will play next</b>.
      * @throws GameException if invalid playerAggregate.
      */
     public Game(final GameRoundService gameRoundService, final PlayerAggregate playerAggregate) {
@@ -37,7 +38,7 @@ public class Game implements CanValidate<Game> {
      * Consider validating game with NewGameValidator after initializing.
      *
      * @param gameRoundService the service for each game round.
-     * @param playerAggregate the playerAggregate aggregate holding the root as current player (who is about to play next number).
+     * @param playerAggregate the player aggregate holding the root as the <b>player that will play next</b>.
      * @param gameRoundResult the result of the played round.
      */
     public Game(final GameRoundService gameRoundService, final PlayerAggregate playerAggregate, final GameRoundResult gameRoundResult) {
@@ -55,7 +56,8 @@ public class Game implements CanValidate<Game> {
      * @throws GameException if can not play input number in current game state.
      */
     public Game play(final InputNumber inputNumber) {
-        return new Game(gameRoundService, playerAggregate.getNext(), gameRoundService.play(inputNumber));
+        GameRoundInput gameRoundInput = new GameRoundInput(inputNumber, gameRoundResult.getOutputNumber());
+        return new Game(gameRoundService, playerAggregate.getNext(), gameRoundService.play(gameRoundInput));
     }
 
     /**

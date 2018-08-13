@@ -127,7 +127,6 @@ mvn test
 ```
 
 ### Todo
- - [ ] add feature for player to choose -1, 0 or 1 instead of the server to calculate the next valid input (like it's now implemented) 
  - [ ] define a better interface for Game module to reduce the leaking in controller.
  - [ ] allow ip and port to be overwritten with the command args, not only file configuration. 
  - [ ] global properties class
@@ -154,3 +153,25 @@ Design patterns I used on application:
 Game, gameround are immutable and can be streamed through a reducer. (functional programming style)
 
 reduce functional for readability
+
+
+Other parts:
+- controller parses input and uses command pattern and chain of responsibility pattern to control game   
+- each socket connection starts in separate thread and binds socket to controller
+- socketChannel works as a pub-sub system to connect to streams and broadcast messages. 
+
+- game is divided in 2 main parts:
+  - the game round which is a stateless class representing a round (a turn) in a game. It has it's own domains, logic, validators is a standalone module.
+  - the turn based game that mediates the game round and the players. 
+
+- main game logic and AI are two separate classes that are injected by the game factory into the game.
+
+The game logic is very flexible. For example to convert this to a tic-tac-toe game all is needed is to replace the game logic, win logic and AI independent classes.
+
+
+
+
+
+
+  
+

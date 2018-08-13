@@ -15,8 +15,8 @@ public class PlayerAggregate {
 
     public static final int DEFAULT_ROOT_INDEX = Integer.parseInt(PropertiesConfigLoader.getProperties()
             .getProperty("com.challenge.application.game.index_of_player_that_starts_first", "0"));
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerAggregate.class);
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerAggregate.class);
 
     public static final PlayerAggregate NULL = new PlayerAggregate(Collections.emptyList(), -1);
     private static final int PLAYER_COUNT = 2;

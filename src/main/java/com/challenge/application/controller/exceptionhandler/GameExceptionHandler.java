@@ -24,11 +24,11 @@ public class GameExceptionHandler implements ExceptionHandler<GameException> {
     @Override
     public void handle(GameException ex, IPlayer currentPlayer) {
         LOGGER.debug("GameException for player {}. Error message: {}.", currentPlayer, ex.getMessage());
-        String errMessage = buildErrorMessage(ex, currentPlayer);
+        String errMessage = buildErrorMessage(ex);
         socketChannel.send(errMessage);
     }
 
-    private String buildErrorMessage(GameException ex, IPlayer currentPlayer) {
+    private String buildErrorMessage(GameException ex) {
         return "ERROR: " +
 //                player +
 //                ": " +

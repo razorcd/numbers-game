@@ -4,7 +4,7 @@ import com.challenge.application.utils.collections.CircularLinkedList;
 import com.challenge.application.utils.collections.LinkedNode;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class CircularLinkedListTest {
 

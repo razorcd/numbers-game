@@ -9,7 +9,7 @@ import java.util.List;
 
 public class UniquePlayerValidator implements Validator<GameManager> {
 
-    static final String NOT_UNQUE_MSG = "can not add another player.";
+    static final String NOT_UNIQUE_MSG = "can not add another player.";
 
     private List<String> messages = new ArrayList<>();
     private IPlayer newPlayer;
@@ -28,7 +28,7 @@ public class UniquePlayerValidator implements Validator<GameManager> {
     @Override
     public boolean validate(GameManager gameManager) {
         return isUniqueNewPlayer(gameManager.getPlayers(), newPlayer)
-                || setInvalidState(NOT_UNQUE_MSG);
+                || setInvalidState(NOT_UNIQUE_MSG);
     }
 
     /**
@@ -40,7 +40,7 @@ public class UniquePlayerValidator implements Validator<GameManager> {
     @Override
     public void validateOrThrow(GameManager gameManager) {
         if (!isUniqueNewPlayer(gameManager.getPlayers(), newPlayer)) {
-            throw new ValidationException(NOT_UNQUE_MSG);
+            throw new ValidationException(NOT_UNIQUE_MSG);
         }
     }
 

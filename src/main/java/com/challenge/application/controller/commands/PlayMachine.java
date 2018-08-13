@@ -6,8 +6,8 @@ import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.OutputNumber;
 import com.challenge.application.game.domain.PlayerAggregate;
+import com.challenge.application.game.gameround.ai.IGameRoundAi;
 import com.challenge.application.game.model.IPlayer;
-import com.challenge.application.game.service.ai.IGameRoundAi;
 import com.challenge.server.SocketChannel;
 
 public class PlayMachine extends ChainableCommand<String> {
@@ -30,9 +30,9 @@ public class PlayMachine extends ChainableCommand<String> {
     }
 
     /**
-     * Execute play command.
+     * Execute play command for machine player.
      *
-     * @param rawInputNumber the played input number.
+     * @param rawInputNumber the playing input number.
      */
     @Override
     public void execute(String rawInputNumber) {

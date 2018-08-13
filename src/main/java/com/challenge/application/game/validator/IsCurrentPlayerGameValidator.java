@@ -58,10 +58,8 @@ public class IsCurrentPlayerGameValidator implements Validator<Game> {
     }
 
     private boolean isNextTurnPlayer(Game game, IPlayer expectedCurrentPlayer) {
-        return Optional.of(game.getPlayerAggregate())
-                .map(agg -> agg.getRootPlayer())
-                .filter(rootPlayer -> rootPlayer.isSame(expectedCurrentPlayer))
-                .isPresent();
+        IPlayer gameCurrentPlayer = game.getPlayerAggregate().getRootPlayer();
+        return gameCurrentPlayer.isSame(expectedCurrentPlayer);
     }
 
     private boolean setInvalidState(String message) {

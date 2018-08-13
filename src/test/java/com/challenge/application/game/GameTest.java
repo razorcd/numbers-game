@@ -1,11 +1,9 @@
 package com.challenge.application.game;
 
-import com.challenge.application.game.domain.GameRoundResult;
-import com.challenge.application.game.domain.InputNumber;
-import com.challenge.application.game.domain.PlayerAggregate;
+import com.challenge.application.game.domain.*;
 import com.challenge.application.game.exception.GameException;
+import com.challenge.application.game.gameround.GameRoundService;
 import com.challenge.application.game.model.Human;
-import com.challenge.application.game.service.GameRoundService;
 import com.challenge.application.game.validator.CanPlayGameValidator;
 import com.challenge.application.game.validator.NewGameValidator;
 import org.junit.Before;
@@ -13,13 +11,15 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+
 public class GameTest {
 
+    private Game game;
     private GameRoundService gameRoundServiceMock;
 
     @Before
@@ -49,31 +49,37 @@ public class GameTest {
     }
 
     @Test
-    public void gameShouldPlay() {
+    public void gameShouldPlayWithHumans() {
         Human player1 = new Human("1", "player1");
         Human player2 = new Human("1", "player2");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
-        InputNumber inputNumber = new InputNumber(100);
+
+        InputNumber inputNumberToPlay = new InputNumber(1);
+        game = new Game(gameRoundServiceMock, playerAggregate);
+        OutputNumber lastOutputNumber = game.getGameRoundResult().getOutputNumber();
+        GameRoundInput gameRoundInput = new GameRoundInput(new InputNumber(1), lastOutputNumber);
 
         GameRoundResult gameRoundResultDummy = mock(GameRoundResult.class);
-        when(gameRoundServiceMock.play(inputNumber)).thenReturn(gameRoundResultDummy);
+        when(gameRoundServiceMock.play(gameRoundInput)).thenReturn(gameRoundResultDummy);
 
-        Game nextGame = new Game(gameRoundServiceMock, playerAggregate).play(inputNumber);
+        Game nextGame = game.play(inputNumberToPlay);
 
-        assertEquals("New game should have a round result.", nextGame.getGameRoundResult(), gameRoundResultDummy);
+        assertEquals("New game should have a new round result.", nextGame.getGameRoundResult(), gameRoundResultDummy);
         assertEquals("New game should hold new player aggregate with next player.", playerAggregate.getNext(), nextGame.getPlayerAggregate());
     }
 
     @Test(expected = GameException.class)
-    public void gameShouldNotPlayInvalidInitialInput() {
+    public void gameShouldThrowWhenPlayingInvalidInitialInput() {
         Human player1 = new Human("1", "player1");
         Human player2 = new Human("2", "player2");
         PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
-        InputNumber inputNumber = new InputNumber(0);
+        InputNumber inputNumberToPlay = new InputNumber(0);
 
-        when(gameRoundServiceMock.play(inputNumber)).thenThrow(GameException.class);
+        when(gameRoundServiceMock.play(any())).thenThrow(GameException.class);
 
-        Game nextGgame = new Game(gameRoundServiceMock, playerAggregate).play(inputNumber);
+        new Game(gameRoundServiceMock, playerAggregate).play(inputNumberToPlay);
+
+        fail("Should have thrown exception when playing invalid initial value.");
     }
 
     @Test
@@ -84,14 +90,14 @@ public class GameTest {
         InputNumber inputNumber = new InputNumber(0);
 
         GameRoundResult gameRoundResult = new GameRoundResult(null, true);
-        when(gameRoundServiceMock.play(inputNumber)).thenReturn(gameRoundResult);
+        when(gameRoundServiceMock.play(any())).thenReturn(gameRoundResult);
 
-        Game nextGgame = new Game(gameRoundServiceMock, playerAggregate).play(inputNumber);
+        Game nextGame = new Game(gameRoundServiceMock, playerAggregate).play(inputNumber);
 
-        boolean validGameForPlaying = nextGgame.validate(new CanPlayGameValidator());
+        boolean validGameForPlaying = nextGame.validate(new CanPlayGameValidator());
 
         assertFalse("Should invalidate with CanPlayGameValidator after winning.", validGameForPlaying);
 
-        nextGgame.play(new InputNumber(5));
+        nextGame.play(new InputNumber(5));
     }
 }
