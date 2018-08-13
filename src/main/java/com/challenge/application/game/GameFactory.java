@@ -2,14 +2,9 @@ package com.challenge.application.game;
 
 import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.PlayerAggregate;
-import com.challenge.application.game.exception.GameException;
 import com.challenge.application.game.gameround.GameRoundService;
 import com.challenge.application.game.gameround.gamerules.gameplaylogic.IGameRoundLogic;
 import com.challenge.application.game.gameround.gamerules.gamewinlogic.IGameWinLogic;
-import com.challenge.application.game.model.IPlayer;
-import com.challenge.application.game.validator.NewGameValidator;
-
-import java.util.List;
 
 public class GameFactory {
 
@@ -29,22 +24,13 @@ public class GameFactory {
     }
 
     /**
-     * Build the new game with specified players.
+     * Build the new game.
      *
-     * @param players a list of human and AI players that will play the game.
      * @return [Game] the new game
      */
-    public Game buildNewGame(List<IPlayer> players) {
+    public Game buildNewGame() {
         GameRoundService gameRoundService = new GameRoundService(gameLogic, winLogic);
 
-        PlayerAggregate playerAggregate = new PlayerAggregate(players, PlayerAggregate.DEFAULT_ROOT_INDEX);
-
-        Game game = new Game(gameRoundService, playerAggregate, GameRoundResult.getInitial());
-
-        if (!game.validate(new NewGameValidator())) {
-            throw new GameException("can not create a game with invalid players");
-        }
-
-        return game;
+        return new Game(gameRoundService, PlayerAggregate.NULL, GameRoundResult.NULL);
     }
 }

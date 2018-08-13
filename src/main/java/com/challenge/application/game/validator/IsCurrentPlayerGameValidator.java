@@ -7,7 +7,6 @@ import com.challenge.application.game.model.IPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class IsCurrentPlayerGameValidator implements Validator<Game> {
 

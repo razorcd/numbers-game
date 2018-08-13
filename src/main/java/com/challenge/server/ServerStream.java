@@ -32,7 +32,7 @@ public class ServerStream implements Closeable {
      */
     public SocketChannel start() {
         LOGGER.debug("Starting ServerStream.");
-        try {             //TODO: nest them in try/catch
+        try {
             clientSocket = serverSocket.accept();
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));

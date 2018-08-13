@@ -9,7 +9,7 @@ import com.challenge.application.game.validator.NewGameValidator;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,57 +27,106 @@ public class GameTest {
         gameRoundServiceMock = mock(GameRoundService.class);
     }
 
+
     @Test
-    public void gameShouldInitialize() {
+    public void gameShouldAddPlayers() {
+        Human player1 = new Human("1", "player1");
+
+        Game game = new Game(gameRoundServiceMock);
+
+        Game newGame = game.addPlayer(player1);
+
+        assertEquals("Game should add players.", player1, newGame.getPlayerAggregate().getRootPlayer());
+    }
+
+
+    @Test
+    public void gameShouldAddMultiplePlayers() {
         Human player1 = new Human("1", "player1");
         Human player2 = new Human("2", "player2");
-        PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
+        Human player3 = new Human("3", "player3");
 
-        Game game = new Game(gameRoundServiceMock, playerAggregate);
+        Game lastGame = Stream.of(player1, player2, player3)
+                .reduce(new Game(gameRoundServiceMock), Game::addPlayer, (a, b) -> null);
 
-        assertEquals("New game should have NULL round result.", GameRoundResult.NULL, game.getGameRoundResult());
-        assertEquals("New game should hold the player aggregate.", playerAggregate, game.getPlayerAggregate());
+        assertEquals("Game should add player1 to game.", player1, lastGame.getPlayerAggregate().getRootPlayer());
+        assertEquals("Game should add player2 to game.", player2, lastGame.getPlayerAggregate().next().getRootPlayer());
+        assertEquals("Game should add player3 to game.", player3, lastGame.getPlayerAggregate().next().next().getRootPlayer());
     }
 
     @Test
     public void gameShouldInvalidate_withNewGameValidator_whenGameInitializedWithInvalidAggregate() {
         Human player1 = new Human("1", "player1");
-        PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1), 0);
-        Game game = new Game(gameRoundServiceMock, playerAggregate);
+
+        Game game = new Game(gameRoundServiceMock)
+                .addPlayer(player1);
+
         assertFalse("Game should invalidate with NewGameValidator when game initialized with invalid playerAggregate",
                 game.validate(new NewGameValidator()));
+    }
+
+    @Test
+    public void gameShouldValidate_withNewGameValidator_whenGameInitializedWithValidAggregate() {
+        Human player1 = new Human("1", "player1");
+        Human player2 = new Human("2", "player2");
+
+        Game game = new Game(gameRoundServiceMock)
+                .addPlayer(player1)
+                .addPlayer(player2);
+
+        assertTrue("Game should validate with NewGameValidator when game initialized with valid playerAggregate",
+                game.validate(new NewGameValidator()));
+    }
+
+    @Test
+    public void gameShouldStartGameAndHaveOutputNumber() {
+        Human player1 = new Human("1", "player1");
+        Human player2 = new Human("1", "player2");
+
+        Game game = new Game(gameRoundServiceMock)
+                .addPlayer(player1)
+                .addPlayer(player2)
+                .startGame();
+
+        assertEquals("New game should have a new round result with output.", new OutputNumber(64), game.getGameRoundResult().getOutputNumber());
+        assertEquals("New game should hold new player aggregate with next player.", player1, game.getPlayerAggregate().getRootPlayer());
     }
 
     @Test
     public void gameShouldPlayWithHumans() {
         Human player1 = new Human("1", "player1");
         Human player2 = new Human("1", "player2");
-        PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
 
-        InputNumber inputNumberToPlay = new InputNumber(1);
-        game = new Game(gameRoundServiceMock, playerAggregate);
+        Game game = new Game(gameRoundServiceMock)
+                .addPlayer(player1)
+                .addPlayer(player2);
+//                .startGame();  //irrelevant while mocking
+
+        PlayerAggregate playerAggregate = game.getPlayerAggregate();
         OutputNumber lastOutputNumber = game.getGameRoundResult().getOutputNumber();
         GameRoundInput gameRoundInput = new GameRoundInput(new InputNumber(1), lastOutputNumber);
-
         GameRoundResult gameRoundResultDummy = mock(GameRoundResult.class);
         when(gameRoundServiceMock.play(gameRoundInput)).thenReturn(gameRoundResultDummy);
 
+        InputNumber inputNumberToPlay = new InputNumber(1);
         Game nextGame = game.play(inputNumberToPlay);
 
         assertEquals("New game should have a new round result.", nextGame.getGameRoundResult(), gameRoundResultDummy);
-        assertEquals("New game should hold new player aggregate with next player.", playerAggregate.getNext(), nextGame.getPlayerAggregate());
+        assertEquals("New game should hold new player aggregate with next player.", playerAggregate.next(), nextGame.getPlayerAggregate());
     }
 
     @Test(expected = GameException.class)
     public void gameShouldThrowWhenPlayingInvalidInitialInput() {
         Human player1 = new Human("1", "player1");
         Human player2 = new Human("2", "player2");
-        PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
         InputNumber inputNumberToPlay = new InputNumber(0);
 
         when(gameRoundServiceMock.play(any())).thenThrow(GameException.class);
 
-        new Game(gameRoundServiceMock, playerAggregate).play(inputNumberToPlay);
+        new Game(gameRoundServiceMock)
+                .addPlayer(player1)
+                .addPlayer(player2)
+                .play(inputNumberToPlay);
 
         fail("Should have thrown exception when playing invalid initial value.");
     }
@@ -86,13 +135,15 @@ public class GameTest {
     public void gameShouldInvalidate_withCanPlayGameValidator_afterWinning() {
         Human player1 = new Human("1", "player1");
         Human player2 = new Human("2", "player2");
-        PlayerAggregate playerAggregate = new PlayerAggregate(Arrays.asList(player1, player2), 0);
         InputNumber inputNumber = new InputNumber(0);
 
         GameRoundResult gameRoundResult = new GameRoundResult(null, true);
         when(gameRoundServiceMock.play(any())).thenReturn(gameRoundResult);
 
-        Game nextGame = new Game(gameRoundServiceMock, playerAggregate).play(inputNumber);
+        Game nextGame = new Game(gameRoundServiceMock)
+                .addPlayer(player1)
+                .addPlayer(player2)
+                .play(inputNumber);
 
         boolean validGameForPlaying = nextGame.validate(new CanPlayGameValidator());
 

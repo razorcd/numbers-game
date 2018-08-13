@@ -1,14 +1,14 @@
 package com.challenge.application.controller.commands;
 
 import com.challenge.application.game.Game;
-import com.challenge.application.game.GameManager;
+import com.challenge.application.game.GameService;
 import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.server.SocketChannel;
 
 public class State extends ChainableCommand<String> {
 
-    private GameManager gameManager;
+    private GameService gameManager;
     private SocketChannel socketChannel;
 
     /**
@@ -17,7 +17,7 @@ public class State extends ChainableCommand<String> {
      * @param gameManager holds the state of the application.
      * @param socketChannel socket adapter.
      */
-    public State(GameManager gameManager, SocketChannel socketChannel) {
+    public State(GameService gameManager, SocketChannel socketChannel) {
         this.gameManager = gameManager;
         this.socketChannel = socketChannel;
     }

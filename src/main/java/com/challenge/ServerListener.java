@@ -2,7 +2,7 @@ package com.challenge;
 
 import com.challenge.application.controller.CommandController;
 import com.challenge.application.controller.mapper.UserInputDeserializer;
-import com.challenge.application.game.GameManager;
+import com.challenge.application.game.GameService;
 import com.challenge.server.ServerStream;
 import com.challenge.server.SocketChannel;
 import com.challenge.server.SocketChannelRegistry;
@@ -17,7 +17,7 @@ public class ServerListener implements Runnable {
 
     private ServerSocket mainServerSocket;
     private ThreadLocal<SocketChannelRegistry> socketChannelRegistry;
-    private ThreadLocal<GameManager> gameManager;
+    private ThreadLocal<GameService> gameManager;
 
     /**
      * Start listener on server socket.
@@ -26,7 +26,7 @@ public class ServerListener implements Runnable {
      */
     public ServerListener(ServerSocket mainServerSocket,
                           ThreadLocal<SocketChannelRegistry> socketChannelRegistry,
-                          ThreadLocal<GameManager> gameManager) {
+                          ThreadLocal<GameService> gameManager) {
         this.mainServerSocket = mainServerSocket;
         this.socketChannelRegistry = socketChannelRegistry;
         this.gameManager = gameManager;

@@ -2,7 +2,7 @@ package com.challenge.application.controller.commands;
 
 import com.challenge.application.controller.exceptionhandler.GameExceptionHandler;
 import com.challenge.application.game.Game;
-import com.challenge.application.game.GameManager;
+import com.challenge.application.game.GameService;
 import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.GameException;
@@ -11,7 +11,7 @@ import com.challenge.server.SocketChannel;
 
 public class Start extends ChainableCommand<String> {
 
-    private GameManager gameManager;
+    private GameService gameManager;
     private SocketChannel socketChannel;
 
     /**
@@ -20,7 +20,7 @@ public class Start extends ChainableCommand<String> {
      * @param gameManager holds the state of the application.
      * @param socketChannel socket adapter.
      */
-    public Start(GameManager gameManager, SocketChannel socketChannel) {
+    public Start(GameService gameManager, SocketChannel socketChannel) {
         this.gameManager = gameManager;
         this.socketChannel = socketChannel;
     }

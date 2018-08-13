@@ -7,6 +7,7 @@ import com.challenge.application.game.domain.PlayerAggregate;
 import com.challenge.application.game.exception.GameException;
 import com.challenge.application.game.exception.ValidationException;
 import com.challenge.application.game.gameround.GameRoundService;
+import com.challenge.application.game.model.IPlayer;
 import com.challenge.application.game.validator.CanValidate;
 import com.challenge.application.game.validator.Validator;
 
@@ -24,12 +25,11 @@ public class Game implements CanValidate<Game> {
      * Consider validating game with NewGameValidator after initializing.
      *
      * @param gameRoundService the service for each game round.
-     * @param playerAggregate the player aggregate holding the root as the <b>player that will play next</b>.
      * @throws GameException if invalid playerAggregate.
      */
-    public Game(final GameRoundService gameRoundService, final PlayerAggregate playerAggregate) {
+    public Game(final GameRoundService gameRoundService) {
         this.gameRoundService = gameRoundService;
-        this.playerAggregate = playerAggregate;
+        this.playerAggregate = PlayerAggregate.NULL;
         this.gameRoundResult = GameRoundResult.NULL;
     }
 
@@ -47,6 +47,20 @@ public class Game implements CanValidate<Game> {
         this.gameRoundResult = gameRoundResult;
     }
 
+    public Game startGame() {
+        return new Game(gameRoundService, playerAggregate, GameRoundResult.getInitial());
+    }
+
+    /**
+     * Add new player to game. Returns a copy of current game with this player included.
+     *
+     * @param player the new player to add.
+     * @return [Game] the new copied game with specified new player included.
+     */
+    public Game addPlayer(final IPlayer player) {
+        return new Game(gameRoundService, playerAggregate.addPlayer(player), gameRoundResult);
+    }
+
     /**
      * Play a new number.
      * Consider validating game with CanPlayGameValidator before playing.
@@ -57,7 +71,7 @@ public class Game implements CanValidate<Game> {
      */
     public Game play(final InputNumber inputNumber) {
         GameRoundInput gameRoundInput = new GameRoundInput(inputNumber, gameRoundResult.getOutputNumber());
-        return new Game(gameRoundService, playerAggregate.getNext(), gameRoundService.play(gameRoundInput));
+        return new Game(gameRoundService, playerAggregate.next(), gameRoundService.play(gameRoundInput));
     }
 
     /**

@@ -1,12 +1,12 @@
 package com.challenge.application.controller.commands;
 
-import com.challenge.application.game.GameManager;
+import com.challenge.application.game.GameService;
 import com.challenge.application.game.model.Machine;
 import com.challenge.server.SocketChannel;
 
 public class AddMachine extends ChainableCommand<String> {
 
-    private GameManager gameManager;
+    private GameService gameManager;
     private SocketChannel socketChannel;
 
     /**
@@ -15,7 +15,7 @@ public class AddMachine extends ChainableCommand<String> {
      * @param gameManager holds the state of the application.
      * @param socketChannel socket adapter.
      */
-    public AddMachine(GameManager gameManager, SocketChannel socketChannel) {
+    public AddMachine(GameService gameManager, SocketChannel socketChannel) {
         this.gameManager = gameManager;
         this.socketChannel = socketChannel;
     }

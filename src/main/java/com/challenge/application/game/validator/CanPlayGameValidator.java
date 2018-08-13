@@ -24,7 +24,7 @@ public class CanPlayGameValidator implements Validator<Game> {
      */
     @Override
     public boolean validate(Game game) {
-        return Stream.of(  //TODO: split in 2 more readable validators
+        return Stream.of(
             isValidGameRoundResult(game) || setInvalidState(INVALID_GAME_ROUND_STATE_MSG+game.getGameRoundResult()),
             isValidPlayerAggregate(game) || setInvalidState(INVALID_PLAYER_AGGREGATE_MSG+game.getPlayerAggregate())
         ).allMatch(Boolean::booleanValue);

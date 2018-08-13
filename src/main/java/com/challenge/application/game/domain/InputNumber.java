@@ -19,7 +19,7 @@ public class InputNumber {
     public int getValue() {
         return value;
     }
-//TODO: add validator here?
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

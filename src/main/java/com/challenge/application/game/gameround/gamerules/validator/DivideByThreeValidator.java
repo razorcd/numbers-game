@@ -51,7 +51,6 @@ public class DivideByThreeValidator implements Validator<GameRoundInput> {
         return messages;
     }
 
-    //TODO: split in multiple validators
     private boolean isValid(GameRoundInput gameRoundInput) {
         return isBiggerThanLowBoundary(gameRoundInput) &&
                isDividableBy(gameRoundInput);

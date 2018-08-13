@@ -126,10 +126,6 @@ ERROR: Player player1: Can not play after Round result: outputNumber 1, winner t
 mvn test
 ```
 
-### Todo
- - [ ] define a better interface for Game module to reduce the leaking in controller.
- - [ ] allow ip and port to be overwritten with the command args, not only file configuration. 
- - [ ] global properties class
 ### Other 
  This was done in about 5 days so far, including the small server implementation.
  

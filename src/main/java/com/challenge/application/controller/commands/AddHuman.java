@@ -1,15 +1,14 @@
 package com.challenge.application.controller.commands;
 
 import com.challenge.application.controller.exceptionhandler.GameExceptionHandler;
-import com.challenge.application.game.GameManager;
-import com.challenge.application.game.exception.ValidationException;
+import com.challenge.application.game.GameService;
+import com.challenge.application.game.exception.GameException;
 import com.challenge.application.game.model.Human;
-import com.challenge.application.game.validator.UniquePlayerValidator;
 import com.challenge.server.SocketChannel;
 
 public class AddHuman extends ChainableCommand<String> {
 
-    private GameManager gameManager;
+    private GameService gameManager;
     private SocketChannel socketChannel;
 
     /**
@@ -18,7 +17,7 @@ public class AddHuman extends ChainableCommand<String> {
      * @param gameManager holds the state of the application.
      * @param socketChannel socket adapter.
      */
-    public AddHuman(GameManager gameManager, SocketChannel socketChannel) {
+    public AddHuman(GameService gameManager, SocketChannel socketChannel) {
         this.gameManager = gameManager;
         this.socketChannel = socketChannel;
     }
@@ -30,23 +29,17 @@ public class AddHuman extends ChainableCommand<String> {
      */
     @Override
     public void execute(String name) {
-        Human newPlayer = new Human(Thread.currentThread().getName(), name);  //inject authorized user
+        Human authorizedPlayer = new Human(Thread.currentThread().getName(), name);  //inject authorized user
 
-        if (!validateGameManagerForAddingNewPlayer(newPlayer)) return;
+        try {
+            gameManager.addPlayer(authorizedPlayer);
+        } catch (GameException ex) {
+            new GameExceptionHandler(socketChannel).handle(ex, authorizedPlayer);
+            return;
+        }
 
-        gameManager.addPlayer(newPlayer);
-        socketChannel.broadcast("Added player " + newPlayer.getName() + " to game.");
+        socketChannel.broadcast("Added player " + authorizedPlayer.getName() + " to game.");
 
         this.doNext(name);
-    }
-
-    private boolean validateGameManagerForAddingNewPlayer(Human newPlayer) {
-        try {
-            gameManager.validateOrThrow(new UniquePlayerValidator(newPlayer));
-        } catch (ValidationException ex) {
-            new GameExceptionHandler(socketChannel).handle(ex, newPlayer);
-            return false;
-        }
-        return true;
     }
 }

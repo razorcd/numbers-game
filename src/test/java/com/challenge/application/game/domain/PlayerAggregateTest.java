@@ -31,7 +31,7 @@ public class PlayerAggregateTest {
         IPlayer player2 = new Human("2", "p2");
         playerAggregate = new PlayerAggregate(Arrays.asList(new Human("1", "p1"), player2), 0);
 
-        assertEquals("When getting next aggregate, root player aggregate is player 2.", player2, playerAggregate.getNext().getRootPlayer());
+        assertEquals("When getting next aggregate, root player aggregate is player 2.", player2, playerAggregate.next().getRootPlayer());
     }
 
     @Test
@@ -39,7 +39,7 @@ public class PlayerAggregateTest {
         IPlayer player1 = new Human("1", "p1");
         playerAggregate = new PlayerAggregate(Arrays.asList(player1, new Human("1", "p1")), 0);
 
-        assertEquals("When getting cyclic aggregate, root player aggregate is player 1.", player1, playerAggregate.getNext().getNext().getRootPlayer());
+        assertEquals("When getting cyclic aggregate, root player aggregate is player 1.", player1, playerAggregate.next().next().getRootPlayer());
     }
 
     @Test

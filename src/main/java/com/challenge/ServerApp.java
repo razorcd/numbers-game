@@ -1,6 +1,13 @@
 package com.challenge;
 
-import com.challenge.application.game.GameManager;
+import com.challenge.application.game.Game;
+import com.challenge.application.game.GameFactory;
+import com.challenge.application.game.GameService;
+import com.challenge.application.game.gameround.gamerules.gameplaylogic.DivideByThreeLogic;
+import com.challenge.application.game.gameround.gamerules.gameplaylogic.IGameRoundLogic;
+import com.challenge.application.game.gameround.gamerules.gamewinlogic.IGameWinLogic;
+import com.challenge.application.game.gameround.gamerules.gamewinlogic.WinWhenOne;
+import com.challenge.application.game.gameround.gamerules.validator.DivideByThreeValidator;
 import com.challenge.application.utils.PropertiesConfigLoader;
 import com.challenge.server.MainServer;
 import com.challenge.server.SocketChannelRegistry;
@@ -46,11 +53,12 @@ public class ServerApp {
         executorService = new ThreadPoolExecutor(
                 serverListenersCount, serverListenersCount,0, TimeUnit.SECONDS, new LinkedBlockingDeque<>());
 
-        //initialize global game manager
-        GameManager gameManager = new GameManager();
+        //compose global game
+        GameService gameManager = new GameService(composeGame());
+
         SocketChannelRegistry socketChannelRegistry = new SocketChannelRegistry();
 
-        ThreadLocal<GameManager> globalGameManager = InheritableThreadLocal.withInitial(() -> gameManager);
+        ThreadLocal<GameService> globalGameManager = InheritableThreadLocal.withInitial(() -> gameManager);
         ThreadLocal<SocketChannelRegistry> globalSocketChannelRegistry = InheritableThreadLocal.withInitial(() -> socketChannelRegistry);
 
         for (int i = 0; i < serverListenersCount; i++) {
@@ -61,9 +69,21 @@ public class ServerApp {
         try {
             executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-//            LOGGER.error("InterruptedException while running main thread. {}", e);
-//            throw new RuntimeException(e);
+            throw new RuntimeException("InterruptedException while running main thread.", e);
         }
+    }
+
+    /**
+     * Creates a new game that will be shared across all threads.
+     * @return [Game] a new game
+     */
+    private static Game composeGame() {
+        IGameRoundLogic gameLogic = new DivideByThreeLogic();
+        gameLogic.addValidator(new DivideByThreeValidator());
+
+        IGameWinLogic winLogic = new WinWhenOne();
+
+        return new GameFactory(gameLogic, winLogic).buildNewGame();
     }
 
     public static void exit() {

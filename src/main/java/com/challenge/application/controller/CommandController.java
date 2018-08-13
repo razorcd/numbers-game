@@ -3,7 +3,7 @@ package com.challenge.application.controller;
 import com.challenge.application.controller.commands.*;
 import com.challenge.application.controller.dto.UserInputDto;
 import com.challenge.application.controller.mapper.UserInputDeserializer;
-import com.challenge.application.game.GameManager;
+import com.challenge.application.game.GameService;
 import com.challenge.application.game.gameround.ai.DivideByThreeAi;
 import com.challenge.server.SocketChannel;
 
@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 public class CommandController implements Consumer<String> {
 
-    private GameManager gameManager;
+    private GameService gameManager;
     private SocketChannel socketChannel;
     private UserInputDeserializer userInputDeserializer;
 
@@ -22,7 +22,7 @@ public class CommandController implements Consumer<String> {
      * @param gameManager holds the state of the application.
      * @param socketChannel socket adapter.
      */
-    public CommandController(GameManager gameManager,
+    public CommandController(GameService gameManager,
                              SocketChannel socketChannel,
                              UserInputDeserializer userInputDeserializer) {
         this.gameManager = gameManager;

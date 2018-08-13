@@ -1,11 +1,11 @@
 package com.challenge.application.controller.commands;
 
-import com.challenge.application.game.GameManager;
+import com.challenge.application.game.GameService;
 import com.challenge.server.SocketChannel;
 
 public class Exit extends ChainableCommand<String> {
 
-    private GameManager gameManager;
+    private GameService gameManager;
     private SocketChannel socketChannel;
 
     /**
@@ -14,7 +14,7 @@ public class Exit extends ChainableCommand<String> {
      * @param gameManager holds the state of the application.
      * @param socketChannel socket adapter.
      */
-    public Exit(GameManager gameManager, SocketChannel socketChannel) {
+    public Exit(GameService gameManager, SocketChannel socketChannel) {
         this.gameManager = gameManager;
         this.socketChannel = socketChannel;
     }
@@ -27,7 +27,6 @@ public class Exit extends ChainableCommand<String> {
     @Override
     public void execute(String data) {
         socketChannel.broadcast("Goodbye.");
-//TODO: remove yourself from game and reset game
         doNext(data);
     }
 }

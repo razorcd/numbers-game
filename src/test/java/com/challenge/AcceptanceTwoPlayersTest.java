@@ -116,8 +116,8 @@ public class AcceptanceTwoPlayersTest {
 
         //when
         socketPlayer1.sendWithDelay("ADD_MACHINE");
-        //then
 
+        //then
         assertThat("Player1 should receive added machine1.", socketPlayer1.readNextLineSync(),
                 matchesPattern("Added AI player Machine[0-9]+ to game."));
         assertThat("Player2 should receive added machine1.", socketPlayer2.readNextLineSync(),
@@ -125,6 +125,7 @@ public class AcceptanceTwoPlayersTest {
 
         //and when
         socketPlayer2.sendWithDelay("ADD_MACHINE");
+
         //then
         assertThat("Player1 should receive added machine1.", socketPlayer1.readNextLineSync(),
                 matchesPattern("Added AI player Machine[0-9]+ to game."));
@@ -188,7 +189,7 @@ public class AcceptanceTwoPlayersTest {
 
         //then
         assertEquals("Player 1 should not be able to start game with invalid players.",
-            "ERROR: can not create a game with invalid players", socketPlayer1.readNextLineSync());
+            "ERROR: Game initialization failed due to invalid players.", socketPlayer1.readNextLineSync());
         assertTrue("Player 2 should not receive anything.", socketPlayer2.inputIsEmpty());
     }
 
@@ -203,7 +204,7 @@ public class AcceptanceTwoPlayersTest {
 
         //then
         assertEquals("Should not be able to play game that was not started and has invalid players.",
-                "ERROR: can not play game when players: [] and player 0 has next turn.", socketPlayer1.readNextLineSync());
+                "ERROR: can not play game when players: [] and player 1 has next turn.", socketPlayer1.readNextLineSync());
         assertTrue("Player 2 should not receive anything.", socketPlayer2.inputIsEmpty());
     }
 

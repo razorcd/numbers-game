@@ -1,7 +1,7 @@
 package com.challenge.application.controller.commands;
 
 import com.challenge.application.game.Game;
-import com.challenge.application.game.GameManager;
+import com.challenge.application.game.GameService;
 import com.challenge.application.game.domain.GameRoundResult;
 import com.challenge.application.game.domain.InputNumber;
 import com.challenge.application.game.domain.OutputNumber;
@@ -12,7 +12,7 @@ import com.challenge.server.SocketChannel;
 
 public class PlayMachine extends ChainableCommand<String> {
 
-    private GameManager gameManager;
+    private GameService gameManager;
     private SocketChannel socketChannel;
     private IGameRoundAi gameRoundAi;
 
@@ -23,7 +23,7 @@ public class PlayMachine extends ChainableCommand<String> {
      * @param socketChannel socket adapter.
      * @param gameRoundAi AI algorithm to calculate next game input for machine to play.
      */
-    public PlayMachine(GameManager gameManager, SocketChannel socketChannel, IGameRoundAi gameRoundAi) {
+    public PlayMachine(GameService gameManager, SocketChannel socketChannel, IGameRoundAi gameRoundAi) {
         this.gameManager = gameManager;
         this.socketChannel = socketChannel;
         this.gameRoundAi = gameRoundAi;
