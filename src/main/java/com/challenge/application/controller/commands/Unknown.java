@@ -5,17 +5,17 @@ import com.challenge.server.SocketChannel;
 
 public class Unknown extends ChainableCommand<String> {
 
-    private GameService gameManager;
+    private GameService gameService;
     private SocketChannel socketChannel;
 
     /**
      * Unknown command.
      *
-     * @param gameManager holds the state of the application.
+     * @param gameService service to interact with running game.
      * @param socketChannel socket adapter.
      */
-    public Unknown(GameService gameManager, SocketChannel socketChannel) {
-        this.gameManager = gameManager;
+    public Unknown(GameService gameService, SocketChannel socketChannel) {
+        this.gameService = gameService;
         this.socketChannel = socketChannel;
     }
 

@@ -5,17 +5,17 @@ import com.challenge.server.SocketChannel;
 
 public class Exit extends ChainableCommand<String> {
 
-    private GameService gameManager;
+    private GameService gameService;
     private SocketChannel socketChannel;
 
     /**
      * Exit command.
      *
-     * @param gameManager holds the state of the application.
+     * @param gameService service to interact with running game.
      * @param socketChannel socket adapter.
      */
-    public Exit(GameService gameManager, SocketChannel socketChannel) {
-        this.gameManager = gameManager;
+    public Exit(GameService gameService, SocketChannel socketChannel) {
+        this.gameService = gameService;
         this.socketChannel = socketChannel;
     }
 

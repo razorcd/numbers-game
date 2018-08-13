@@ -1,27 +1,27 @@
 package com.challenge.application.controller.commands;
 
 import com.challenge.application.controller.exceptionhandler.GameExceptionHandler;
+import com.challenge.application.gameofthree.exception.GameException;
 import com.challenge.application.gameofthree.game.Game;
 import com.challenge.application.gameofthree.game.GameService;
-import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
 import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
-import com.challenge.application.gameofthree.exception.GameException;
+import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
 import com.challenge.application.gameofthree.model.Human;
 import com.challenge.server.SocketChannel;
 
 public class Start extends ChainableCommand<String> {
 
-    private GameService gameManager;
+    private GameService gameService;
     private SocketChannel socketChannel;
 
     /**
      * Start command.
      *
-     * @param gameManager holds the state of the application.
+     * @param gameService service to interact with running game.
      * @param socketChannel socket adapter.
      */
-    public Start(GameService gameManager, SocketChannel socketChannel) {
-        this.gameManager = gameManager;
+    public Start(GameService gameService, SocketChannel socketChannel) {
+        this.gameService = gameService;
         this.socketChannel = socketChannel;
     }
 
@@ -34,13 +34,13 @@ public class Start extends ChainableCommand<String> {
     public void execute(String data) {
         Human authorizedCurrentPlayer = new Human(Thread.currentThread().getName(), "");
         try {
-            gameManager.startGame();
+            gameService.startGame();
         } catch (GameException e) {
             new GameExceptionHandler(socketChannel).handle(e, authorizedCurrentPlayer);
             return;
         }
 
-        Game gameAfterStart = gameManager.getGame();
+        Game gameAfterStart = gameService.getGame();
         String finalMessage = buildFinalMessage(gameAfterStart);
 
         socketChannel.broadcast(finalMessage);

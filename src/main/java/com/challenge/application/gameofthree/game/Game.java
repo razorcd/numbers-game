@@ -1,15 +1,15 @@
 package com.challenge.application.gameofthree.game;
 
-import com.challenge.application.gameofthree.gameround.domain.GameRoundInput;
-import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
-import com.challenge.application.gameofthree.game.domain.InputNumber;
-import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
 import com.challenge.application.gameofthree.exception.GameException;
 import com.challenge.application.gameofthree.exception.ValidationException;
-import com.challenge.application.gameofthree.gameround.GameRoundService;
-import com.challenge.application.gameofthree.model.IPlayer;
+import com.challenge.application.gameofthree.game.domain.InputNumber;
+import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
 import com.challenge.application.gameofthree.game.validator.CanValidate;
 import com.challenge.application.gameofthree.game.validator.Validator;
+import com.challenge.application.gameofthree.gameround.GameRoundService;
+import com.challenge.application.gameofthree.gameround.domain.GameRoundInput;
+import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
+import com.challenge.application.gameofthree.model.IPlayer;
 
 import java.util.Objects;
 

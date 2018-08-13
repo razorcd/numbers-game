@@ -17,7 +17,7 @@ public class ServerListener implements Runnable {
 
     private ServerSocket mainServerSocket;
     private ThreadLocal<SocketChannelRegistry> socketChannelRegistry;
-    private ThreadLocal<GameService> gameManager;
+    private ThreadLocal<GameService> gameService;
 
     /**
      * Start listener on server socket.
@@ -26,10 +26,10 @@ public class ServerListener implements Runnable {
      */
     public ServerListener(ServerSocket mainServerSocket,
                           ThreadLocal<SocketChannelRegistry> socketChannelRegistry,
-                          ThreadLocal<GameService> gameManager) {
+                          ThreadLocal<GameService> gameService) {
         this.mainServerSocket = mainServerSocket;
         this.socketChannelRegistry = socketChannelRegistry;
-        this.gameManager = gameManager;
+        this.gameService = gameService;
     }
 
     /**
@@ -44,7 +44,7 @@ public class ServerListener implements Runnable {
             socketChannel.setActiveSocketChannels(socketChannelRegistry.get().getActiveSocketChannels());
 
             //setup application controller
-            CommandController commandController = new CommandController(gameManager.get(), socketChannel, new UserInputDeserializer());
+            CommandController commandController = new CommandController(gameService.get(), socketChannel, new UserInputDeserializer());
 
             //listen on input stream
             socketChannel.send("connected");

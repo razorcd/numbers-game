@@ -1,9 +1,9 @@
 package com.challenge.application.gameofthree.gameround;
 
+import com.challenge.application.gameofthree.exception.GameRoundException;
+import com.challenge.application.gameofthree.game.domain.OutputNumber;
 import com.challenge.application.gameofthree.gameround.domain.GameRoundInput;
 import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
-import com.challenge.application.gameofthree.game.domain.OutputNumber;
-import com.challenge.application.gameofthree.exception.GameRoundException;
 import com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic.IGameRoundLogic;
 import com.challenge.application.gameofthree.gameround.gamerules.gamewinlogic.IGameWinLogic;
 

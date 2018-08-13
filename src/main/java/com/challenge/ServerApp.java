@@ -5,9 +5,9 @@ import com.challenge.application.gameofthree.game.GameFactory;
 import com.challenge.application.gameofthree.game.GameService;
 import com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic.DivideByThreeLogic;
 import com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic.IGameRoundLogic;
+import com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic.validator.DivideByThreeValidator;
 import com.challenge.application.gameofthree.gameround.gamerules.gamewinlogic.IGameWinLogic;
 import com.challenge.application.gameofthree.gameround.gamerules.gamewinlogic.WinWhenOne;
-import com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic.validator.DivideByThreeValidator;
 import com.challenge.application.utils.PropertiesConfigLoader;
 import com.challenge.server.MainServer;
 import com.challenge.server.SocketChannelRegistry;
@@ -56,11 +56,11 @@ public class ServerApp {
 
         SocketChannelRegistry socketChannelRegistry = new SocketChannelRegistry();
 
-        ThreadLocal<GameService> globalGameManager = InheritableThreadLocal.withInitial(() -> gameManager);
+        ThreadLocal<GameService> gameService = InheritableThreadLocal.withInitial(() -> gameManager);
         ThreadLocal<SocketChannelRegistry> globalSocketChannelRegistry = InheritableThreadLocal.withInitial(() -> socketChannelRegistry);
 
         for (int i = 0; i < serverListenersCount; i++) {
-            executorService.execute(new ServerListener(mainServerSocket, globalSocketChannelRegistry, globalGameManager));
+            executorService.execute(new ServerListener(mainServerSocket, globalSocketChannelRegistry, gameService));
         }
         executorService.shutdown();
 

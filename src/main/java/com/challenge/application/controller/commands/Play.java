@@ -1,29 +1,29 @@
 package com.challenge.application.controller.commands;
 
 import com.challenge.application.controller.exceptionhandler.GameExceptionHandler;
+import com.challenge.application.gameofthree.exception.GameException;
 import com.challenge.application.gameofthree.game.Game;
 import com.challenge.application.gameofthree.game.GameService;
-import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
 import com.challenge.application.gameofthree.game.domain.InputNumber;
 import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
-import com.challenge.application.gameofthree.exception.GameException;
+import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
 import com.challenge.application.gameofthree.model.Human;
 import com.challenge.application.gameofthree.model.IPlayer;
 import com.challenge.server.SocketChannel;
 
 public class Play extends ChainableCommand<String> {
 
-    private GameService gameManager;
+    private GameService gameService;
     private SocketChannel socketChannel;
 
     /**
      * Play command.
      *
-     * @param gameManager holds the state of the application.
+     * @param gameService service to interact with running game.
      * @param socketChannel socket adapter.
      */
-    public Play(GameService gameManager, SocketChannel socketChannel) {
-        this.gameManager = gameManager;
+    public Play(GameService gameService, SocketChannel socketChannel) {
+        this.gameService = gameService;
         this.socketChannel = socketChannel;
     }
 
@@ -37,17 +37,17 @@ public class Play extends ChainableCommand<String> {
         IPlayer authorizedPlayer = new Human(Thread.currentThread().getName(), "");  //inject authorized user
         InputNumber parsedRawInputNumber = parseRawInputNumber(rawInputNumber);
 
-        Game gameBeforePlay = gameManager.getGame();
+        Game gameBeforePlay = gameService.getGame();
         PlayerAggregate playersBeforePlay = gameBeforePlay.getPlayerAggregate();
 
         try {
-            gameManager.play(parsedRawInputNumber, authorizedPlayer);
+            gameService.play(parsedRawInputNumber, authorizedPlayer);
         } catch (GameException ex) {
             new GameExceptionHandler(socketChannel).handle(ex, authorizedPlayer);
             return;
         }
 
-        Game gameAfterPlay = gameManager.getGame();
+        Game gameAfterPlay = gameService.getGame();
         String message = buildFinalMessage(playersBeforePlay.getRootPlayer(), gameAfterPlay, rawInputNumber);
 
         socketChannel.broadcast(message);

@@ -7,6 +7,7 @@ public enum CommandType {
 
     /**
      * Get value of enum for the input string or {@link #UNKNOWN} as default.
+     *
      * @param commandTypeStr command type as string
      * @return {@link CommandType}
      */

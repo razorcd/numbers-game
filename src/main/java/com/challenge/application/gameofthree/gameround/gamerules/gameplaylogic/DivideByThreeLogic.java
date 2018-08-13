@@ -1,8 +1,8 @@
 package com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic;
 
-import com.challenge.application.gameofthree.gameround.domain.GameRoundInput;
 import com.challenge.application.gameofthree.game.domain.OutputNumber;
 import com.challenge.application.gameofthree.game.validator.Validator;
+import com.challenge.application.gameofthree.gameround.domain.GameRoundInput;
 import com.challenge.application.utils.PropertiesConfigLoader;
 
 import java.util.ArrayList;

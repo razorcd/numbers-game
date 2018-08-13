@@ -6,17 +6,17 @@ import com.challenge.server.SocketChannel;
 
 public class AddMachine extends ChainableCommand<String> {
 
-    private GameService gameManager;
+    private GameService gameService;
     private SocketChannel socketChannel;
 
     /**
      * Add new machine player command.
      *
-     * @param gameManager holds the state of the application.
+     * @param gameService service to interact with running game.
      * @param socketChannel socket adapter.
      */
-    public AddMachine(GameService gameManager, SocketChannel socketChannel) {
-        this.gameManager = gameManager;
+    public AddMachine(GameService gameService, SocketChannel socketChannel) {
+        this.gameService = gameService;
         this.socketChannel = socketChannel;
     }
 
@@ -29,7 +29,7 @@ public class AddMachine extends ChainableCommand<String> {
     public void execute(String data) {
         Machine newPlayer = Machine.generate();
 
-        gameManager.addPlayer(newPlayer);
+        gameService.addPlayer(newPlayer);
         socketChannel.broadcast("Added AI player " + newPlayer.getName() + " to game.");
 
         doNext(data);

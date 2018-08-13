@@ -6,7 +6,6 @@ public class UserInputDto {
 
     private String command;
     private String data;
-//    private String playerName;
 //    private String authToken;
 
 

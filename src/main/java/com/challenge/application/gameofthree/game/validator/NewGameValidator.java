@@ -1,7 +1,7 @@
 package com.challenge.application.gameofthree.game.validator;
 
-import com.challenge.application.gameofthree.game.Game;
 import com.challenge.application.gameofthree.exception.ValidationException;
+import com.challenge.application.gameofthree.game.Game;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,24 +1,24 @@
 package com.challenge.application.controller.commands;
 
 import com.challenge.application.controller.exceptionhandler.GameExceptionHandler;
-import com.challenge.application.gameofthree.game.GameService;
 import com.challenge.application.gameofthree.exception.GameException;
+import com.challenge.application.gameofthree.game.GameService;
 import com.challenge.application.gameofthree.model.Human;
 import com.challenge.server.SocketChannel;
 
 public class AddHuman extends ChainableCommand<String> {
 
-    private GameService gameManager;
+    private GameService gameService;
     private SocketChannel socketChannel;
 
     /**
      * Add new human player command.
      *
-     * @param gameManager holds the state of the application.
+     * @param gameService service to interact with running game.
      * @param socketChannel socket adapter.
      */
-    public AddHuman(GameService gameManager, SocketChannel socketChannel) {
-        this.gameManager = gameManager;
+    public AddHuman(GameService gameService, SocketChannel socketChannel) {
+        this.gameService = gameService;
         this.socketChannel = socketChannel;
     }
 
@@ -32,7 +32,7 @@ public class AddHuman extends ChainableCommand<String> {
         Human authorizedPlayer = new Human(Thread.currentThread().getName(), name);  //inject authorized user
 
         try {
-            gameManager.addPlayer(authorizedPlayer);
+            gameService.addPlayer(authorizedPlayer);
         } catch (GameException ex) {
             new GameExceptionHandler(socketChannel).handle(ex, authorizedPlayer);
             return;

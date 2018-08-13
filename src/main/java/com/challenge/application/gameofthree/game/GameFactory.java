@@ -1,8 +1,8 @@
 package com.challenge.application.gameofthree.game;
 
-import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
 import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
 import com.challenge.application.gameofthree.gameround.GameRoundService;
+import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
 import com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic.IGameRoundLogic;
 import com.challenge.application.gameofthree.gameround.gamerules.gamewinlogic.IGameWinLogic;
 

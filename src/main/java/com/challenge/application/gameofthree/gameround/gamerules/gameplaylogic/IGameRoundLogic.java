@@ -1,7 +1,7 @@
 package com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic;
 
-import com.challenge.application.gameofthree.gameround.domain.GameRoundInput;
 import com.challenge.application.gameofthree.game.domain.OutputNumber;
+import com.challenge.application.gameofthree.gameround.domain.GameRoundInput;
 import com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic.validator.Validatable;
 
 import java.util.function.Function;

@@ -1,9 +1,9 @@
 package com.challenge.application.gameofthree.game;
 
-import com.challenge.application.gameofthree.game.domain.InputNumber;
 import com.challenge.application.gameofthree.exception.GameException;
-import com.challenge.application.gameofthree.model.IPlayer;
+import com.challenge.application.gameofthree.game.domain.InputNumber;
 import com.challenge.application.gameofthree.game.validator.*;
+import com.challenge.application.gameofthree.model.IPlayer;
 
 import java.util.concurrent.atomic.AtomicReference;
 
