@@ -1,6 +1,5 @@
 package com.challenge.application.controller.commands;
 
-import com.challenge.application.gameofthree.game.Game;
 import com.challenge.application.gameofthree.game.GameService;
 import com.challenge.application.gameofthree.model.Human;
 import com.challenge.application.gameofthree.model.IPlayer;
@@ -33,7 +32,7 @@ public class Exit extends ChainableCommand<String> {
         gameService.removePlayer(authorizedPlayer);
         gameService.stopGame();
 
-        socketChannel.broadcast("Goodbye.");
+        socketChannel.send("Goodbye.");
         doNext(data);
     }
 }

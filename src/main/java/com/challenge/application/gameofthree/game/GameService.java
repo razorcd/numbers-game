@@ -60,8 +60,7 @@ public class GameService {
      * @throws GameException if not enough players or last round result is not valid or invalid input.
      */
     public void play(final InputNumber inputNumber, final IPlayer playerInTurn) {
-        game.get().validateOrThrow(new IsValidGameRoundResultValidator());
-        game.get().validateOrThrow(new IsValidGameRoundResultValidator());
+        game.get().validateOrThrow(new CanPlayGameValidator());
         game.get().validateOrThrow(new IsCurrentPlayerGameValidator(playerInTurn));
         game.get().validateOrThrow(new InputNumberWithinRangeValidator(inputNumber));
 

@@ -168,8 +168,8 @@ public class AcceptanceTest {
         socketPlayer2.sendWithDelay("ADD_PLAYER:player1");
 
         //then
-        assertEquals("Player 2 should receive error: can not add another player.",
-                "ERROR: limit reached, can not add more players: [player player1, machine Machine2] and player 1 has next turn.", socketPlayer2.readNextLineSync());
+        assertThat("Player 2 should receive error: can not add another player.", socketPlayer2.readNextLineSync(),
+                matchesPattern("ERROR: limit reached, can not add more players: \\[player player1, machine Machine[0-9]+\\] and player 1 has next turn."));
         assertTrue("Player 1 should not receive anything.", socketPlayer1.inputIsEmpty());
     }
 
