@@ -15,8 +15,11 @@ Both players should be able to play automatically without user input. One of the
 
 ## Solution:
 
-Application covers all features and also most cornercases. See `AcceptanceTests.java` for all tested user features.
-Once connected these are the commands available:
+Application works and covers all features and also most cornercases. See `AcceptanceTests.java` for all tested user features.
+
+This was implemented in `vanilla Java` (the only dependencies are Junit, mockito and log4j).
+
+Once the server is started and a `tcp` client is connected, these are the commands available:
 ```
 ADD_PLAYER:your_name  - to add yourself as player
 ADD_MACHINE           - to add AI player (play with computer)
@@ -28,7 +31,7 @@ EXIT                  - leave the game
 
 See a little lower an example. 
 
-Adding 2 machine players are also possible. Example:
+Adding 2 AI players is also possible. Example:
 ```
 ADD_MACHINE
 Added AI player Machine2 to game.
@@ -42,7 +45,7 @@ machine Machine2 played number 0. The result is Round result: outputNumber 4, wi
 machine Machine3 played number -1. The result is Round result: outputNumber 1, winner true.
 ```
 
-### Planing
+### Planning
 
 At first I planed to implement this as a P2P (peer to peer) communication where each player would run his/her own version of the game and there would be no state stored anywhere. I would have been just 2 idempotent applications that would ping pong the input number and last round result from one to another.  
 At a later stage I decided to switch to a `one server application` that holds the state of the game and players just connect to it. This would be more evolvable.  
@@ -82,7 +85,11 @@ These are all implemented.
 
 ### Implementation 
 
- I did the implementation using a more `functional programming` approach. Notice there very few `IF` keywords used. This results in a more linear, reusable codebase, immutable objects and avoiding `null`.
+Main diagram showing the architecture:
+
+![alt text](map.jpeg "map")
+
+ I did the implementation using a more `functional programming` approach. Notice there are very few `if` keywords used. This results in a more linear, reusable codebase, immutable objects and avoiding `null`.
  Everything was done fallowing `TDD` (plan small, red green refactor and then the big refactoring)
  I also followed `BDD` style, making tests easier to work with business experts.
  For the design of the application followed `DDD` so again it's easier to work with business experts.
@@ -97,15 +104,15 @@ These are all implemented.
   
  I tried to not add any any big external `dependencies/frameworks` and and just keep it simple and stupid (KISS).
  
- `Test` coverage is good (and I mean the behaviours coverage, not only the line coverage), Uncle Bob should be happy. Acceptance tests test all edge cases (both happy/sad paths).
+ `Test` coverage is good, (and I mean the behaviours coverage, not only the line coverage) acceptance tests cover everything (both happy/sad paths), unit tests are partially done, Uncle Bob should be still happy.
 
 
-`Design patterns` I used for designing this: `observer`(messaging-pubsub), `iterator`(cyclic - PlayerAggregate), `strategy`(di), `factory`(build games), `visitor`(validators), 
+`Design patterns` I used for designing this: `observer`(messaging - pubsub - open stream), `iterator`(cyclic - PlayerAggregate), `strategy`(di), `factory`(build games), `visitor`(validators), 
 `command`(human commands mapped to classes), `chain of responsibility`(chained commands), `singleton` (only for global configurable properties), 
  `mediator`(controller, services), `memento` (GameService holds state of games. Can also hold entire history of game objects).
 - and of course composition over inheritance.
 
-`Game` and `Gameround` are immutable and can be streamed through a `reducer` (functional programming style) like this:
+`Game` and `Gameround` are immutable and because of functional approach, these can be streamed through a `reducer` like this:
 ```java
 Game init = new Game(gameRoundServiceMock)
         .addPlayer(player1)
@@ -122,7 +129,7 @@ Game finalStage = Stream.of(
 finalStage.getGameRoundResult().isWinner() #=> true
 ```
 
-The game architecture is very flexible. For example to convert this to a tic-tac-toe game all is needed is to replace the `game logic`, `win logic` and `AI` that are independent classes.
+The game architecture is very flexible. For example to convert this to a tic-tac-toe game all is needed is to replace the `game logic`, `win logic` and `AI`, these are independent classes.
 
 ## Setup
  
@@ -144,13 +151,15 @@ The game architecture is very flexible. For example to convert this to a tic-tac
  
 ##### Start the server:
 
+You have to start the application first. This will be the server. Default port is `9999`. Then use any networking client that supports `tcp` and connect to it. You will immediately see `cnonnected` message. 
+
 - run to build app: `mvn compile` or better `mvn clean install` to also run tests.
 - run tests: `mvn test`
 - run to start server app: `mvn exec:java -Dexec.mainClass=com.challenge.ServerApp`
-- run a TCP/IP networking client interface on the same port as the application. 
+- run a TCP/IP networking client interface on the same port as the application. Each client represents a player so you can connect more. 
 For example in linux you can use the popular `netcat`. Run `netcat localhost 9999` to start client and connect to server socket. You should see `connected` on the client terminal once successfully connected. Then just start typing.
 
-##### Demo
+## Demo
 
 The application is fully functioning and it works like this:
 
