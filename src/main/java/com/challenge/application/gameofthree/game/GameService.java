@@ -7,7 +7,7 @@ import com.challenge.application.gameofthree.model.IPlayer;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-public class GameService {
+public class GameService implements IGameService {
     private final AtomicReference<Game> game;
 
     /**
@@ -18,7 +18,7 @@ public class GameService {
     }
 
     /**
-     * Add new player.
+     * Add new player to the game.
      *
      * @param player player to add to player list.
      * @throws GameException if not unique player.
@@ -29,6 +29,11 @@ public class GameService {
         game.set(game.get().addPlayer(player));
     }
 
+    /**
+     * Remove a player from the game.
+     *
+     * @param player the player to remove.
+     */
     public void removePlayer(IPlayer player) {
         game.set(game.get().removePlayer(player));
     }

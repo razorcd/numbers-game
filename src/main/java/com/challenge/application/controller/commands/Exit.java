@@ -1,14 +1,14 @@
 package com.challenge.application.controller.commands;
 
-import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.game.IGameService;
 import com.challenge.application.gameofthree.model.Human;
 import com.challenge.application.gameofthree.model.IPlayer;
-import com.challenge.server.SocketChannel;
+import com.challenge.server.ISocketChannel;
 
 public class Exit extends ChainableCommand<String> {
 
-    private GameService gameService;
-    private SocketChannel socketChannel;
+    private IGameService gameService;
+    private ISocketChannel socketChannel;
 
     /**
      * Exit command.
@@ -16,7 +16,7 @@ public class Exit extends ChainableCommand<String> {
      * @param gameService service to interact with running game.
      * @param socketChannel socket adapter.
      */
-    public Exit(GameService gameService, SocketChannel socketChannel) {
+    public Exit(IGameService gameService, ISocketChannel socketChannel) {
         this.gameService = gameService;
         this.socketChannel = socketChannel;
     }

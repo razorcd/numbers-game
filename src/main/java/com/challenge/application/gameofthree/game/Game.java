@@ -6,7 +6,7 @@ import com.challenge.application.gameofthree.game.domain.InputNumber;
 import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
 import com.challenge.application.gameofthree.game.validator.CanValidate;
 import com.challenge.application.gameofthree.game.validator.Validator;
-import com.challenge.application.gameofthree.gameround.GameRoundService;
+import com.challenge.application.gameofthree.gameround.IGameRoundService;
 import com.challenge.application.gameofthree.gameround.domain.GameRoundInput;
 import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
 import com.challenge.application.gameofthree.model.IPlayer;
@@ -15,8 +15,7 @@ import java.util.Objects;
 
 public class Game implements CanValidate<Game> {
 
-//    static final Game NULL = new Game(null, PlayerAggregate.NULL, GameRoundResult.NULL);
-    private final GameRoundService gameRoundService;
+    private final IGameRoundService gameRoundService;
     private final PlayerAggregate playerAggregate;
     private final GameRoundResult gameRoundResult;
 
@@ -27,7 +26,7 @@ public class Game implements CanValidate<Game> {
      * @param gameRoundService the service for each game round.
      * @throws GameException if invalid playerAggregate.
      */
-    public Game(final GameRoundService gameRoundService) {
+    public Game(final IGameRoundService gameRoundService) {
         this.gameRoundService = gameRoundService;
         this.playerAggregate = PlayerAggregate.NULL;
         this.gameRoundResult = GameRoundResult.NULL;
@@ -41,7 +40,7 @@ public class Game implements CanValidate<Game> {
      * @param playerAggregate the player aggregate holding the root as the <b>player that will play next</b>.
      * @param gameRoundResult the result of the played round.
      */
-    public Game(final GameRoundService gameRoundService, final PlayerAggregate playerAggregate, final GameRoundResult gameRoundResult) {
+    public Game(final IGameRoundService gameRoundService, final PlayerAggregate playerAggregate, final GameRoundResult gameRoundResult) {
         this.gameRoundService = gameRoundService;
         this.playerAggregate = playerAggregate;
         this.gameRoundResult = gameRoundResult;

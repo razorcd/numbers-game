@@ -2,16 +2,16 @@ package com.challenge.application.controller.exceptionhandler;
 
 import com.challenge.application.gameofthree.exception.GameException;
 import com.challenge.application.gameofthree.model.IPlayer;
-import com.challenge.server.SocketChannel;
+import com.challenge.server.ISocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GameExceptionHandler implements ExceptionHandler<GameException> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameExceptionHandler.class);
-    private SocketChannel socketChannel;
+    private ISocketChannel socketChannel;
 
-    public GameExceptionHandler(SocketChannel socketChannel) {
+    public GameExceptionHandler(ISocketChannel socketChannel) {
         this.socketChannel = socketChannel;
     }
 

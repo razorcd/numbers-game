@@ -4,16 +4,16 @@ import com.challenge.application.controller.commands.*;
 import com.challenge.application.controller.dto.UserInputDto;
 import com.challenge.application.controller.mapper.UserInputDeserializer;
 import com.challenge.application.gameofthree.ai.DivideByThreeAi;
-import com.challenge.application.gameofthree.game.GameService;
-import com.challenge.server.SocketChannel;
+import com.challenge.application.gameofthree.game.IGameService;
+import com.challenge.server.ISocketChannel;
 
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class CommandController implements Consumer<String> {
 
-    private GameService gameService;
-    private SocketChannel socketChannel;
+    private IGameService gameService;
+    private ISocketChannel socketChannel;
     private UserInputDeserializer userInputDeserializer;
 
     /**
@@ -22,8 +22,8 @@ public class CommandController implements Consumer<String> {
      * @param gameService service to interact with running game.
      * @param socketChannel socket adapter.
      */
-    public CommandController(GameService gameService,
-                             SocketChannel socketChannel,
+    public CommandController(IGameService gameService,
+                             ISocketChannel socketChannel,
                              UserInputDeserializer userInputDeserializer) {
         this.gameService = gameService;
         this.socketChannel = socketChannel;

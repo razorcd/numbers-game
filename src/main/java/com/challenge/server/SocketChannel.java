@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
-public class SocketChannel {
+public class SocketChannel implements ISocketChannel{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SocketChannel.class);
     private static final int SEND_WITH_DELAY_VALUE = 75;
@@ -86,10 +86,11 @@ public class SocketChannel {
                 .orElse("stream closed");
     }
 
-    public Iterator<String> getInputiterator() {
-        return getValidInputStream().iterator();
-    }
-
+    /**
+     * Check if there is any data to be consumed on the incoming stream.
+     *
+     * @return [boolean] if there is any data on the incoming stream.
+     */
     public boolean inputIsEmpty() {
         try {
             return !in.ready();
@@ -98,6 +99,9 @@ public class SocketChannel {
         }
     }
 
+    /**
+     * Consume all th data available on the stream.
+     */
     public void clearInput() {
         try {
             Thread.sleep(100);
@@ -107,12 +111,6 @@ public class SocketChannel {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Exception while reading all characters from input buffer.", e);
         }
-    }
-
-    private Stream<String> getValidInputStream() {
-        return in.lines()
-                .filter(Objects::nonNull)
-                .filter(s -> !s.isEmpty());
     }
 
     public void setActiveSocketChannels(Collection<SocketChannel> allActiveSocketChannels) {
@@ -132,5 +130,11 @@ public class SocketChannel {
     @Override
     public int hashCode() {
         return Objects.hash(in, out, allActiveSocketChannels);
+    }
+
+    private Stream<String> getValidInputStream() {
+        return in.lines()
+                .filter(Objects::nonNull)
+                .filter(s -> !s.isEmpty());
     }
 }

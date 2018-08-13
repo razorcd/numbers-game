@@ -2,18 +2,18 @@ package com.challenge.application.controller.commands;
 
 import com.challenge.application.gameofthree.ai.IGameRoundAi;
 import com.challenge.application.gameofthree.game.Game;
-import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.game.IGameService;
 import com.challenge.application.gameofthree.game.domain.InputNumber;
 import com.challenge.application.gameofthree.game.domain.OutputNumber;
 import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
 import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
 import com.challenge.application.gameofthree.model.IPlayer;
-import com.challenge.server.SocketChannel;
+import com.challenge.server.ISocketChannel;
 
 public class PlayMachine extends ChainableCommand<String> {
 
-    private GameService gameService;
-    private SocketChannel socketChannel;
+    private IGameService gameService;
+    private ISocketChannel socketChannel;
     private IGameRoundAi gameRoundAi;
 
     /**
@@ -23,7 +23,7 @@ public class PlayMachine extends ChainableCommand<String> {
      * @param socketChannel socket adapter.
      * @param gameRoundAi AI algorithm to calculate next game input for machine to play.
      */
-    public PlayMachine(GameService gameService, SocketChannel socketChannel, IGameRoundAi gameRoundAi) {
+    public PlayMachine(IGameService gameService, ISocketChannel socketChannel, IGameRoundAi gameRoundAi) {
         this.gameService = gameService;
         this.socketChannel = socketChannel;
         this.gameRoundAi = gameRoundAi;

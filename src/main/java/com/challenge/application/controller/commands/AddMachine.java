@@ -1,13 +1,13 @@
 package com.challenge.application.controller.commands;
 
-import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.game.IGameService;
 import com.challenge.application.gameofthree.model.Machine;
-import com.challenge.server.SocketChannel;
+import com.challenge.server.ISocketChannel;
 
 public class AddMachine extends ChainableCommand<String> {
 
-    private GameService gameService;
-    private SocketChannel socketChannel;
+    private IGameService gameService;
+    private ISocketChannel socketChannel;
 
     /**
      * Add new machine player command.
@@ -15,7 +15,7 @@ public class AddMachine extends ChainableCommand<String> {
      * @param gameService service to interact with running game.
      * @param socketChannel socket adapter.
      */
-    public AddMachine(GameService gameService, SocketChannel socketChannel) {
+    public AddMachine(IGameService gameService, ISocketChannel socketChannel) {
         this.gameService = gameService;
         this.socketChannel = socketChannel;
     }

@@ -3,16 +3,17 @@ package com.challenge.application.controller.commands;
 import com.challenge.application.controller.exceptionhandler.GameExceptionHandler;
 import com.challenge.application.gameofthree.exception.GameException;
 import com.challenge.application.gameofthree.game.Game;
-import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.game.IGameService;
 import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
 import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
 import com.challenge.application.gameofthree.model.Human;
+import com.challenge.server.ISocketChannel;
 import com.challenge.server.SocketChannel;
 
 public class Start extends ChainableCommand<String> {
 
-    private GameService gameService;
-    private SocketChannel socketChannel;
+    private IGameService gameService;
+    private ISocketChannel socketChannel;
 
     /**
      * Start command.
@@ -20,7 +21,7 @@ public class Start extends ChainableCommand<String> {
      * @param gameService service to interact with running game.
      * @param socketChannel socket adapter.
      */
-    public Start(GameService gameService, SocketChannel socketChannel) {
+    public Start(IGameService gameService, ISocketChannel socketChannel) {
         this.gameService = gameService;
         this.socketChannel = socketChannel;
     }

@@ -7,7 +7,7 @@ import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
 import com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic.IGameRoundLogic;
 import com.challenge.application.gameofthree.gameround.gamerules.gamewinlogic.IGameWinLogic;
 
-public class GameRoundService {
+public class GameRoundService implements IGameRoundService {
     private final IGameRoundLogic gameRoundRule;
     private final IGameWinLogic winLogic;
 

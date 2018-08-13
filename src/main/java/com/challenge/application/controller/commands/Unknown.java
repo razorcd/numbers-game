@@ -1,12 +1,13 @@
 package com.challenge.application.controller.commands;
 
-import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.game.IGameService;
+import com.challenge.server.ISocketChannel;
 import com.challenge.server.SocketChannel;
 
 public class Unknown extends ChainableCommand<String> {
 
-    private GameService gameService;
-    private SocketChannel socketChannel;
+    private IGameService gameService;
+    private ISocketChannel socketChannel;
 
     /**
      * Unknown command.
@@ -14,7 +15,7 @@ public class Unknown extends ChainableCommand<String> {
      * @param gameService service to interact with running game.
      * @param socketChannel socket adapter.
      */
-    public Unknown(GameService gameService, SocketChannel socketChannel) {
+    public Unknown(IGameService gameService, ISocketChannel socketChannel) {
         this.gameService = gameService;
         this.socketChannel = socketChannel;
     }

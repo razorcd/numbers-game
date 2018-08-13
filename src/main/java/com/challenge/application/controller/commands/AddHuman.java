@@ -2,14 +2,14 @@ package com.challenge.application.controller.commands;
 
 import com.challenge.application.controller.exceptionhandler.GameExceptionHandler;
 import com.challenge.application.gameofthree.exception.GameException;
-import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.game.IGameService;
 import com.challenge.application.gameofthree.model.Human;
-import com.challenge.server.SocketChannel;
+import com.challenge.server.ISocketChannel;
 
 public class AddHuman extends ChainableCommand<String> {
 
-    private GameService gameService;
-    private SocketChannel socketChannel;
+    private IGameService gameService;
+    private ISocketChannel socketChannel;
 
     /**
      * Add new human player command.
@@ -17,7 +17,7 @@ public class AddHuman extends ChainableCommand<String> {
      * @param gameService service to interact with running game.
      * @param socketChannel socket adapter.
      */
-    public AddHuman(GameService gameService, SocketChannel socketChannel) {
+    public AddHuman(IGameService gameService, ISocketChannel socketChannel) {
         this.gameService = gameService;
         this.socketChannel = socketChannel;
     }
