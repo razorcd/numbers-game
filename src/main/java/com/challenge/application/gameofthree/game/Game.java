@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class Game implements CanValidate<Game> {
 
-    static final Game NULL = new Game(null, PlayerAggregate.NULL, GameRoundResult.NULL);
+//    static final Game NULL = new Game(null, PlayerAggregate.NULL, GameRoundResult.NULL);
     private final GameRoundService gameRoundService;
     private final PlayerAggregate playerAggregate;
     private final GameRoundResult gameRoundResult;

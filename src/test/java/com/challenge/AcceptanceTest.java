@@ -157,6 +157,23 @@ public class AcceptanceTest {
     }
 
     @Test(timeout = TEST_TIMEOUT)
+    public void shouldNotAcceptMorePlayersThanConfigured() {
+        //given connected is read
+        socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
+        socketPlayer1.sendWithDelay("ADD_MACHINE");
+        socketPlayer1.clearInput();
+        socketPlayer2.clearInput();
+
+        //when
+        socketPlayer2.sendWithDelay("ADD_PLAYER:player1");
+
+        //then
+        assertEquals("Player 2 should receive error: can not add another player.",
+                "ERROR: limit reached, can not add more players: [player player1, machine Machine2] and player 1 has next turn.", socketPlayer2.readNextLineSync());
+        assertTrue("Player 1 should not receive anything.", socketPlayer1.inputIsEmpty());
+    }
+
+    @Test(timeout = TEST_TIMEOUT)
     public void shouldStartGameWhenHumans() {
         //given
         socketPlayer1.sendWithDelay("ADD_PLAYER:player1");

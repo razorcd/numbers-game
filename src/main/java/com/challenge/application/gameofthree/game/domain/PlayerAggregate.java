@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 
 public class PlayerAggregate implements Iterator<PlayerAggregate>{
 
-    public static final int DEFAULT_ROOT_INDEX = Integer.parseInt(PropertiesConfigLoader.getProperties()
+    private static final int DEFAULT_ROOT_INDEX = Integer.parseInt(PropertiesConfigLoader.getProperties()
             .getProperty("com.challenge.application.game.index_of_player_that_starts_first", "0"));
 
-    public static final int PLAYER_COUNT = Integer.parseInt(PropertiesConfigLoader.getProperties()
+    private static final int PLAYER_COUNT = Integer.parseInt(PropertiesConfigLoader.getProperties()
             .getProperty("com.challenge.application.game.player_count"));
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerAggregate.class);
@@ -95,6 +95,15 @@ public class PlayerAggregate implements Iterator<PlayerAggregate>{
     public boolean isValid() {
         return players.size() == PLAYER_COUNT &&
                 isValidRootIndex(rootIndex);
+    }
+
+    /**
+     * Check if current aggregate accepts more players.
+     *
+     * @return [boolean] if aggregate accepts more players.
+     */
+    public boolean acceptsMorePlayers() {
+        return players.size() < PLAYER_COUNT;
     }
 
     /**
