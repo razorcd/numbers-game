@@ -100,10 +100,9 @@ These are all implemented.
  `Test` coverage is good (and I mean the behaviours coverage, not only the line coverage), Uncle Bob should be happy. Acceptance tests test all edge cases (both happy/sad paths).
 
 
-`Design patterns` I used in designing this: `observer`, `strategy`, `factory`, `visitor`, 
-`command`, `chain of responsibility`, `singleton` (only for global configurable properties), 
- `mediator`, `memento` (GameManager holds state of games. Can also hold entire history of game objects).
-
+`Design patterns` I used for designing this: `observer`(messaging-pubsub), `iterator`(cyclic - PlayerAggregate), `strategy`(di), `factory`(build games), `visitor`(validators), 
+`command`(human commands mapped to classes), `chain of responsibility`(chained commands), `singleton` (only for global configurable properties), 
+ `mediator`(controller, services), `memento` (GameService holds state of games. Can also hold entire history of game objects).
 - and of course composition over inheritance.
 
 `Game` and `Gameround` are immutable and can be streamed through a `reducer` (functional programming style) like this:
