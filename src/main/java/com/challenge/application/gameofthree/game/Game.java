@@ -47,8 +47,22 @@ public class Game implements CanValidate<Game> {
         this.gameRoundResult = gameRoundResult;
     }
 
+    /**
+     * Start game by creating a new copy of game with a random number.
+     *
+     * @return [Game] ready to be played.
+     */
     public Game startGame() {
         return new Game(gameRoundService, playerAggregate, GameRoundResult.getInitial());
+    }
+
+    /**
+     * Sets game to a reset state while keeping the players.
+     *
+     * @return [Game] new game in reset state.
+     */
+    public Game stopGame() {
+        return new Game(gameRoundService, playerAggregate, GameRoundResult.NULL);
     }
 
     /**
@@ -59,6 +73,16 @@ public class Game implements CanValidate<Game> {
      */
     public Game addPlayer(final IPlayer player) {
         return new Game(gameRoundService, playerAggregate.addPlayer(player), gameRoundResult);
+    }
+
+    /**
+     * Remove player from game. Returns a copy of current game without this player.
+     *
+     * @param player the player to remove.
+     * @return [Game] the new copied game without specified player.
+     */
+    public Game removePlayer(IPlayer player) {
+        return new Game(gameRoundService, playerAggregate.removePlayer(player), gameRoundResult);
     }
 
     /**

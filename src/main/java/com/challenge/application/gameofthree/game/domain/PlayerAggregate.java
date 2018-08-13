@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PlayerAggregate implements Iterator<PlayerAggregate>{
 
@@ -58,6 +59,13 @@ public class PlayerAggregate implements Iterator<PlayerAggregate>{
         return new PlayerAggregate(Collections.unmodifiableList(newList), rootIndex);
     }
 
+    public PlayerAggregate removePlayer(IPlayer player) {
+        List<IPlayer> newList = players.stream()
+                .filter(p -> !p.isSame(player))
+                .collect(Collectors.toList());
+        return new PlayerAggregate(Collections.unmodifiableList(newList), rootIndex);
+    }
+
     /**
      * Get new aggregate with root as next player.
      *
@@ -94,7 +102,8 @@ public class PlayerAggregate implements Iterator<PlayerAggregate>{
      * @return [boolean] if player already exists in this aggregate.
      */
     public boolean hasPlayer(IPlayer player) {
-        return players.contains(player);
+        return players.stream()
+                .anyMatch(p -> p.isSame(player));
     }
 
     /**

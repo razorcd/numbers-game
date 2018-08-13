@@ -28,7 +28,7 @@ public class UniquePlayerValidator implements Validator<Game> {
      */
     @Override
     public boolean validate(Game game) {
-        return isUniqueNewPlayer(game.getPlayerAggregate(), newPlayer)
+        return !alreadyPresentPlayer(game.getPlayerAggregate(), newPlayer)
                 || setInvalidState(NOT_UNIQUE_MSG);
     }
 
@@ -40,7 +40,7 @@ public class UniquePlayerValidator implements Validator<Game> {
      */
     @Override
     public void validateOrThrow(Game game) {
-        if (!isUniqueNewPlayer(game.getPlayerAggregate(), newPlayer)) {
+        if (alreadyPresentPlayer(game.getPlayerAggregate(), newPlayer)) {
             throw new ValidationException(NOT_UNIQUE_MSG);
         }
     }
@@ -50,10 +50,8 @@ public class UniquePlayerValidator implements Validator<Game> {
         return messages;
     }
 
-    private boolean isUniqueNewPlayer(PlayerAggregate playerAggregate, IPlayer newPlayer) {
-        return !playerAggregate.hasPlayer(newPlayer);
-//        return !players.stream()
-//                .anyMatch(player -> player.isSame(newPlayer));
+    private boolean alreadyPresentPlayer(PlayerAggregate playerAggregate, IPlayer newPlayer) {
+        return playerAggregate.hasPlayer(newPlayer);
     }
 
     private boolean setInvalidState(String message) {

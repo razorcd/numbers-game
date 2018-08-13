@@ -361,9 +361,9 @@ public class AcceptanceTest {
         socketPlayer1.sendWithDelay("STATE");
 
         //then
-        assertThat("Player1 should be able to get correct current state of new game.",
-                socketPlayer1.readNextLineSync(),
-                matchesPattern("player unknown is next. Last Round result: outputNumber null, winner false."));
+        assertEquals("Player1 should be able to get correct current state of new game.",
+                "Currently playing players: [] and player 1 has next turn. Last Round result: outputNumber null, winner false.",
+                socketPlayer1.readNextLineSync());
         assertTrue("Player2 should not receive anything.", socketPlayer2.inputIsEmpty());
 
         //and when
@@ -371,9 +371,8 @@ public class AcceptanceTest {
 
         //then
         assertTrue("Player1 should not receive anything.", socketPlayer1.inputIsEmpty());
-        assertThat("Player2 should be able to get correct current state of new game.",
-                socketPlayer2.readNextLineSync(),
-                matchesPattern("player unknown is next. Last Round result: outputNumber null, winner false."));
+        assertEquals("Player2 should be able to get correct current state of new game.",
+                "Currently playing players: [] and player 1 has next turn. Last Round result: outputNumber null, winner false.", socketPlayer2.readNextLineSync());
     }
 
     @Test(timeout = TEST_TIMEOUT)
@@ -389,9 +388,9 @@ public class AcceptanceTest {
         socketPlayer1.sendWithDelay("STATE");
 
         //then
-        assertThat("Player1 should be able to get correct current state of game.",
+        assertEquals("Player1 should be able to get correct current state of game.",
                 socketPlayer1.readNextLineSync(),
-                matchesPattern("player player1 is next. Last Round result: outputNumber 64, winner false."));
+                "Currently playing players: [player player1, player player2] and player 1 has next turn. Last Round result: outputNumber 64, winner false.");
         assertTrue("Player2 should not receive anything.", socketPlayer2.inputIsEmpty());
 
     }
@@ -410,9 +409,9 @@ public class AcceptanceTest {
         socketPlayer1.sendWithDelay("STATE");
 
         //then
-        assertThat("Player1 should be able to get correct current state of game after a failed attempt.",
+        assertEquals("Player1 should be able to get correct current state of game after a failed attempt.",
                 socketPlayer1.readNextLineSync(),
-                matchesPattern("player player2 is next. Last Round result: outputNumber 21, winner false."));
+                "Currently playing players: [player player1, player player2] and player 2 has next turn. Last Round result: outputNumber 21, winner false.");
         assertTrue("Player2 should not receive anything.", socketPlayer2.inputIsEmpty());
     }
 
@@ -420,8 +419,8 @@ public class AcceptanceTest {
     @Test(timeout = TEST_TIMEOUT)
     public void shouldBeAbleToGetCurrentStateOfPlayingGameAfterFailedAttempt(){
         //given
-        socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
-        socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
+        socketPlayer1.sendWithDelay("ADD_PLAYER:AAA");
+        socketPlayer2.sendWithDelay("ADD_PLAYER:BBB");
         socketPlayer1.sendWithDelay("START");
         socketPlayer1.sendWithDelay("PLAY:-1");
         socketPlayer1.sendWithDelay("PLAY:999");
@@ -432,9 +431,9 @@ public class AcceptanceTest {
         socketPlayer1.sendWithDelay("STATE");
 
         //then
-        assertThat("Player1 should be able to get correct current state of game after a failed attempt.",
+        assertEquals("Player1 should be able to get correct current state of game after a failed attempt.",
                 socketPlayer1.readNextLineSync(),
-                matchesPattern("player player2 is next. Last Round result: outputNumber 21, winner false."));
+                "Currently playing players: [player AAA, player BBB] and player 2 has next turn. Last Round result: outputNumber 21, winner false.");
         assertTrue("Player2 should not receive anything.", socketPlayer2.inputIsEmpty());
     }
 
@@ -554,17 +553,6 @@ public class AcceptanceTest {
 
     @Test(timeout = TEST_TIMEOUT)
     public void shouldStartAndPlayGameWhenMachineAndHuman() throws InterruptedException {
-//        ConcurrentLinkedQueue<String> messagesPlayer1 = new ConcurrentLinkedQueue<>();
-//        ConcurrentLinkedQueue<String> messagesPlayer2 = new ConcurrentLinkedQueue<>();
-//        Thread t = new Thread(() -> {
-//            socketPlayer1.getInputStream().forEach(m -> {
-//                messagesPlayer1.add(m);
-//            });
-//            socketPlayer2.getInputStream().forEach(m -> messagesPlayer2.add(m));
-//        });
-//        t.start();
-//        Thread.sleep(100);
-
         //given
         socketPlayer1.sendWithDelay("ADD_MACHINE");
         socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
@@ -645,7 +633,7 @@ public class AcceptanceTest {
 
 
     @Test(timeout = TEST_TIMEOUT)
-    public void whenExitUnknownPlayerShouldReceiveUnknownPlayerExited() {
+    public void whenExitPlayerShouldReceivePlayerExited() {
         //given
         socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
         socketPlayer1.clearInput();
@@ -659,5 +647,48 @@ public class AcceptanceTest {
                 "Goodbye.",
                 socketPlayer1.readNextLineSync());
         assertTrue("Player 1 should not receive anything.", socketPlayer1.inputIsEmpty());
+    }
+
+    @Test(timeout = TEST_TIMEOUT)
+    public void whenExitPlayerShouldRemoveFromAggregate() {
+        //given
+        socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
+        socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
+        socketPlayer1.sendWithDelay("START");
+        socketPlayer1.sendWithDelay("PLAY:-1");
+        socketPlayer2.sendWithDelay("EXIT");
+        socketPlayer1.clearInput();
+
+        //when
+        socketPlayer1.sendWithDelay("STATE");
+
+        //then
+        assertEquals("Player2 should be unregistred.",
+                "Currently playing players: [player player1] and player 2 has next turn. Last Round result: outputNumber null, winner false.",
+                socketPlayer1.readNextLineSync());
+    }
+
+    @Test(timeout = TEST_TIMEOUT)
+    public void shouldNotBeAbleToPlayAloneWhenOtherPlayerExited() {
+        //given
+        socketPlayer1.sendWithDelay("ADD_PLAYER:player1");
+        socketPlayer2.sendWithDelay("ADD_PLAYER:player2");
+        socketPlayer1.sendWithDelay("START");
+        socketPlayer1.sendWithDelay("PLAY:-1");
+        socketPlayer2.sendWithDelay("PLAY:0");
+        socketPlayer2.sendWithDelay("EXIT");
+
+        socketPlayer1.clearInput();
+        socketPlayer2.clearInput();
+
+        //when
+        socketPlayer1.sendWithDelay("PLAY:-1");
+        socketPlayer1.sendWithDelay("PLAY:1");
+        socketPlayer1.sendWithDelay("PLAY:1");
+
+        //then
+        assertEquals("Player1 should not be able to play when left alone.",
+                socketPlayer1.readNextLineSync(),
+                "ERROR: can not play game when players: [player player1] and player 1 has next turn.");
     }
 }

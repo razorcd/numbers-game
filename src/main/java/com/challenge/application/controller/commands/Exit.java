@@ -1,6 +1,9 @@
 package com.challenge.application.controller.commands;
 
+import com.challenge.application.gameofthree.game.Game;
 import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.model.Human;
+import com.challenge.application.gameofthree.model.IPlayer;
 import com.challenge.server.SocketChannel;
 
 public class Exit extends ChainableCommand<String> {
@@ -26,6 +29,10 @@ public class Exit extends ChainableCommand<String> {
      */
     @Override
     public void execute(String data) {
+        IPlayer authorizedPlayer = new Human(Thread.currentThread().getName(), "");  //inject authorized user
+        gameService.removePlayer(authorizedPlayer);
+        gameService.stopGame();
+
         socketChannel.broadcast("Goodbye.");
         doNext(data);
     }

@@ -2,6 +2,7 @@ package com.challenge.application.gameofthree.game;
 
 import com.challenge.application.gameofthree.exception.GameException;
 import com.challenge.application.gameofthree.game.domain.InputNumber;
+import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
 import com.challenge.application.gameofthree.game.validator.*;
 import com.challenge.application.gameofthree.model.IPlayer;
 
@@ -28,6 +29,10 @@ public class GameService {
         game.set(game.get().addPlayer(player));
     }
 
+    public void removePlayer(IPlayer player) {
+        game.set(game.get().removePlayer(player));
+    }
+
     /**
      * Start playing the game with the added players.
      *
@@ -36,6 +41,13 @@ public class GameService {
     public void startGame() {
         game.get().validateOrThrow(new NewGameValidator());
         game.set(game.get().startGame());
+    }
+
+    /**
+     * Stop playing game. Sets game to initial state while keeping the players.
+     */
+    public void stopGame() {
+        game.set(game.get().stopGame());
     }
 
     /**

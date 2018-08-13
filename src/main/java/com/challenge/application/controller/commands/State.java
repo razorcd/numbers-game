@@ -41,8 +41,9 @@ public class State extends ChainableCommand<String> {
     }
 
     private String buildFinalMessage(PlayerAggregate players, GameRoundResult currentRoundResult) {
-        return players.getRootPlayer() +
-                " is next. Last " +
+        return //players.getRootPlayer() +
+                "Currently playing "+
+                players + " Last " +
                 currentRoundResult;
     }
 }
