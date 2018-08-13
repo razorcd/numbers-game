@@ -85,10 +85,6 @@ These are all implemented.
 
 ### Implementation 
 
-Main diagram showing the architecture:
-
-![alt text](map.jpeg "map")
-
  I did the implementation using a more `functional programming` approach. Notice there are very few `if` keywords used. This results in a more linear, reusable codebase, immutable objects and avoiding `null`.
  Everything was done fallowing `TDD` (plan small, red green refactor and then the big refactoring)
  I also followed `BDD` style, making tests easier to work with business experts.
@@ -108,8 +104,8 @@ Main diagram showing the architecture:
 
 
 `Design patterns` I used for designing this: `observer`(messaging - pubsub - open stream), `iterator`(cyclic - PlayerAggregate), `strategy`(di), `factory`(build games), `visitor`(validators), 
-`command`(human commands mapped to classes), `chain of responsibility`(chained commands), `singleton` (only for global configurable properties), 
- `mediator`(controller, services), `memento` (GameService holds state of games. Can also hold entire history of game objects).
+`command`(human commands mapped to classes), `chain of responsibility`(chained commands), 
+`mediator`(controller, services), `memento` (GameService holds state of games. Can also hold entire history of game objects).
 - and of course composition over inheritance.
 
 `Game` and `Gameround` are immutable and because of functional approach, these can be streamed through a `reducer` like this:
