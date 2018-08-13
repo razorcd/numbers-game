@@ -661,8 +661,7 @@ public class AcceptanceTest {
 
         //then
         assertEquals("Player 2 should receive goodbye.",
-                "Goodbye.",
-                socketPlayer1.readNextLineSync());
+                "Goodbye.", socketPlayer2.readNextLineSync());
         assertTrue("Player 1 should not receive anything.", socketPlayer1.inputIsEmpty());
     }
 
