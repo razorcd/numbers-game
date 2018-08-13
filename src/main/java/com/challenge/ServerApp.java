@@ -1,13 +1,13 @@
 package com.challenge;
 
-import com.challenge.application.game.Game;
-import com.challenge.application.game.GameFactory;
-import com.challenge.application.game.GameService;
-import com.challenge.application.game.gameround.gamerules.gameplaylogic.DivideByThreeLogic;
-import com.challenge.application.game.gameround.gamerules.gameplaylogic.IGameRoundLogic;
-import com.challenge.application.game.gameround.gamerules.gamewinlogic.IGameWinLogic;
-import com.challenge.application.game.gameround.gamerules.gamewinlogic.WinWhenOne;
-import com.challenge.application.game.gameround.gamerules.validator.DivideByThreeValidator;
+import com.challenge.application.gameofthree.game.Game;
+import com.challenge.application.gameofthree.game.GameFactory;
+import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic.DivideByThreeLogic;
+import com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic.IGameRoundLogic;
+import com.challenge.application.gameofthree.gameround.gamerules.gamewinlogic.IGameWinLogic;
+import com.challenge.application.gameofthree.gameround.gamerules.gamewinlogic.WinWhenOne;
+import com.challenge.application.gameofthree.gameround.gamerules.gameplaylogic.validator.DivideByThreeValidator;
 import com.challenge.application.utils.PropertiesConfigLoader;
 import com.challenge.server.MainServer;
 import com.challenge.server.SocketChannelRegistry;
@@ -23,8 +23,6 @@ import java.util.concurrent.TimeUnit;
 
 public class ServerApp {
     static {initializeGlobalConfiguration();}
-
-    private static ExecutorService executorService;
 
     private static final String PORT = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.port");
     private static final String SERVER_LISTENERS_COUNT = PropertiesConfigLoader.getProperties().getProperty("com.challenge.server.server_listeners_count");
@@ -50,7 +48,7 @@ public class ServerApp {
      */
     private static void runServerListenerThreads(ServerSocket mainServerSocket) {
         int serverListenersCount = Integer.parseInt(SERVER_LISTENERS_COUNT);
-        executorService = new ThreadPoolExecutor(
+        ExecutorService executorService = new ThreadPoolExecutor(
                 serverListenersCount, serverListenersCount,0, TimeUnit.SECONDS, new LinkedBlockingDeque<>());
 
         //compose global game
@@ -84,11 +82,6 @@ public class ServerApp {
         IGameWinLogic winLogic = new WinWhenOne();
 
         return new GameFactory(gameLogic, winLogic).buildNewGame();
-    }
-
-    public static void exit() {
-        executorService.shutdownNow();
-        do {} while (executorService.isTerminated());
     }
 
     /**

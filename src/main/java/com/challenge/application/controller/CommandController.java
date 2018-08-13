@@ -3,8 +3,8 @@ package com.challenge.application.controller;
 import com.challenge.application.controller.commands.*;
 import com.challenge.application.controller.dto.UserInputDto;
 import com.challenge.application.controller.mapper.UserInputDeserializer;
-import com.challenge.application.game.GameService;
-import com.challenge.application.game.gameround.ai.DivideByThreeAi;
+import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.ai.DivideByThreeAi;
 import com.challenge.server.SocketChannel;
 
 import java.util.function.Consumer;

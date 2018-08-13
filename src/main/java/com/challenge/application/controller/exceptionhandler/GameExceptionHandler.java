@@ -1,7 +1,7 @@
 package com.challenge.application.controller.exceptionhandler;
 
-import com.challenge.application.game.exception.GameException;
-import com.challenge.application.game.model.IPlayer;
+import com.challenge.application.gameofthree.exception.GameException;
+import com.challenge.application.gameofthree.model.IPlayer;
 import com.challenge.server.SocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

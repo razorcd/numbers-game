@@ -1,7 +1,7 @@
 package com.challenge.application.controller.commands;
 
-import com.challenge.application.game.GameService;
-import com.challenge.application.game.model.Machine;
+import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.model.Machine;
 import com.challenge.server.SocketChannel;
 
 public class AddMachine extends ChainableCommand<String> {

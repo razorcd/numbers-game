@@ -94,8 +94,7 @@ public class SocketChannel {
         try {
             return !in.ready();
         } catch (IOException e) {
-            LOGGER.error("IOException while checking if input buffer is ready.");
-            throw new RuntimeException(e);
+            throw new RuntimeException("IOException while checking if input buffer is ready.", e);
         }
     }
 
@@ -106,8 +105,7 @@ public class SocketChannel {
                 in.read();
             }
         } catch (IOException | InterruptedException e) {
-            LOGGER.error("Exception while reading all characters from input buffer.");
-            throw new RuntimeException(e);
+            throw new RuntimeException("Exception while reading all characters from input buffer.", e);
         }
     }
 

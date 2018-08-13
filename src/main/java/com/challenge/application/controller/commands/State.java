@@ -1,9 +1,9 @@
 package com.challenge.application.controller.commands;
 
-import com.challenge.application.game.Game;
-import com.challenge.application.game.GameService;
-import com.challenge.application.game.domain.GameRoundResult;
-import com.challenge.application.game.domain.PlayerAggregate;
+import com.challenge.application.gameofthree.game.Game;
+import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
+import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
 import com.challenge.server.SocketChannel;
 
 public class State extends ChainableCommand<String> {

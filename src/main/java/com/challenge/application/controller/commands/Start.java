@@ -1,12 +1,12 @@
 package com.challenge.application.controller.commands;
 
 import com.challenge.application.controller.exceptionhandler.GameExceptionHandler;
-import com.challenge.application.game.Game;
-import com.challenge.application.game.GameService;
-import com.challenge.application.game.domain.GameRoundResult;
-import com.challenge.application.game.domain.PlayerAggregate;
-import com.challenge.application.game.exception.GameException;
-import com.challenge.application.game.model.Human;
+import com.challenge.application.gameofthree.game.Game;
+import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
+import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
+import com.challenge.application.gameofthree.exception.GameException;
+import com.challenge.application.gameofthree.model.Human;
 import com.challenge.server.SocketChannel;
 
 public class Start extends ChainableCommand<String> {

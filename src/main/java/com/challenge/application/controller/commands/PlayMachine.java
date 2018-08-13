@@ -1,13 +1,13 @@
 package com.challenge.application.controller.commands;
 
-import com.challenge.application.game.Game;
-import com.challenge.application.game.GameService;
-import com.challenge.application.game.domain.GameRoundResult;
-import com.challenge.application.game.domain.InputNumber;
-import com.challenge.application.game.domain.OutputNumber;
-import com.challenge.application.game.domain.PlayerAggregate;
-import com.challenge.application.game.gameround.ai.IGameRoundAi;
-import com.challenge.application.game.model.IPlayer;
+import com.challenge.application.gameofthree.game.Game;
+import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.gameround.domain.GameRoundResult;
+import com.challenge.application.gameofthree.game.domain.InputNumber;
+import com.challenge.application.gameofthree.game.domain.OutputNumber;
+import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
+import com.challenge.application.gameofthree.ai.IGameRoundAi;
+import com.challenge.application.gameofthree.model.IPlayer;
 import com.challenge.server.SocketChannel;
 
 public class PlayMachine extends ChainableCommand<String> {
@@ -36,8 +36,6 @@ public class PlayMachine extends ChainableCommand<String> {
      */
     @Override
     public void execute(String rawInputNumber) {
-//        InputNumber inputNumber = new InputNumber(Integer.parseInt(rawInputNumber));
-
         playMachineRecursive();
 
         Game gameAfterPlay = gameManager.getGame();
@@ -45,7 +43,7 @@ public class PlayMachine extends ChainableCommand<String> {
         doNext(String.valueOf(gameRoundResultAfterPlay.getOutputNumber().getValue()));
     }
 
-    void playMachineRecursive() {
+    private void playMachineRecursive() {
         Game gameBeforePlay = gameManager.getGame();
         PlayerAggregate playersBeforePlay = gameBeforePlay.getPlayerAggregate();
         IPlayer nextPlayer = playersBeforePlay.getRootPlayer();

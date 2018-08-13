@@ -2,7 +2,7 @@ package com.challenge;
 
 import com.challenge.application.controller.CommandController;
 import com.challenge.application.controller.mapper.UserInputDeserializer;
-import com.challenge.application.game.GameService;
+import com.challenge.application.gameofthree.game.GameService;
 import com.challenge.server.ServerStream;
 import com.challenge.server.SocketChannel;
 import com.challenge.server.SocketChannelRegistry;

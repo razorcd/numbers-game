@@ -1,9 +1,9 @@
 package com.challenge.application.controller.commands;
 
 import com.challenge.application.controller.exceptionhandler.GameExceptionHandler;
-import com.challenge.application.game.GameService;
-import com.challenge.application.game.exception.GameException;
-import com.challenge.application.game.model.Human;
+import com.challenge.application.gameofthree.game.GameService;
+import com.challenge.application.gameofthree.exception.GameException;
+import com.challenge.application.gameofthree.model.Human;
 import com.challenge.server.SocketChannel;
 
 public class AddHuman extends ChainableCommand<String> {

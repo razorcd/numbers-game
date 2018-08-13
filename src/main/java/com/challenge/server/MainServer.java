@@ -33,8 +33,7 @@ public class MainServer implements Closeable {
             serverSocket = new ServerSocket(port);
             return serverSocket;
         } catch (IOException e) {
-            LOGGER.error("IO exception while opening main server socket.");
-            throw new RuntimeException(e);
+            throw new RuntimeException("IO exception while opening main server socket.", e);
         }
     }
 
@@ -49,8 +48,7 @@ public class MainServer implements Closeable {
                 if(serverSocket.isClosed()) return;
             }
         } catch (IOException e) {
-            LOGGER.error("IO exception while closing main server socket.");
-            throw new RuntimeException(e);
+            throw new RuntimeException("IO exception while closing main server socket.", e);
         }
 
     }

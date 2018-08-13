@@ -1,6 +1,6 @@
 package com.challenge.application.controller.exceptionhandler;
 
-import com.challenge.application.game.model.IPlayer;
+import com.challenge.application.gameofthree.model.IPlayer;
 
 public interface ExceptionHandler<E extends RuntimeException> {
 
