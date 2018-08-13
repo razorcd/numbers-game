@@ -14,10 +14,12 @@ public class PlayerAggregate implements Iterator<PlayerAggregate>{
     public static final int DEFAULT_ROOT_INDEX = Integer.parseInt(PropertiesConfigLoader.getProperties()
             .getProperty("com.challenge.application.game.index_of_player_that_starts_first", "0"));
 
+    public static final int PLAYER_COUNT = Integer.parseInt(PropertiesConfigLoader.getProperties()
+            .getProperty("com.challenge.application.game.player_count"));
+
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerAggregate.class);
 
     public static final PlayerAggregate NULL = new PlayerAggregate(Collections.emptyList(), DEFAULT_ROOT_INDEX);
-    private static final int PLAYER_COUNT = 2;
 
     private final List<IPlayer> players;
     private final int rootIndex;

@@ -2,7 +2,6 @@ package com.challenge.application.gameofthree.game;
 
 import com.challenge.application.gameofthree.exception.GameException;
 import com.challenge.application.gameofthree.game.domain.InputNumber;
-import com.challenge.application.gameofthree.game.domain.PlayerAggregate;
 import com.challenge.application.gameofthree.game.validator.*;
 import com.challenge.application.gameofthree.model.IPlayer;
 
