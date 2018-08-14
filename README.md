@@ -110,19 +110,21 @@ These are all implemented.
 
 `Game` and `Gameround` are immutable and because of functional approach, these can be streamed through a `reducer` like this:
 ```java
-Game init = new Game(gameRoundServiceMock)
-        .addPlayer(player1)
-        .addPlayer(player2)
-        .startGame();
+Game newGame = Stream.of(
+            new Human("1", "player1"),
+            new Human("2", "player2"),
+            new Human("3", "player3"))
+        .reduce(new Game(gameRound), Game::addPlayer, (a, b) -> null);
+
 
 Game finalStage = Stream.of(
-            new InputNumber(-1), 
-            new InputNumber(0), 
-            new InputNumber(-1), 
+            new InputNumber(-1),
+            new InputNumber(0),
+            new InputNumber(-1),
             new InputNumber(1))
-        .reduce(init, Game::play, (a , b) -> null);
+        .reduce(newGame, Game::play, (a , b) -> null);
 
-finalStage.getGameRoundResult().isWinner() #=> true
+finalStage.getGameRoundResult().isWinner();  // #=> true
 ```
 
 The game architecture is very flexible. For example to convert this to a tic-tac-toe game all is needed is to replace the `game logic`, `win logic` and `AI`, these are independent classes.
